@@ -8,6 +8,7 @@ Pasos para ejecutar el backend en un entorno de desarrollo por primera vez:
 ```
 MONGODB_CNN=
 PORT=
+JWT_SECRET=
 ```
 3. Ejecutar el servidor
 ```
