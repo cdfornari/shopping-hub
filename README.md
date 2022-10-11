@@ -7,8 +7,8 @@ cd <folder_name>
 ```
 3. Instalar dependencias
 ```
-cd admin && npm install && cd ../
+cd admin && yarn && cd ../
 cd backend && npm install && cd ../
-cd client && npm install && cd ../
+cd client && yarn && cd ../
 ```
 4. Revisar los pasos en el README de cada carpeta para ejecutar cada servicio
