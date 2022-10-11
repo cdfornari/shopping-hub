@@ -6,4 +6,5 @@ export const JoiValidationSchema = Joi.object({
     .default('development'),
     MONGODB_CNN: Joi.string().required(),
     PORT: Joi.number().default(3000),
+    JWT_SECRET: Joi.string().required()
 })
