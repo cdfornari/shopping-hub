@@ -3,7 +3,6 @@ import { Avatar, Dropdown, Navbar, Text } from '@nextui-org/react'
 export const NavbarMenu = () => {
   return (
     <Dropdown placement="bottom-right">
-        <Navbar.Item>
         <Dropdown.Trigger>
             <Avatar
                 bordered
@@ -14,7 +13,6 @@ export const NavbarMenu = () => {
                 src="https://www.tonica.la/__export/1665268080767/sites/debate/img/2022/10/08/daredevil-shehulk-serie.jpg_1037907269.jpg"
             />
         </Dropdown.Trigger>
-        </Navbar.Item>
         <Dropdown.Menu
             aria-label="User menu actions"
             color="secondary"
