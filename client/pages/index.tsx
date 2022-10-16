@@ -9,8 +9,7 @@ const Home: NextPage = () => {
       title='Home'
       description='This is the home page'
     >
-      <h1>Home</h1>
-      <Grid.Container gap={4}>
+      <Grid.Container gap={4} css={{w:'100vw', px: '$24'}}>
         <Grid xs={12} sm={6} md={4}>
           <ProductCard />
         </Grid>
