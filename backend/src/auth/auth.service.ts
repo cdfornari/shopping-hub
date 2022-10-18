@@ -17,6 +17,8 @@ export class AuthService {
 
   async login({email,password}: LoginDto){
     const user = await this.userModel.findOne({email})
+    .select('-__v')
+    .lean()
     if(!user || !user.isActive) throw new UnauthorizedException('usuario no encontrado');
     const match = await bcrypt.compare(password,user.password)
     if(!match) throw new UnauthorizedException('credenciales invalidas')

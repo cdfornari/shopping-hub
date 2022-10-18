@@ -1,4 +1,4 @@
-import { IsEmail, IsString, Matches, Min } from 'class-validator';
+import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
 
 export class LoginDto{
 
@@ -7,7 +7,7 @@ export class LoginDto{
     email: string;
 
     @IsString()
-    @Min(8,{message: 'La contraseña debe tener al menos 8 caracteres'})
+    @MinLength(8,{message: 'La contraseña debe tener al menos 8 caracteres'})
     @Matches(
         /(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
         message: 'La contraseña debe contener al menos una mayúscula, una minúscula y un número'

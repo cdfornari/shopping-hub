@@ -1,7 +1,8 @@
 import { Injectable, InternalServerErrorException, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { AuthService } from 'src/auth/auth.service';
+import { LoginDto } from 'src/auth/dto/login.dto';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { Client } from './entities/client.entity';
@@ -34,6 +35,20 @@ export class ClientsService {
     } catch (error) {
       throw new InternalServerErrorException(error)
     }
+  }
+
+  async login(loginDto: LoginDto) {
+    const { email, password } = loginDto;
+    const { user,token } = await this.authService.login({email, password});
+    const client = await this.clientModel.findOne({"user._id" : user.id})
+    .populate('user', '-password -__v')
+    .select('-__v')
+    .lean();
+    if(!client) throw new NotFoundException('cliente no encontrado')
+    return {
+      client,
+      token
+    };
   }
 
   async findAll() {

@@ -4,6 +4,7 @@ import { ParseMongoIdPipe } from 'src/common/pipes/ParseMongoIdPipe';
 import { ClientsService } from './clients.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
+import { LoginDto } from '../auth/dto/login.dto';
 
 @Controller('clients')
 export class ClientsController {
@@ -12,6 +13,11 @@ export class ClientsController {
   @Post('/register')
   create(@Body() createClientDto: CreateClientDto) {
     return this.clientsService.create(createClientDto);
+  }
+
+  @Post('/login')
+  login(@Body() loginDto: LoginDto) {
+    return this.clientsService.login(loginDto);
   }
 
   @Get()
