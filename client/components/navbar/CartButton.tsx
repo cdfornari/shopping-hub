@@ -10,7 +10,7 @@ export const CartButton = () => {
         >
             <Link>
                 <FaShoppingCart
-                    size={20}
+                    size={28}
                 />
             </Link>
         </NextLink>

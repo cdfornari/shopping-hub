@@ -10,7 +10,7 @@ export const SearchBar = () => {
             bordered
             placeholder='Busca un producto'
             size='lg'
-            width={'480px'}
+            width='360px'
             contentRight={
                 <Button
                     auto
