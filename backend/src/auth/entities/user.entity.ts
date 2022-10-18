@@ -6,6 +6,7 @@ import { ValidRoles, ValidRolesArray } from '../types/valid-roles.type';
 export class User extends Document {
 
     @Prop({
+        type: String,
         required: true,
         unique: true,
         trim: true,
@@ -14,6 +15,7 @@ export class User extends Document {
     email: string;
 
     @Prop({
+        type: String,
         required: true
     })
     password: string;
@@ -25,6 +27,7 @@ export class User extends Document {
     role: ValidRoles;
 
     @Prop({
+        type: Boolean,
         required: true,
         default: true
     })

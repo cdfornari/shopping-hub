@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -14,10 +14,16 @@ import { User, UserSchema } from './entities/user.entity';
     PassportModule.register({
       defaultStrategy: 'jwt'
     }),
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: {
-        expiresIn: '1d'
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const secret = configService.get('JWT_SECRET');
+        if(!secret) throw new Error('JWT_SECRET is not defined');
+        return {
+          secret,
+          signOptions: { expiresIn: '1d' }
+        }
       }
     }),
     MongooseModule.forFeature([
@@ -36,7 +42,8 @@ import { User, UserSchema } from './entities/user.entity';
     JwtStrategy,
     PassportModule,
     JwtModule,
-    MongooseModule
+    MongooseModule,
+    AuthService
   ]
 })
 export class AuthModule {}

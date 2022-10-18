@@ -16,7 +16,7 @@ export class CreateUserDto {
     password: string;
 
     @IsString()
-    @IsIn(ValidRolesArray)
+    @IsIn(ValidRolesArray, {message: 'El rol no es válido'})
     role: ValidRoles;
 
     @IsBoolean()
