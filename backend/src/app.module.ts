@@ -5,6 +5,7 @@ import { EnvConfig,JoiValidationSchema } from './config';
 import { AuthModule } from './auth/auth.module';
 import { ClientsModule } from './clients/clients.module';
 import { CommonModule } from './common/common.module';
+import { StoresModule } from './stores/stores.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { CommonModule } from './common/common.module';
     AuthModule,
     ClientsModule,
     CommonModule,
+    StoresModule,
   ],
   controllers: [],
   providers: [],
