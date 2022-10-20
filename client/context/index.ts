@@ -1,0 +1,1 @@
+export { ShoppingCartProvider } from './shopping-cart';
