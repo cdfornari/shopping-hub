@@ -4,6 +4,7 @@ import { ProductsService } from './products.service';
 import { ProductsController } from './products.controller';
 import { Product, ProductSchema } from './entities/product.entity';
 import { AuthModule } from 'src/auth/auth.module';
+import { StoresModule } from 'src/stores/stores.module';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { AuthModule } from 'src/auth/auth.module';
         schema: ProductSchema
       }
     ]),
-    AuthModule
+    AuthModule,
+    StoresModule
   ],
   controllers: [ProductsController],
   providers: [ProductsService]

@@ -5,13 +5,15 @@ import { IUser } from 'src/auth/interfaces/user.interface';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
+import { StoresService } from '../stores/stores.service';
 
 @Injectable()
 export class ProductsService {
 
   constructor(
     @InjectModel(Product.name)
-    private readonly productModel: Model<Product>
+    private readonly productModel: Model<Product>,
+    private readonly storesService: StoresService
   ){}
 
   async create(createProductDto: CreateProductDto, storeUser: IUser) {
@@ -27,9 +29,13 @@ export class ProductsService {
         throw new BadRequestException('Las tallas UNI no pueden ir con otras tallas')
       }
     }
-    //TODO: buscar store
+    const store = await this.storesService.findOne(storeUser._id);
+    if(!store) throw new NotFoundException('Tienda no encontrada');
     try {
-      const product = await this.productModel.create({createProductDto});
+      const product = await this.productModel.create({
+        ...createProductDto,
+        store: store._id
+      });
       return product;
     } catch (error) {
       console.log(error);
