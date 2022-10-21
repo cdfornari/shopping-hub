@@ -12,7 +12,7 @@ export class ClientsService {
 
   constructor(
     @InjectModel(Client.name) private readonly clientModel: Model<Client>,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
   ) {}
 
   async create(createClientDto: CreateClientDto) {
