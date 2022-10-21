@@ -24,7 +24,7 @@ export class AuthService {
     if(!match) throw new UnauthorizedException('credenciales invalidas')
     return {
       user,
-      token: this.jwtService.sign({id: user.id})
+      token: this.jwtService.sign({id: user._id})
     }
   }
 
@@ -39,7 +39,7 @@ export class AuthService {
       })
       return {
         user,
-        token: this.jwtService.sign({id: user.id})
+        token: this.jwtService.sign({id: user._id})
       };
     } catch (error) {
       console.log(error);
@@ -50,7 +50,7 @@ export class AuthService {
   async renewToken(user: User) {
     return {
       ...user,
-      token: this.jwtService.sign({id: user.id})
+      token: this.jwtService.sign({id: user._id})
     }
   }
 

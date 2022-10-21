@@ -1,18 +1,18 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { ValidCategories } from '../types/category';
-import { ValidGenders } from '../types/gender';
+import { Category, ValidCategories } from '../types/category';
+import { Gender, ValidGenders } from '../types/gender';
 import { Size, ValidSizes } from '../types/size';
 
 @Schema()
 export class Product extends Document {
 
-    @Prop({
+   @Prop({
         type: Types.ObjectId,
         required: true,
         ref: 'Store'
     })
-    store: string;
+    store: Types.ObjectId;
 
     @Prop({
         type: String,
@@ -24,7 +24,7 @@ export class Product extends Document {
     @Prop({
         type: String
     })
-    description: string;
+    description?: string;
     
     @Prop({
         type: Number,
@@ -35,7 +35,7 @@ export class Product extends Document {
     @Prop({
         type: Number
     })
-    comparativePrice: number;
+    comparativePrice?: number;
 
     @Prop({
         type: String,
@@ -51,7 +51,7 @@ export class Product extends Document {
             message: 'Gender is not valid'
         }
     })
-    gender: string;
+    gender: Gender;
 
     @Prop({
         type: String,
@@ -61,25 +61,45 @@ export class Product extends Document {
             message: 'Category is not valid'
         }
     })
-    category: string;
+    category: Category;
 
-    @Prop([
-        raw({
-            size: {
-                type: String,
-                required: true,
-                enum: {
-                    values: ValidSizes,
-                    message: 'Size is not valid'
+    @Prop({
+        type: [
+            raw({
+                size: {
+                    type: String,
+                    required: true,
+                    enum: {
+                        values: ValidSizes,
+                        message: 'Size is not valid'
+                    }
+                },
+                stock: {
+                    type: Number,
+                    default: 0
                 }
-            },
-            stock: {
-                type: Number,
-                default: 0
-            }
-        }
-    )])
-    sizes: {size: Size, stock: number}[];
+            })
+        ],
+        default: []
+    })
+    sizes?: {size: Size, stock: number}[];
+
+    @Prop({
+        type: [
+            raw({
+                size: {
+                    type: Number,
+                    required: true,
+                },
+                stock: {
+                    type: Number,
+                    default: 0
+                }
+            })
+        ],
+        default: []
+    })
+    shoeSizes?: {size: number, stock: number}[];
 
 }
 

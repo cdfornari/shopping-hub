@@ -2,14 +2,24 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { ReqUser } from 'src/auth/decorators/req-user.decorator';
+import { IUser } from 'src/auth/interfaces/user.interface';
+import { ParseMongoIdPipe } from '../common/pipes/ParseMongoIdPipe';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService
+  ) {}
 
-  @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
+  @Post('create')
+  @Auth('STORE')
+  create(
+    @Body() createProductDto: CreateProductDto,
+    @ReqUser() user: IUser
+  ) {
+    return this.productsService.create(createProductDto,user);
   }
 
   @Get()
@@ -18,8 +28,8 @@ export class ProductsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productsService.findOne(+id);
+  findOne(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.productsService.findOne(id);
   }
 
   @Patch(':id')
@@ -31,4 +41,5 @@ export class ProductsController {
   remove(@Param('id') id: string) {
     return this.productsService.remove(+id);
   }
+  
 }
