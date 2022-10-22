@@ -10,12 +10,12 @@ import { Auth } from 'src/auth/decorators/auth.decorator';
 export class StoresController {
   constructor(private readonly storesService: StoresService) {}
 
-  @Post('/register')
+  @Post('register')
   create(@Body() createStoreDto: CreateStoreDto) {
     return this.storesService.create(createStoreDto);
   }
 
-  @Post('/login')
+  @Post('login')
   login(@Body() loginDto: LoginDto) {
     return this.storesService.login(loginDto);
   }

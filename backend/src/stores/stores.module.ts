@@ -16,6 +16,7 @@ import { AuthModule } from 'src/auth/auth.module';
     AuthModule
   ],
   controllers: [StoresController],
-  providers: [StoresService]
+  providers: [StoresService],
+  exports: [StoresService,MongooseModule]
 })
 export class StoresModule {}

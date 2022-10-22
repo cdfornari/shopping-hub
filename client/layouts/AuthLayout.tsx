@@ -15,7 +15,7 @@ export const AuthLayout: FC<Props> = ({children,title,description}) => {
             <meta name='description' content={description}/>
         </Head>
         <main>
-            {children}
+          {children}
         </main>
     </>
   )
