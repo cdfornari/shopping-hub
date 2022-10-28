@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -19,9 +19,12 @@ export class AuthService {
     const user = await this.userModel.findOne({email})
     .select('-__v')
     .lean()
-    if(!user || !user.isActive) throw new UnauthorizedException('usuario no encontrado');
-    const match = await bcrypt.compare(password,user.password)
-    if(!match) throw new UnauthorizedException('credenciales invalidas')
+    if(!user) throw new UnauthorizedException('Credenciales inválidas')
+    if(!user.isActive) throw new UnauthorizedException(
+      user.role === 'STORE' ? 'La tienda no ha sido aprobada' :'Usuario inactivo'
+    )
+    const match = await bcrypt.compare(password,user.password);
+    if(!match) throw new UnauthorizedException('Credenciales inválidas')
     return {
       user,
       token: this.jwtService.sign({id: user._id})
@@ -29,10 +32,10 @@ export class AuthService {
   }
 
   async createUser({password,...rest}: CreateUserDto){
+    if(
+      await this.userModel.findOne({email: rest.email})
+    ) throw new BadRequestException('email ya registrado')
     try {
-      if(
-        await this.userModel.findOne({email: rest.email})
-      ) throw new BadRequestException('email ya registrado')
       const user = await this.userModel.create({
         ...rest,
         password: await bcrypt.hash(password,10)
@@ -49,7 +52,7 @@ export class AuthService {
 
   async renewToken(user: User) {
     return {
-      ...user,
+      user,
       token: this.jwtService.sign({id: user._id})
     }
   }

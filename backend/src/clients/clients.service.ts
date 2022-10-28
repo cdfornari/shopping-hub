@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { AuthService } from 'src/auth/auth.service';
 import { LoginDto } from 'src/auth/dto/login.dto';
+import { User } from 'src/auth/entities/user.entity';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { Client } from './entities/client.entity';
@@ -70,6 +71,18 @@ export class ClientsService {
     .lean();
     if(!client) throw new NotFoundException('cliente no encontrado')
     return client;
+  }
+
+  async validate(user: User) {
+    const client = this.clientModel.find({"user._id" : user.id})
+    .populate('user', '-password -__v')
+    .select('-__v')
+    .lean();
+    if(!client) throw new NotFoundException('cliente no encontrado')
+    return {
+      client,
+      token: this.authService.renewToken(user._id)
+    }
   }
 
   update(id: number, updateClientDto: UpdateClientDto) {

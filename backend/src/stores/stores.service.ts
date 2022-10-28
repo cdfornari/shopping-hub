@@ -20,19 +20,17 @@ export class StoresService {
     if(await this.storeModel.findOne({phoneNumber: createStoreDto.phoneNumber})) throw new BadRequestException('telefono ya registrado');
     try {
       const { email, password, ...storeData } = createStoreDto;
-      const {user,token} = await this.authService.createUser({
+      const {user} = await this.authService.createUser({
         email,
         password,
         role: 'STORE',
-        isActive: false
+        //isActive: false
       });
       await this.storeModel.create({
         ...storeData,
         user: user.id
       })
-      return {
-        token
-      };
+      return {ok : true};
     } catch (error) {
       throw new InternalServerErrorException(error)
     }
@@ -47,7 +45,7 @@ export class StoresService {
     .lean();
     if(!store) throw new NotFoundException('tienda no encontrada')
     return {
-      store,
+      user: store,
       token
     };
   }
