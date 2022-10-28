@@ -5,12 +5,20 @@ import { EyeIcon } from "./EyeIcon";
 import { EditIcon } from "./EditIcon";
 import { DeleteIcon } from "./DeleteIcon";
 import { FC } from "react";
+import { useRouter } from "next/router";
+import NextLink from "next/link";
 
 interface Props{
   columns: { name: string; uid: string}[] 
+  url: string
 }
 
-const TableInfo: FC<Props>= ( {columns} ) => {
+const TableInfo: FC<Props>= ( {columns, url} ) => {
+
+  const router = useRouter();
+  const onClick = () => {
+      router.push(url);
+  }
 
       const users = [
         {
@@ -23,6 +31,7 @@ const TableInfo: FC<Props>= ( {columns} ) => {
           avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
           email: "tony.reichert@example.com",
           rif: "V-028155389",
+          tlf: "414-1115826"
         },
         {
           id: 2,
@@ -102,13 +111,16 @@ const TableInfo: FC<Props>= ( {columns} ) => {
             return <StyledBadge type={user.status}>{cellValue}</StyledBadge>;
     
           case "actions":
+            // url+`${user.id}`
             return (
               <Row justify="center" align="center">
                 <Col css={{ d: "flex" }}>
                   <Tooltip content="Details">
-                    <IconButton onClick={() => console.log("View user", user.id)}>
-                      <EyeIcon height = {20} width={ 20} size={20} fill="#979797" />
-                    </IconButton>
+                    <NextLink href = {url} passHref > 
+                      <IconButton onClick={ () => console.log("Edit user", user.id) } >
+                        <EyeIcon height = {20} width={ 20} size={20} fill="#979797" />
+                      </IconButton>
+                    </NextLink>
                   </Tooltip>
                 </Col>
                 <Col css={{ d: "flex" }}>
@@ -151,7 +163,6 @@ const TableInfo: FC<Props>= ( {columns} ) => {
             key={column.uid}
             hideHeader={column.uid === "actions"}
             align={column.uid === "actions" ? "center" : "start"}
-            allowsSorting
           >
             {column.name}
           </Table.Column>
@@ -166,6 +177,13 @@ const TableInfo: FC<Props>= ( {columns} ) => {
           </Table.Row>
         )}
       </Table.Body>
+      <Table.Pagination
+        shadow
+        noMargin
+        align="center"
+        rowsPerPage={5}
+        onPageChange={(page) => console.log({ page })}
+      />
     </Table>
   )
 }

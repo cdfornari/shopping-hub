@@ -9,6 +9,8 @@ import { FaShoppingCart } from 'react-icons/fa';
 import { BsFillPeopleFill,BsFillPersonFill } from 'react-icons/bs';
 import { RiAdminFill } from 'react-icons/ri';
 import { LogoutButton } from '../LogoutButton';
+import NextLink from "next/link";
+
 
 export const SidebarWrapper = () => {
    const router = useRouter();
@@ -44,39 +46,40 @@ export const SidebarWrapper = () => {
                   <SidebarItem
                      isActive={router.pathname === '/products'}
                      title="Productos"
-                     href="products"
+                     href="/products"
                      icon={<FaShoppingCart/>}
                   />
                   <SidebarItem
                      isActive={router.pathname === '/orders'}
                      title="Órdenes"
-                     href="orders"
+                     href="/dashboard/orders"
                      icon={<AiTwotoneShopping/>}
                   />
                   <SidebarItem
                      isActive={router.pathname === '/clients'}
                      title="Clientes"
-                     href="clients"
+                     href="/clients"
                      icon={<BsFillPeopleFill/>}
                   />
                   <SidebarItem
                      isActive={router.pathname === '/brands'}
-                     title="Marcas"
-                     href="brands"
+                     title="Tiendas"
+                     href="/dashboard/brands"
                      icon={<AiTwotoneShop/>}
                   />
                   <SidebarItem
                      isActive={router.pathname === '/admins'}
                      title="Administradores"
-                     href="admins"
+                     href="/dashboard/admins"
                      icon={<RiAdminFill/>}
                   />
                   <SidebarItem
                      isActive={router.pathname === '/profile'}
                      title="Perfil"
-                     href="profile"
+                     href="/profile"
                      icon={<BsFillPersonFill/>}
                   />
+                  
                </Sidebar.Body>
                <Sidebar.Footer>
                   <ThemeSwitcher/>

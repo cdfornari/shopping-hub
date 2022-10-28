@@ -1,11 +1,11 @@
-import { DashboardLayout } from '../../layouts/DashboardLayout';
-import { Box, Flex } from '../../components/containers';
-import TableInfo from "../../components/table/index"
+import { DashboardLayout } from '../../../layouts/DashboardLayout';
+import { Box, Flex } from '../../../components/containers';
+import TableInfo from "../../../components/table/index"
 
 const columns = [
-  { name: "LOGO", uid: "logo" },
-  { name: "NAME", uid: "name" },
-  { name: "RIF", uid: "rif" },
+  { name: "CLIENTE", uid: "logo" },
+  { name: "Nro. Productos", uid: "name" },
+  { name: "Precio Total", uid: "rif" },
   { name: "STATUS", uid: "status" },
   { name: "ACTIONS", uid: "actions" },
 ];
@@ -20,7 +20,7 @@ const OrdersPage = () => {
         <Box
           css = {{width: '100%', display: 'table'}} 
         >
-          <TableInfo columns = { columns } />
+          <TableInfo columns = { columns } url = {`/dashboard/order/${1}`} />
         </Box>
     </DashboardLayout>
   )
