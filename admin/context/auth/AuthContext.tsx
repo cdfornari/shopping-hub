@@ -4,7 +4,7 @@ import { RegisterDto } from '../../dtos/register.dto';
 interface ContextProps {
     isLoggedIn: boolean;
     user?: any;
-    login: (email: string, password: string, type: 'admin'|'store') => void;
+    login: (email: string, password: string, type: 'admin'|'stores') => void;
     registerStore: (dto: RegisterDto) => void;
     logout: () => void;
 }

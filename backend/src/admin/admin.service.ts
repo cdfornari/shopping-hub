@@ -32,6 +32,17 @@ export class AdminService {
     }
   }
 
+  async login(loginDto: LoginDto) {
+    const { email, password } = loginDto;
+    const { user,token } = await this.authService.login({email, password});
+    if(!['ADMIN','SUPER-ADMIN'].includes(user.role))
+    throw new UnauthorizedException('admin no encontrado');
+    return {
+      user,
+      token
+    };
+  }
+
   async validate(userToValidate: User) {
     const store = await this.storeModel.findOne({"user._id" : userToValidate.id})
     .populate('user', '-password -__v')
