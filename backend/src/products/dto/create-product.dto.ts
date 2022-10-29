@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsIn, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, IsUrl, Min, MinLength, ValidateNested } from 'class-validator';
+import { IsArray, IsIn, IsNumber, IsObject, IsOptional, IsString, Min, MinLength, ValidateNested } from 'class-validator';
 import { Category, ValidCategories } from '../types/category';
 import { Gender, ValidGenders } from '../types/gender';
 import { Size } from '../types/size';
@@ -32,10 +32,6 @@ export class CreateProductDto {
     @IsString()
     @IsIn(ValidGenders)
     gender: Gender;
-
-    @IsString()
-    @IsUrl()
-    image: string;
 
     @IsArray()
     @IsOptional()

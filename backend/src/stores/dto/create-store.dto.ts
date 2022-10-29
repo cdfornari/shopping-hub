@@ -1,4 +1,4 @@
-import { IsEmail, IsString, IsUrl, Matches, MinLength } from 'class-validator';
+import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
 
 export class CreateStoreDto {
 
@@ -23,11 +23,7 @@ export class CreateStoreDto {
     rif: string;
 
     @IsString()
-    @Matches(/^(414|424|412|416|426)[0-9]{7}$/g, {message: 'numero de telefono invalido'})
+    @Matches(/^(0414|0424|0412|0416|0426)[0-9]{7}$/, {message: 'numero de telefono invalido'})
     phoneNumber: string;
-
-    @IsString()
-    @IsUrl()
-    logo: string;
 
 }

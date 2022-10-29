@@ -1,4 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipeBuilder } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { v4 as uuid } from 'uuid';
+import { diskStorage } from 'multer';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -15,11 +18,34 @@ export class ProductsController {
 
   @Post('create')
   @Auth('STORE')
+  @UseInterceptors(
+    FileInterceptor('image',{
+      limits: {
+        files: 1,
+      },
+      storage: diskStorage({
+        destination: './images',
+        filename: (req, file, cb) => {
+          const fileExtension = file.mimetype.split('/')[1];
+          const fileName = `${uuid()}.${fileExtension}`;
+          cb(null,fileName)
+        }
+      })
+    })
+  )
   create(
     @Body() createProductDto: CreateProductDto,
-    @ReqUser() user: IUser
+    @ReqUser() user: IUser,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+      .addFileTypeValidator({
+        fileType: new RegExp(/(png|jpe?g)/),
+      })
+      .build()
+    ) 
+    file: Express.Multer.File
   ) {
-    return this.productsService.create(createProductDto,user);
+    return this.productsService.create(createProductDto,user,file.path);
   }
 
   @Get()
