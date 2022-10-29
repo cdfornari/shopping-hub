@@ -39,18 +39,19 @@ const LoginPage = () => {
         })
         try {
             await login(email.value,password.value,'admin')
+            setTimeout(() => replace('/dashboard'),500)
             Notification(isDark).fire({
                 title: 'Sesión iniciada',
                 icon: 'success',
             })
+            setIsLoading(false)
         } catch (error: any) {
             Notification(isDark).fire({
                 title: error.response.data.message,
                 icon: 'error',
             })
+            setIsLoading(false)
         }
-        setIsLoading(false)
-        replace('/dashboard')
     }
     return (
         <AuthLayout
