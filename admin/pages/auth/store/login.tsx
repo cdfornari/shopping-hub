@@ -114,7 +114,7 @@ const LoginPage = () => {
                     </Button>
                 </Card.Body>
                 <Card.Footer>
-                    <NextLink href='/auth/store/register' passHref prefetch>
+                    <NextLink href='/auth/store/register' passHref>
                         <Link>
                             Registra tu tienda aquí
                         </Link>

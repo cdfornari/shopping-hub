@@ -63,11 +63,22 @@ export const AuthProvider: FC<Props> = ({children}) => {
     const registerStore = async(
         {email,logo,name,password,phoneNumber,rif}: RegisterDto
     ) => {
-        const { data } = await api.post<{token: string}>(
-            '/stores/register', {name, email, password,phoneNumber,rif,logo}
+        const formData = new FormData();
+        formData.append('email', email);
+        formData.append('image', logo);
+        formData.append('name', name);
+        formData.append('password', password);
+        formData.append('phoneNumber', phoneNumber);
+        formData.append('rif', rif);
+        await api.post<void>(
+            '/stores/register',
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
         );
-        const { token } = data;
-        Cookies.set('token', token);
     }
 
     const logout = () => {
