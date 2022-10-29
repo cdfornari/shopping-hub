@@ -18,7 +18,7 @@ export class StoresService {
   ) {}
 
   async create(createStoreDto: CreateStoreDto, imagePath: string) {
-    if(await this.storeModel.findOne({dni: createStoreDto.rif})) throw new BadRequestException('rif ya registrado');
+    if(await this.storeModel.findOne({rif: createStoreDto.rif})) throw new BadRequestException('rif ya registrado');
     if(await this.storeModel.findOne({phoneNumber: createStoreDto.phoneNumber})) throw new BadRequestException('telefono ya registrado');
     try {
       const { email, password, ...storeData } = createStoreDto;
