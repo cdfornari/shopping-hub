@@ -1,2 +1,2 @@
-export type ValidRoles = 'ADMIN' | 'CLIENT' | 'BRAND' | 'SUPER-ADMIN';
-export const ValidRolesArray: ValidRoles[] = ['ADMIN', 'CLIENT', 'BRAND', 'SUPER-ADMIN'];
+export type ValidRoles = 'ADMIN' | 'CLIENT' | 'STORE' | 'SUPER-ADMIN';
+export const ValidRolesArray: ValidRoles[] = ['ADMIN', 'CLIENT', 'STORE', 'SUPER-ADMIN'];
