@@ -1,19 +1,22 @@
 export interface Product {
     _id: string;
+    title: string;
     description: string;
     image: string;
-    stock: number;
     price: number;
-    sizes: Size[];
-    slug: string;
-    tags: string[];
-    title: string;
-    type: Type;
+    comparativePrice?: number;
+    sizes?: {
+        size: Size;
+        stock: number;
+    }[];
+    shoeSizes?: {
+        size: number;
+        stock: number;
+    }[];
+    category: Category;
     gender: Gender;
-    createdAt?: string;
-    updatedAt?: string;
 }
 
 export type Size = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|'XXXL'|'UNI';
-export type Type = 'tops'|'bottoms'|'shoes'|'accessories';
-export type Gender = 'men'|'women'|'kid'|'unisex';
+export type Category = 'tops'|'bottoms'|'shoes'|'accessories'|'underwear'|'pijamas';
+export type Gender = 'men'|'women'|'kids'|'unisex';
