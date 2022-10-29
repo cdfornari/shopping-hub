@@ -3,6 +3,6 @@ export interface RegisterDto {
     email: string;
     password: string;
     rif: string;
-    logo: string;
+    logo: File;
     phoneNumber: string;
 }

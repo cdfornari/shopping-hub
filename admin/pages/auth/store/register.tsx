@@ -1,5 +1,6 @@
-import { useContext, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import { Button, Card, Input, Link, Loading, Radio, Spacer, Text, useTheme } from '@nextui-org/react'
 import { AuthLayout } from '../../../layouts'
 import { ThemeSwitcher } from '../../../components/ThemeSwitcher';
@@ -11,8 +12,11 @@ import { Box } from '../../../components/containers';
 const RegisterPage = () => {
     const {isDark} = useTheme()
     const {registerStore} = useContext(AuthContext)
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [file,setFile] = useState<File>();
     const [isLoading,setIsLoading] = useState(false)
     const [rifType,setRifType] = useState('')
+    const {replace} = useRouter()
     const {allowSubmit,parsedFields} = useForm([
         {
             name: 'email',
@@ -49,7 +53,6 @@ const RegisterPage = () => {
             errorMessage: '12345678-9',
             initialValue: '',
         },
-
     ])
     const [email,password,name,phoneNumber,rif] = parsedFields;
     const handleSubmit = async() => {
@@ -65,20 +68,23 @@ const RegisterPage = () => {
                 password: password.value,
                 name: name.value,
                 rif: rifType + '-' + rif.value,
-                logo: '',
-                phoneNumber: '',
+                logo: file!,
+                phoneNumber: phoneNumber.value,
             })
+            setTimeout(() => replace('/'),500)
             Notification(isDark).fire({
                 title: 'Tu tienda se registró correctamente, espera aprobación de los administradores',
                 icon: 'success',
+                timer: 5000,
             })
+            setIsLoading(false)
         } catch (error: any) {
             Notification(isDark).fire({
                 title: error.response.data.message,
                 icon: 'error',
             })
+            setIsLoading(false)
         }
-        setIsLoading(false)
     }
     return (
         <AuthLayout
@@ -145,6 +151,7 @@ const RegisterPage = () => {
                     <Input
                         labelPlaceholder='Número de teléfono'
                         type='tel'
+                        maxLength={11}
                         value={phoneNumber.value}
                         onChange={(e) => phoneNumber.setValue(e.target.value)}
                         helperText={phoneNumber.message}
@@ -178,6 +185,7 @@ const RegisterPage = () => {
                         <Input
                             labelPlaceholder='Rif'
                             type='text'
+                            maxLength={10}
                             value={rif.value}
                             onChange={(e) => rif.setValue(e.target.value)}
                             helperText={rif.message}
@@ -189,20 +197,27 @@ const RegisterPage = () => {
                             clearable
                         />
                     </Box>
-                    <Input
+                    <input
                         type='file'
-                        label='Logo'
-                        css={{
-                            my: '-$12',
+                        ref={fileInputRef}
+                        onChange={e => setFile(e.target.files?.[0])}
+                        accept='image/*'
+                        style={{
+                            display: 'none'
                         }}
                     />
                     <Button
+                        flat
+                        css={{mt: '-$5'}}
+                        onClick={() => fileInputRef.current?.click()}
+                        color={file ? 'success' : 'primary'}
+                    >
+                        Sube tu logo
+                    </Button>
+                    <Button
                         size='lg'
                         onPress={handleSubmit}
-                        css={{
-                            mt: '$5',
-                        }}
-                        disabled={!allowSubmit || rifType === '' || isLoading}
+                        disabled={!allowSubmit || rifType === '' || isLoading || !file}
                     >
                         {!isLoading ? 'Registrarse' : <Loading type='points' />}
                     </Button>
