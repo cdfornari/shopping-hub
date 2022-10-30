@@ -43,13 +43,23 @@ export class StoresService {
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
     const { user,token } = await this.authService.login({email, password});
-    const store = await this.storeModel.findOne({"user._id" : user.id})
+    const store = await this.storeModel.findOne({"user._id": user.id})
     .populate('user', '-password -__v')
     .select('-__v')
     .lean();
     if(!store) throw new NotFoundException('tienda no encontrada')
+    delete store.user;
     return {
-      user: store,
+      user: {
+        name: store.name, 
+        logo: store.logo,
+        phoneNumber: store.phoneNumber,
+        rif: store.rif,
+        products: store.products,
+        email: user.email,
+        role: user.role,
+        isActive: user.isActive,
+      },
       token
     };
   }

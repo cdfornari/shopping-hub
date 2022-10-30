@@ -1,9 +1,8 @@
-import { Store } from '../../models/Store';
 import { User } from '../../models/User';
 import { AuthState } from './';
 
 type AuthAction =
-|{ type: '[AUTH] Login', payload: User|Store }
+|{ type: '[AUTH] Login', payload: User }
 |{ type: '[AUTH] Logout' };
 
 export const authReducer = (state: AuthState, action: AuthAction) => {

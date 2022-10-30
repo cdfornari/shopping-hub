@@ -44,14 +44,22 @@ export class AdminService {
   }
 
   async validate(userToValidate: User) {
-    const store = await this.storeModel.findOne({"user._id" : userToValidate.id})
-    .populate('user', '-password -__v')
-    .select('-__v')
-    .lean();
-    if(store) {
+    if(userToValidate.role === 'STORE') {
+      const stores = await this.storeModel.find();
+      const store = stores.find(store => store.user == userToValidate._id);
+      if(!store) throw new UnauthorizedException('tienda no encontrada');
       return {
-        user: store,
-        token: this.authService.renewToken(userToValidate._id)
+        user: {
+          name: store.name, 
+          logo: store.logo,
+          phoneNumber: store.phoneNumber,
+          rif: store.rif,
+          products: store.products,
+          email: userToValidate.email,
+          role: userToValidate.role,
+          isActive: userToValidate.isActive,
+        },
+        token: (await this.authService.renewToken(userToValidate)).token
       }
     }else{
       const user = await this.userModel.findById(userToValidate._id);
@@ -59,7 +67,7 @@ export class AdminService {
       throw new UnauthorizedException('usuario no encontrado');
       return {
         user,
-        token: this.authService.renewToken(userToValidate._id)
+        token: (await this.authService.renewToken(userToValidate)).token
       }
     }
   }

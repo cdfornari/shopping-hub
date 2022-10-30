@@ -209,7 +209,7 @@ const RegisterPage = () => {
                     <Button
                         flat
                         css={{mt: '-$5'}}
-                        onClick={() => fileInputRef.current?.click()}
+                        onPress={() => fileInputRef.current?.click()}
                         color={file ? 'success' : 'primary'}
                     >
                         Sube tu logo

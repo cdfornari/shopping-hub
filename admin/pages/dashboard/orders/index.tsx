@@ -1,14 +1,6 @@
+import { Text } from '@nextui-org/react';
 import { DashboardLayout } from '../../../layouts/DashboardLayout';
-import { Box, Flex } from '../../../components/containers';
-import TableInfo from "../../../components/table/index"
-
-const columns = [
-  { name: "CLIENTE", uid: "logo" },
-  { name: "Nro. Productos", uid: "name" },
-  { name: "Precio Total", uid: "rif" },
-  { name: "STATUS", uid: "status" },
-  { name: "ACTIONS", uid: "actions" },
-];
+import { Box } from '../../../components/containers';
 
 const OrdersPage = () => {
   return (
@@ -16,11 +8,11 @@ const OrdersPage = () => {
         title='Tiendas'
         description='Pagina administrativa de Tienda'
     >
-        <h1>Tienda</h1>
+        <Text h1>Órdenes</Text>
         <Box
           css = {{width: '100%', display: 'table'}} 
         >
-          <TableInfo columns = { columns } url = {`/dashboard/order/${1}`} />
+          
         </Box>
     </DashboardLayout>
   )

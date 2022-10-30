@@ -34,14 +34,14 @@ const Home: NextPage = () => {
           <Button
             flat
             size='lg'
-            onClick={() => push('/auth/store/register')}
+            onPress={() => push('/auth/store/register')}
           >
             Postúlate
           </Button>
           <Button
             flat
             size='lg'
-            onClick={() => push('/auth/store/login')}
+            onPress={() => push('/auth/store/login')}
           >
             Inicia sesión
           </Button>
@@ -59,7 +59,7 @@ const Home: NextPage = () => {
           <Button
             flat
             size='lg'
-            onClick={() => push('/auth/admin/login')}
+            onPress={() => push('/auth/admin/login')}
           >
             Inicia sesión
           </Button>
