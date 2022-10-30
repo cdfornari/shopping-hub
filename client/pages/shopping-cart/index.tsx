@@ -30,7 +30,7 @@ const CartPage = () => {
                 </Grid>
                 <Grid xs={ 12 } sm={ 5 }  css={{height: "50%"}}>
                     <Card>
-                        <Card.Header>
+                        <Card.Header css={{ py: "$0" }}>
                           <Text h2>Orden</Text>
                         </Card.Header>
                         <Card.Divider />

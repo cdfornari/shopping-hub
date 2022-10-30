@@ -1,4 +1,4 @@
-import { Grid, Text, Card, Spacer, Button, Row, Input } from '@nextui-org/react';
+import { Grid, Text, Card, Spacer, Button, Input } from '@nextui-org/react';
 import { ShopLayout } from '../../layouts';
 
 const CheckoutPage = () => {
@@ -8,27 +8,39 @@ const CheckoutPage = () => {
             <Text h2>CheckOut</Text>
             <Grid.Container gap={2} justify="center">
                 <Grid xs={12} sm={ 7 } direction="column">
+                    <Spacer y={1} />
                     <Input
-                        label='Dirección'
+                        labelPlaceholder='Dirección'
                         fullWidth
+                        clearable
+                        bordered
                     />
+                    <Spacer y={2} />
 
                     <Input
-                        label='Estado'
+                        labelPlaceholder='Estado'
                         fullWidth
+                        clearable
+                        bordered
                     />
+                    <Spacer y={2} />
 
                     <Input
-                        label='Ciudad'
+                        labelPlaceholder='Ciudad'
                         fullWidth
+                        clearable
+                        bordered
                     />
-
+                    <Spacer y={2} />
                     <Input
-                        label='Codigo Confirmación'
+                        labelPlaceholder='Codigo Confirmación'
                         fullWidth
+                        clearable
+                        bordered
+                        type={'text'}
                     />
 
-                    <Spacer y={5} />
+                    <Spacer y={3} />
                     <Button>
                         Confirmar Compra    
                     </Button>
