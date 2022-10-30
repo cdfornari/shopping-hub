@@ -1,6 +1,6 @@
-import { Grid, Text, Card, Spacer, Button, Row } from '@nextui-org/react';
+import { Grid, Text, Card, Spacer, Button, Row, Link } from '@nextui-org/react';
 import { ShopLayout } from '../../layouts';
-
+import NextLink from 'next/link';
 import { useContext, useEffect } from 'react';
 //import { CartContext } from '../../context';
 import { CartList, OrderSummary } from '../../components/cart';
@@ -39,12 +39,14 @@ const CartPage = () => {
                             <Card.Divider />
                             <Card.Footer >
                               <Row justify="center">
-                              <Button 
-                                    color="secondary"
-                                    href='/checkout/address'
-                                >
-                                    Checkout
-                                </Button>
+                                <NextLink href={"/checkout"} passHref >
+                                  <Link>
+                                    <Button color="secondary" >
+                                          Checkout
+                                    </Button>
+                                  </Link>
+                                </NextLink>
+                                
                               </Row>
                             </Card.Footer>
                         </Card.Body>
