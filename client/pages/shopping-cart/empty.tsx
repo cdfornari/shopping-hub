@@ -12,11 +12,7 @@ const EmptyPage = () => {
             alignContent='center'
             alignItems='center'
             justify='center'
-            css={{height: "90vh"}}
-            // justifyContent='center' 
-            // alignItems='center' 
-            // height='calc(100vh - 200px)'
-            // sx={{ flexDirection: { xs: 'column', sm: 'row' }}}
+            css={{height:'calc(100vh - 200px)'}}
         >
 
 

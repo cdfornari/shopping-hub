@@ -44,8 +44,8 @@ export const CartList: FC<Props> = ({ editable = false }) => {
                         </Grid>
                         <Grid xs={7}>
                             <Container display='flex' direction='column'>
-                                <Text h1>{ product.title }</Text>
-                                <Text h1>Talla: <strong>{ product.size }</strong></Text>
+                                <Text size={"$2xl"}>{ product.title }</Text>
+                                <Text size={"$2xl"}>Talla: <strong>{ product.size }</strong></Text>
 
                                 {
                                     editable 
@@ -57,14 +57,14 @@ export const CartList: FC<Props> = ({ editable = false }) => {
                                         />
                                     )
                                     : (
-                                        <Text h5>{ product.quantity } { product.quantity > 1 ? 'productos':'producto' }</Text>
+                                        <Text size={"$2xl"}>{ product.quantity } { product.quantity > 1 ? 'productos':'producto' }</Text>
                                     )
                                 }
                                 
                             </Container>
                         </Grid>
                         <Grid xs={2} direction='column' alignItems='center'>
-                            <Text h5>{ `$${ product.price }` }</Text>
+                            <Text size={"$2xl"}>{ `$${ product.price }` }</Text>
                             
                             {
                                 editable && (
@@ -81,7 +81,7 @@ export const CartList: FC<Props> = ({ editable = false }) => {
                     </Grid.Container>
                 ))
             } */}
-            <Grid.Container key={ 2} css={{ mb: 1 }} gap={ 2 }>
+            <Grid.Container key={ 2} css={{ mb: 1 }} gap={ 1 }>
                 <Grid xs={3}>
                 {/* TODO: llevar a la página del producto */}
                     <NextLink href={`/`} passHref>
@@ -95,9 +95,9 @@ export const CartList: FC<Props> = ({ editable = false }) => {
                     </NextLink>
                 </Grid>
                 <Grid xs={7}>
-                    <Container display='flex' direction='column'>
-                        <Text h3>{ "Camisa Epica de Stranger Things" }</Text>
-                        <Text h3>Talla: <strong>{ "L" }</strong></Text>
+                    <Container display='flex' direction='column' justify='center'>
+                        <Text size={"$2xl"}>{ "Camisa Epica de Stranger Things" }</Text>
+                        <Text size={"$2xl"}>Talla: <strong>{ "L" }</strong></Text>
                         {
                             editable 
                             ? (
@@ -109,15 +109,15 @@ export const CartList: FC<Props> = ({ editable = false }) => {
                             )
                             : (
                                 // <Text h5>{ product.quantity } { product.quantity > 1 ? 'productos':'producto' }</Text>
-                                <Text h5>{ "Cantidad = 5" }</Text>
+                                <Text size={"$2xl"}>{ "Cantidad = 5" }</Text>
                             )
                         }
                                 
                     </Container>
                 </Grid>
 
-                <Grid xs={2} direction='column' alignItems='center'>
-                        <Text h4>{ `$${ 50 }` }</Text>
+                <Grid xs={2} direction='column' alignItems='center' justify='center'>
+                        <Text size={"$2xl"}>{ `$${ 50 }` }</Text>
                             
                             {
                                 editable && (
@@ -134,7 +134,7 @@ export const CartList: FC<Props> = ({ editable = false }) => {
                     </Grid> 
             </Grid.Container>   
 
-            <Grid.Container key={ 2} css={{ mb: 1 }} gap={ 2 }>
+            <Grid.Container key={ 2} css={{ mb: 1 }} gap={ 1 }>
                 <Grid xs={3}>
                 {/* TODO: llevar a la página del producto */}
                     <NextLink href={`/`} passHref>
@@ -148,9 +148,9 @@ export const CartList: FC<Props> = ({ editable = false }) => {
                     </NextLink>
                 </Grid>
                 <Grid xs={7}>
-                    <Container display='flex' direction='column'>
-                        <Text h3>{ "Bella Modelo solo para ti" }</Text>
-                        <Text h3>Talla: <strong>{ "XHOT" }</strong></Text>
+                    <Container display='flex' direction='column' justify='center'>
+                        <Text size={"$2xl"} >{ "Bella Modelo solo para ti" }</Text>
+                        <Text size={"$2xl"}>Talla: <strong>{ "XHOT" }</strong></Text>
                         {
                             editable 
                             ? (
@@ -162,15 +162,15 @@ export const CartList: FC<Props> = ({ editable = false }) => {
                             )
                             : (
                                 // <Text h5>{ product.quantity } { product.quantity > 1 ? 'productos':'producto' }</Text>
-                                <Text h5>{ "Cantidad = 1" }</Text>
+                                <Text size={"$2xl"}>{ "Cantidad = 1" }</Text>
                             )
                         }
                                 
                     </Container>
                 </Grid>
 
-                <Grid xs={2} direction='column' alignItems='center'>
-                        <Text h4>{ `$${ 50 }` }</Text>
+                <Grid xs={2} direction='column' alignItems='center' justify='center'>
+                        <Text size={"$2xl"}>{ `$${ 50 }` }</Text>
                             
                             {
                                 editable && (
