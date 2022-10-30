@@ -45,8 +45,10 @@ export class AdminService {
 
   async validate(userToValidate: User) {
     if(userToValidate.role === 'STORE') {
-      const stores = await this.storeModel.find();
-      const store = stores.find(store => store.user == userToValidate._id);
+      const store = await this.storeModel.findOne({user : userToValidate.id})
+      .populate('user', '-password -__v')
+      .select('-__v')
+      .lean();
       if(!store) throw new UnauthorizedException('tienda no encontrada');
       return {
         user: {

@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { AuthService } from 'src/auth/auth.service';
 import { LoginDto } from 'src/auth/dto/login.dto';
 import { User } from 'src/auth/entities/user.entity';
@@ -74,14 +74,14 @@ export class ClientsService {
   }
 
   async validate(user: User) {
-    const client = this.clientModel.find({"user._id" : user.id})
+    const client = await this.clientModel.findOne({user: user.id})
     .populate('user', '-password -__v')
     .select('-__v')
     .lean();
     if(!client) throw new NotFoundException('cliente no encontrado')
     return {
       client,
-      token: this.authService.renewToken(user._id)
+      token: (await this.authService.renewToken(user)).token
     }
   }
 

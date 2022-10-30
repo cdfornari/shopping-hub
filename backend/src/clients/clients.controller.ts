@@ -23,7 +23,7 @@ export class ClientsController {
   }
 
   @Post('renew')
-  @Auth()
+  @Auth('CLIENT')
   validate(
     @ReqUser() user: User
   ) {
