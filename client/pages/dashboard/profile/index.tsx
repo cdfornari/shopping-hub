@@ -1,6 +1,9 @@
-import { Card, Col, Grid, Row, Spacer, Text } from '@nextui-org/react'
+import { Card, Col, Grid, Row, Spacer, Text, Button, User, Input, Link, Container, Avatar } from '@nextui-org/react';
 import React, { FC } from 'react'
 import { Client } from '../../../models/Client'
+import { Box } from '../../../../admin/components/containers/Box';
+import NextLink from 'next/link'
+import Image from 'next/image';
 
 const img = "https://i.pravatar.cc/400?u=a042581f4e29026024d"
 //Usuario de prueba
@@ -20,51 +23,50 @@ const myUser: Client = {
 
 export const ProfilePage: FC<Client> = ({user}) => {
   return (
-    <Grid.Container gap={1} justify="flex-start">
-        <Grid css={{marginInline: 'auto'}} xs={11} sm={3}>
-          <Card isPressable>
-            <Card.Body css={{ p: 0 }}>
-              <Card.Image
-                src={img}
-                objectFit="cover"
-                width="100%"
-                height={300}
-              />
-            </Card.Body>
-            <Card.Footer css={{ }}>
-            <Col>
-            <Row wrap="wrap" justify="space-between" align="center">
-                <Text b>Name</Text>
-                <Text css={{ color: "$accents7", fontWeight: "$semibold", fontSize: "1.2 rem" }}>
-                  {myUser.fullName}
-                </Text>
-              </Row>
-              <Spacer y={1}></Spacer>
-              <Row wrap="wrap" justify="space-between" align="center">
-                <Text b>Email</Text>
-                <Text css={{ color: "$accents7", fontWeight: "$semibold", fontSize: "1.2 rem" }}>
-                  {myUser.user.email}
-                </Text>
-              </Row>
-              <Spacer y={1}></Spacer>
-              <Row wrap="wrap" justify="space-between" align="center">
-                <Text b>DNI</Text>
-                <Text css={{ color: "$accents7", fontWeight: "$semibold", fontSize: "1.2 rem" }}>
-                  {myUser.dni}
-                </Text>
-              </Row>
-              <Spacer y={1}></Spacer>
-              <Row wrap="wrap" justify="space-between" align="center">
-                <Text b>Phone number</Text>
-                <Text css={{ color: "$accents7", fontWeight: "$semibold", fontSize: "1.2 rem" }}>
-                  {myUser.phoneNumber}
-                </Text>
-              </Row>
-            </Col>
-            </Card.Footer>
-          </Card>
+    <>
+    <Container css={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '70%', paddingBlock: '30px' }}>
+      <Card css={{paddingInline: '25px'}} variant="shadow">
+      <Text h3 css={{marginBlock: '25px', alignSelf: 'center'}}>Account profile</Text>
+      <Container css={{display: 'flex', justifyContent: 'center'}}>
+        <Avatar
+            src="https://i.pravatar.cc/150?u=a04258114e29026702d"
+            css={{ size: "$30" }}
+          />
+      </Container>
+      <Grid.Container gap={2} justify="center">
+        <Grid xs={12} sm={6}>
+          <Input bordered color="primary" label="Name" initialValue={myUser.fullName} fullWidth size='xl'></Input>
         </Grid>
-    </Grid.Container>
+        <Grid xs={12} sm={6}>
+          <Input bordered color="primary" label="Email" initialValue={myUser.user.email} fullWidth size='xl'></Input>
+        </Grid>
+      </Grid.Container>
+      <Spacer y={1}></Spacer>
+      <hr style={{height: '1px', width: '100%'}}></hr>
+        <Grid.Container gap={2} justify="center">
+          <Grid xs={12} sm={6}>
+            <Input bordered color="primary" label="DNI" initialValue={myUser.dni} fullWidth size='xl'></Input>
+          </Grid>
+          <Grid xs={12} sm={6}>
+            <Input bordered color="primary" label="Phone number" initialValue={myUser.phoneNumber} fullWidth size='xl'></Input>
+          </Grid>
+        </Grid.Container>
+      <Spacer y={1}></Spacer>
+      <hr style={{height: '1px', width: '100%'}}></hr>
+      <Button css={{alignSelf: 'center', marginBlock: '20px'}} shadow>Editar</Button>
+      <Spacer y={1}></Spacer>
+      <Row css={{justifyContent: 'space-between', alignItems: 'center', paddingBlock: '10px'}}>
+        <Container>
+          <Text h4>Delete account</Text>
+          <Text>Quitara todo</Text>
+        </Container>
+        <Button >Delete</Button>
+      </Row>
+      <Spacer y={1}></Spacer>
+      <hr style={{height: '1px', width: '100%'}}></hr>
+      </Card>
+    </Container>
+  </>
   )
 }
 
