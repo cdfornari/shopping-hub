@@ -1,86 +1,17 @@
-import { FC, useContext } from 'react';
+import { FC } from 'react';
 import NextLink from 'next/link';
 import { Grid, Button, Link, Text, Card, Container } from '@nextui-org/react';
 import { ItemCounter } from '../ui/ItemCounter';
-// import { ItemCounter } from '../ui';
-// import { CartContext } from '../../context';
-// import { ICartProduct, IOrderItem } from '../../interfaces';
 
 
 
 interface Props {
     editable?: boolean;
-    //products?: IOrderItem[];
 }
 
 export const CartList: FC<Props> = ({ editable = false }) => {
-
-    //const { cart, updateCartQuantity, removeCartProduct } = useContext(CartContext);
-
-    // const onNewCartQuantityValue = (product: ICartProduct, newQuantityValue: number) => {
-    //     product.quantity = newQuantityValue;
-    //     updateCartQuantity( product );
-    // }
-
-    //const productsToShow = products ? products : cart;
-
-
     return (
         <>
-            {/* {
-                productsToShow.map( (product: any) => (
-                    <Grid.Container key={ product.slug + product.size } css={{ mb: 1 }} gap={ 2 }>
-                        <Grid xs={3}>
-                            {/* TODO: llevar a la página del producto *} 
-                            <NextLink href={`/product/${ product.slug }`} passHref>
-                                <Link>
-                                    <Card>
-                                        <Card.Image 
-                                            src={`/products/${ product.image }`}
-                                        />
-                                    </Card>
-                                </Link>
-                            </NextLink>
-                        </Grid>
-                        <Grid xs={7}>
-                            <Container display='flex' direction='column'>
-                                <Text size={"$2xl"}>{ product.title }</Text>
-                                <Text size={"$2xl"}>Talla: <strong>{ product.size }</strong></Text>
-
-                                {
-                                    editable 
-                                    ? (
-                                        <ItemCounter 
-                                            count={0}
-                                            maxValue={ 10 }
-                                            //onChange = { (value: number) => updateProductQuantity({...product, quantity: value} as iCartProduct) }
-                                        />
-                                    )
-                                    : (
-                                        <Text size={"$2xl"}>{ product.quantity } { product.quantity > 1 ? 'productos':'producto' }</Text>
-                                    )
-                                }
-                                
-                            </Container>
-                        </Grid>
-                        <Grid xs={2} direction='column' alignItems='center'>
-                            <Text size={"$2xl"}>{ `$${ product.price }` }</Text>
-                            
-                            {
-                                editable && (
-                                    <Button 
-                                    light color="error" auto
-                                    size={'sm'}
-                                        //onClick={ () => removeCartProduct( product as ICartProduct ) }
-                                    >
-                                    Delete
-                                </Button>
-                                )
-                            }
-                        </Grid>
-                    </Grid.Container>
-                ))
-            } */}
             <Grid.Container key={ 2} css={{ mb: 1 }} gap={ 1 }>
                 <Grid xs={3}>
                 {/* TODO: llevar a la página del producto */}
@@ -108,7 +39,6 @@ export const CartList: FC<Props> = ({ editable = false }) => {
                                 />
                             )
                             : (
-                                // <Text h5>{ product.quantity } { product.quantity > 1 ? 'productos':'producto' }</Text>
                                 <Text size={"$2xl"}>{ "Cantidad = 5" }</Text>
                             )
                         }
@@ -161,14 +91,12 @@ export const CartList: FC<Props> = ({ editable = false }) => {
                                 />
                             )
                             : (
-                                // <Text h5>{ product.quantity } { product.quantity > 1 ? 'productos':'producto' }</Text>
                                 <Text size={"$2xl"}>{ "Cantidad = 1" }</Text>
                             )
                         }
                                 
                     </Container>
                 </Grid>
-
                 <Grid xs={2} direction='column' alignItems='center' justify='center'>
                         <Text size={"$2xl"}>{ `$${ 50 }` }</Text>
                             

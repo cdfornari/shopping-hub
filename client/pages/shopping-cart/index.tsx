@@ -1,25 +1,10 @@
-import { Grid, Text, Card, Spacer, Button, Row, Link } from '@nextui-org/react';
+import { Grid, Text, Card, Button, Row, Link } from '@nextui-org/react';
 import { ShopLayout } from '../../layouts';
 import NextLink from 'next/link';
-import { useContext, useEffect } from 'react';
-//import { CartContext } from '../../context';
 import { CartList, OrderSummary } from '../../components/cart';
-import { useRouter } from 'next/router';
 
 const CartPage = () => {
 
-    //const { isLoaded, cart } = useContext( CartContext );
-    const router = useRouter();
-
-    // useEffect(() => {
-    //   if ( isLoaded && cart.length === 0 ){
-    //     router.replace('/cart/empty');
-    //   }
-    // }, [ isLoaded, cart, router ])
-    
-    // if ( !isLoaded || cart.length === 0 ) {
-    //     return (<></>);
-    // }
 
     return (
         <ShopLayout title='Carrito - 3' description={'Carrito de compras de la tienda'}>
