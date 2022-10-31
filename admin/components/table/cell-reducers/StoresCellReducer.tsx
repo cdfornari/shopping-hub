@@ -10,7 +10,7 @@ interface Row {
   active: boolean;
 }
 
-export const storesCellReducer = (row: Row, columnKey: string) => {
+export const StoresCellReducer = (row: Row, columnKey: string) => {
   switch (columnKey) {
     case "logo":
       return (

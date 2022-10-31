@@ -75,9 +75,9 @@ export const SidebarWrapper = () => {
                   {
                      user?.role === 'SUPER-ADMIN' && (
                         <SidebarItem
-                           isActive={router.pathname === '/dashboard/admins'}
+                           isActive={router.pathname === '/dashboard/admin'}
                            title="Administradores"
-                           href="/dashboard/admins"
+                           href="/dashboard/admin"
                            icon={<RiAdminFill/>}
                         />
                      )
