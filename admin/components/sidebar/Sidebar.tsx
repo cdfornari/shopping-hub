@@ -39,7 +39,7 @@ export const SidebarWrapper = () => {
                   <SidebarItem
                      title="Inicio"
                      isActive={router.pathname === '/dashboard'}
-                     href="/"
+                     href="/dashboard"
                      icon={<AiTwotoneHome/>}
                   />
                   <SidebarItem
