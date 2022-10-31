@@ -5,31 +5,35 @@ import { DashboardLayout } from '../../../layouts/DashboardLayout';
 import { Box } from '../../../components/containers';
 import { TableWrapper } from '../../../components/table';
 import { fetcher } from '../../../api/fetcher';
-import { UserProps } from '../../../models/User';
-import { AdminCellReducer } from '../../../components/table/cell-reducers/AdminCellReducer';
+import { ClientsCellReducer } from '../../../components/table/cell-reducers/ClientsCellReducer';
+import { Client } from '../../../models/Client';
 
 const columns = [
+  { label: "Nombre", uid: "fullName" },
   { label: "Email", uid: "email" },
+  { label: "Cedula", uid: "dni" },
+  { label: "Telefono", uid: "phoneNumber" },
   { label: "Status", uid: "active" },
   { label: "Acciones", uid: "actions" },
 ];
 
-const AdminPage = () => {
-  const {data,error} = useSWR<UserProps[]>('admin', fetcher);
-  const users = useMemo(() => (
-    data?.map((user,i) => ({
+const ClientsPage = () => {
+  const {data,error} = useSWR<Client[]>('clients', fetcher);
+  const clients = useMemo(() => (
+    data?.map((client,i) => ({
       id: i,
-      active: user.isActive,
-      ...user
+      active: client.user.isActive,
+      email: client.user.email,
+      ...client
     }))
   ),[data])
   if(error) return <Text>Error</Text>
   return (
     <DashboardLayout 
-      title='Administradores'
-      description='tabla de administradores'
+      title='Clientes'
+      description='tabla de clientes'
     >
-      <Text h1>Administradores</Text>
+      <Text h1>Clientes</Text>
       {
         data ? (
           data.length > 0 ? (
@@ -38,16 +42,16 @@ const AdminPage = () => {
             >
                 <TableWrapper
                     columns={columns}
-                    rows={users!}
-                    cellReducer={AdminCellReducer}
+                    rows={clients!}
+                    cellReducer={ClientsCellReducer}
                 />
             </Box>
-          ) : <Text>No hay administradores</Text>
+          ) : <Text>No hay clientes</Text>
         ) : <Loading/>
       }
     </DashboardLayout>
   )
 }
 
-export default AdminPage
+export default ClientsPage
 

@@ -27,7 +27,7 @@ export const SidebarWrapper = () => {
             boxSizing: 'border-box'
          }}
       >
-         { collapsed && <Sidebar.Overlay onClick={()=>setCollapsed(prev => !prev)}/>}
+         {collapsed && <Sidebar.Overlay onClick={()=>setCollapsed(prev => !prev)}/>}
 
          <Sidebar collapsed={collapsed}>
             <Flex
