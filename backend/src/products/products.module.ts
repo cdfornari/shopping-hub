@@ -20,6 +20,7 @@ import { UploadsModule } from 'src/uploads/uploads.module';
     UploadsModule
   ],
   controllers: [ProductsController],
-  providers: [ProductsService]
+  providers: [ProductsService],
+  exports: [MongooseModule,ProductsService]
 })
 export class ProductsModule {}

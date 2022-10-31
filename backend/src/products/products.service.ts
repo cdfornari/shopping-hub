@@ -50,6 +50,7 @@ export class ProductsService {
   async findAll() {
     try {
       const products = await this.productModel.find()
+      .populate('store')
       .select('-__v') 
       .lean();
       return products;
@@ -60,8 +61,8 @@ export class ProductsService {
 
   async findOne(id: string) {
     const product = await this.productModel.findById(id)
+    .populate('store')
     .select('-__v') 
-    .lean();
     if(!product) throw new NotFoundException('producto no encontrado')
     return product;
   }
