@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 import { api } from '../../api/api';
 import { authReducer,AuthContext } from './';
 import { User } from '../../models/User';
-import { RegisterDto } from '../../dtos/register.dto';
+import { RegisterAdmin, RegisterDto } from '../../dtos/register.dto';
 
 export interface AuthState {
     isLoggedIn: boolean;
@@ -74,6 +74,24 @@ export const AuthProvider: FC<Props> = ({children}) => {
             }
         );
     }
+
+    const registerAdmin = async(
+        {email,password}: RegisterAdmin
+    ) => {
+        const formData = new FormData();
+        formData.append('email', email);
+        formData.append('password', password);
+        await api.post<void>(
+            './create',
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
+        );
+    }
+
     const logout = () => {
         Cookies.remove('token');
         dispatch({
@@ -84,7 +102,7 @@ export const AuthProvider: FC<Props> = ({children}) => {
         validateToken();
     }, [])
     return (
-        <AuthContext.Provider value={{...state,login,registerStore,logout}}>
+        <AuthContext.Provider value={{...state,login,registerStore, registerAdmin, logout}}>
             {children}
         </AuthContext.Provider>
     )

@@ -49,7 +49,7 @@ export const AdminCreatePage = () => {
             })
             setTimeout(() => replace('/'),500)
             Notification(isDark).fire({
-                title: 'Tu tienda se registró correctamente, espera aprobación de los administradores',
+                title: 'El administrador se registró correctamente',
                 icon: 'success',
                 timer: 5000,
             })
@@ -59,14 +59,15 @@ export const AdminCreatePage = () => {
                 title: error.response.data.message,
                 icon: 'error',
             })
+            console.log('error', error.response.data);
             setIsLoading(false)
         }
     }
 
     return (
     <DashboardLayout 
-    title='Tiendas'
-    description='Pagina administrativa de Tienda'
+    title='Administradores'
+    description='Pagina administrativa de Administradores'
 >
     <Text h1>Órdenes</Text>
         <Container css={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh'}}>
