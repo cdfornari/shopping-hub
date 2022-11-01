@@ -24,7 +24,7 @@ export const DashboardLayout: FC<Props> = ({children,title,description}) => {
           }}
         >
           <SidebarWrapper />
-          <Box css={{overflow: 'hidden', height: '100%'}}>
+          <Box css={{overflow: 'hidden', height: '100%', width: '100%'}}>
             <Flex
               css={{
                   'gap': '$8',
