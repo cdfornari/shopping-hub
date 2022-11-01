@@ -102,7 +102,7 @@ const DetailsBrandsPage: FC<Props>= ( {store} ) => {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const { token } = ctx.req.cookies;
-  const { id } = ctx.params as {id: string}; 
+  const { id = '' } = ctx.params as {id: string}; 
   const {data: store} = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/stores/${id}`,
     {
@@ -117,7 +117,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     return{
       redirect: {
         destination: '/404',
-        permanent: false,
+        permanent: false
       }
     }
   }
