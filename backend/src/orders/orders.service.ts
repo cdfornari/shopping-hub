@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { User } from 'src/auth/entities/user.entity';
 import { Client } from 'src/clients/entities/client.entity';
+import { ExchangesService } from 'src/exchanges/exchanges.service';
 import { Product } from 'src/products/entities/product.entity';
 import { ProductsService } from 'src/products/products.service';
 import { Size } from 'src/products/types/size';
@@ -15,11 +16,14 @@ export class OrdersService {
 
   constructor(
     private readonly productsService: ProductsService,
+    private readonly exchangesService: ExchangesService,
     @InjectModel(Client.name) private readonly clientModel: Model<Client>,
     @InjectModel(Order.name) private readonly orderModel: Model<Order>,
   ) {}
 
-  async create(createOrderDto: CreateOrderDto, user: User) {
+  async create(
+    createOrderDto: CreateOrderDto, user: User
+  ) {
     let total = 0;
     let productsDB: {
       product: Product & {_id: Types.ObjectId;}
@@ -30,17 +34,9 @@ export class OrdersService {
     createOrderDto.products.forEach(
       async ({product,quantity,size,shoeSize}) => {
         const productDB = await this.productsService.findOne(product);
-        if(productDB.category === 'shoes') {
+        if(productDB.category === 'shoes'){
           if(!shoeSize) throw new BadRequestException('Se necesita talla de zapato');
-          const productSize = productDB.shoeSizes.find(sizeDB => sizeDB.size === shoeSize);
-          if(!productSize) throw new BadRequestException('Talla de zapato no disponible');
-          if(productSize.stock < quantity) throw new BadRequestException('No hay suficiente stock');
-        }else{
-          if(!size) throw new BadRequestException('Se necesita talla');
-          const productSize = productDB.sizes.find(sizeDB => sizeDB.size === size);
-          if(!productSize) throw new BadRequestException('Talla no disponible');
-          if(productSize.stock < quantity) throw new BadRequestException('No hay suficiente stock');
-        }
+        }else if(!size) throw new BadRequestException('Se necesita talla');
         total += productDB.price * quantity;
         productsDB.push({
           product: productDB,
@@ -50,7 +46,8 @@ export class OrdersService {
         });
       }
     )
-    if(createOrderDto.paymentMethod === 'pago-movil') total *= 1.05;
+    if(createOrderDto.paymentMethod === 'pago-movil') 
+    total *= await this.exchangesService.getBolivarRate();;
     const client = await this.clientModel.findOne({user: user.id});
     if(!client) throw new BadRequestException('Cliente no encontrado');
     try {
@@ -59,27 +56,13 @@ export class OrdersService {
         total,
         client: client.id
       })
-      productsDB.forEach(async({product,quantity,shoeSize,size})=>{
-        if(product.category === 'shoes') {
-          const productSize = product.shoeSizes.map(
-            sizeDB => sizeDB.size === shoeSize ? {...sizeDB,stock: sizeDB.stock - quantity} : sizeDB
-          );
-          product.shoeSizes = productSize;
-        }else{
-          const productSizes = product.sizes.map(
-            sizeDB => sizeDB.size === size ? {...sizeDB,stock: sizeDB.stock - quantity} : sizeDB
-          );
-          product.sizes = productSizes;
-        }
-        await product.save();
-      })
       return {
         ok: true,
         order
       }
     } catch (error) {
       throw new InternalServerErrorException(error);
-    }
+    } 
   }
 
   async findAll() {

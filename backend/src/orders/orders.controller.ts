@@ -16,7 +16,9 @@ export class OrdersController {
     @Body() createOrderDto: CreateOrderDto,
     @ReqUser() user: User
   ) {
-    return this.ordersService.create(createOrderDto,user);
+    return this.ordersService.create(
+      createOrderDto,user
+    );
   }
 
   @Get()
