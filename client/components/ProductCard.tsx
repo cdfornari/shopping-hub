@@ -1,19 +1,27 @@
-import { Card, Col, Container, Grid, Row, Text } from '@nextui-org/react'
-import { Rating } from 'react-simple-star-rating'
+import { FC } from 'react'
+import { useRouter } from 'next/router'
+import { Card, Col, Grid, Text } from '@nextui-org/react'
+import { Product } from '../models'
 
-export const ProductCard = () => {
+interface Props {
+  product: Product
+}
+
+export const ProductCard: FC<Props> = ({product}) => {
+  const {push} = useRouter()
   return (
     <Card
       isHoverable
       isPressable
+      onPress={() => push(`/products/${product._id}`)}
     >
       <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
         <Col>
           <Text size={12} weight="bold" transform="uppercase" color="#9E9E9E">
-            Stranger Things
+            {product.store.name}
           </Text>
           <Text h3 color='$accents4'>
-            Hellfire Club x Metallica Raglan Shirt
+            {product.title}
           </Text>
         </Col>
       </Card.Header>
@@ -21,7 +29,7 @@ export const ProductCard = () => {
         css={{p: '0'}}
       >
         <Card.Image
-          src="https://netflix-shop.imgix.net/products/HFC-MET-RAG-1_1032x.jpg"
+          src={product.image}
           objectFit='cover'
           width="100%"
           height="100%"
@@ -45,42 +53,46 @@ export const ProductCard = () => {
               fontWeight: "$semibold",
               fontSize: "$sm",
             }}>
-              Stranger Things
+              {product.store.name}
             </Text>
             <Text css={{
               transformOrigin: "left",
               fontWeight: "$bold",
               fontSize: "$md",
             }}>
-              Hellfire Club x Metallica Raglan Shirt
+              {product.title}
             </Text>
           </Grid>
           <Grid xs={4} direction='column'>
-            <div style={{
-              display: 'flex'
-            }}>
-              <Text css={{
-                textDecorationLine: "line-through",
-                fontWeight: "$semibold",
-                fontSize: "14px",
-                color: "$accents3",
-              }}>
-                $35.00
-              </Text>
-              <Text css={{
-                ml: "$4",
-                color: "$success",
-                fontSize: "14px",
-                fontWeight: "$semibold",
-              }}>
-                -20%
-              </Text>
-            </div>
+            {
+              product.comparativePrice > product.price && (
+                <div style={{
+                  display: 'flex'
+                }}>
+                  <Text css={{
+                    textDecorationLine: "line-through",
+                    fontWeight: "$semibold",
+                    fontSize: "14px",
+                    color: "$accents3",
+                  }}>
+                    ${product.comparativePrice.toFixed(2)}
+                  </Text>
+                  <Text css={{
+                    ml: "$4",
+                    color: "$success",
+                    fontSize: "14px",
+                    fontWeight: "$semibold",
+                  }}>
+                    -{((product.comparativePrice-product.price)*100/product.comparativePrice).toFixed(2)}%
+                  </Text>
+                </div>
+              )
+            }
             <Text css={{
               fontSize: "18px",
               fontWeight: "$bold",
             }}>
-              $28.00
+              ${product.price.toFixed(2)}
             </Text>
           </Grid>
         </Grid.Container>

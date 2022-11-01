@@ -11,26 +11,26 @@ export const shoppingCartReducer = (state: ShoppingCart, action: cartAction) => 
         case 'SET_CART':
             return {
                 ...state,
-                cart: action.payload
+                products: action.payload
             };
         case `UPDATE_PRODUCT_QUANTITY`:
             return {
                 ...state,
-                cart: state.products.map(product => 
+                products: state.products.map(product => 
                     product._id === action.payload._id && product.size === action.payload.size
                     ? action.payload : product)
             };
         case `REMOVE_PRODUCT`:
             return {
                 ...state,
-                cart: state.products.filter(product =>
+                products: state.products.filter(product =>
                     product._id !== action.payload._id || product.size !== action.payload.size
                 )
             };
         case 'DELETE_CART':
             return {
                 ...state,
-                cart: []
+                products: []
             };
         default:
             return state;
