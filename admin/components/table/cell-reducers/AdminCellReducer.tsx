@@ -26,7 +26,7 @@ export const AdminCellReducer = (row: Row, columnKey: string) => {
       )
     case "actions": 
       return <TableActions
-        url={`/dashboard/stores/${row._id}`}
+        url={`/dashboard/admin/${row._id}`}
         onDelete={() => console.log()}
       />
     default:
