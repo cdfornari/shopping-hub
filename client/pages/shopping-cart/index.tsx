@@ -1,8 +1,9 @@
 import { useContext } from 'react';
 import { ShoppingCartContext } from '../../context/shopping-cart';
 import { ShopLayout } from '../../layouts';
-import CartListPage from '../../components/cart/PageCart';
 import EmptyPage from '../../components/cart/EmptyCart';
+import CartListPage from '../../components/cart/PageCart';
+
 
 const CartPage = () => {
     const { products } = useContext( ShoppingCartContext );
@@ -11,7 +12,6 @@ const CartPage = () => {
             {
                 products.length === 0 ? <EmptyPage /> : <CartListPage products={ products }/>
             }
-            
         </ShopLayout>
             
     )
