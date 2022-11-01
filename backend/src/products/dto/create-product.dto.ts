@@ -1,10 +1,7 @@
-import { Type } from 'class-transformer';
-import { IsArray, IsIn, IsNumber, IsObject, IsOptional, IsString, Min, MinLength, ValidateNested } from 'class-validator';
+import { IsArray, IsIn, IsNumber, IsOptional, IsString, IsUrl, Max, Min, MinLength } from 'class-validator';
 import { Category, ValidCategories } from '../types/category';
 import { Gender, ValidGenders } from '../types/gender';
-import { Size } from '../types/size';
-import { ShoeSizeDto } from './shoe-size.dto';
-import { SizeDto } from './size.dto';
+import { Size, ValidSizes } from '../types/size';
 
 export class CreateProductDto {
 
@@ -33,18 +30,21 @@ export class CreateProductDto {
     @IsIn(ValidGenders)
     gender: Gender;
 
-    @IsArray()
-    @IsOptional()
-    @IsObject({ each: true })
-    @ValidateNested({ each: true })
-    @Type(() => SizeDto)
-    sizes?: {size: Size, stock: number}[];
+    @IsString()
+    @IsUrl()
+    image: string;
 
     @IsArray()
     @IsOptional()
-    @IsObject({ each: true })
-    @ValidateNested({ each: true })
-    @Type(() => ShoeSizeDto)
+    @IsString({ each: true })
+    @IsIn(ValidSizes, { each: true })
+    sizes?: Size[];
+
+    @IsArray()
+    @IsOptional()
+    @IsNumber({}, { each: true })
+    @Min(6, { each: true })
+    @Max(13, { each: true })
     shoeSizes?: {size: number, stock: number}[];
     
 }
