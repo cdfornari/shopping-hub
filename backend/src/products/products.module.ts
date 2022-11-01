@@ -5,7 +5,6 @@ import { ProductsController } from './products.controller';
 import { Product, ProductSchema } from './entities/product.entity';
 import { AuthModule } from 'src/auth/auth.module';
 import { StoresModule } from 'src/stores/stores.module';
-import { UploadsModule } from 'src/uploads/uploads.module';
 
 @Module({
   imports: [
@@ -16,8 +15,7 @@ import { UploadsModule } from 'src/uploads/uploads.module';
       }
     ]),
     AuthModule,
-    StoresModule,
-    UploadsModule
+    StoresModule
   ],
   controllers: [ProductsController],
   providers: [ProductsService],
