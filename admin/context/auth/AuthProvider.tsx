@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 import { api } from '../../api/api';
 import { authReducer,AuthContext } from './';
 import { User } from '../../models/User';
-import { RegisterAdmin, RegisterDto } from '../../dtos/register.dto';
+import { RegisterDto } from '../../dtos/register.dto';
 
 export interface AuthState {
     isLoggedIn: boolean;
@@ -76,17 +76,14 @@ export const AuthProvider: FC<Props> = ({children}) => {
     }
 
     const registerAdmin = async(
-        {email,password}: RegisterAdmin
+        {email,password}: RegisterDto
     ) => {
-        const formData = new FormData();
-        formData.append('email', email);
-        formData.append('password', password);
         await api.post<void>(
-            './create',
-            formData,
+            '/admin/create',
+            {email: email, password: password},
             {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    Authorization: `Bearer ${Cookies.get('token')}`
                 }
             }
         );

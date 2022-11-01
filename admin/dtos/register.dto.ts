@@ -6,8 +6,3 @@ export interface RegisterDto {
     logo: File;
     phoneNumber: string;
 }
-
-export interface RegisterAdmin {
-    email: string,
-    password: string,
-}

@@ -46,8 +46,12 @@ export const AdminCreatePage = () => {
             await registerAdmin({
                 email: email.value,
                 password: password.value,
-            })
-            setTimeout(() => replace('/'),500)
+                logo: new File([],''),
+                name: '',
+                phoneNumber: '',
+                rif: '',
+            });
+            setTimeout(() => replace('/dashboard'),500)
             Notification(isDark).fire({
                 title: 'El administrador se registró correctamente',
                 icon: 'success',
@@ -59,7 +63,7 @@ export const AdminCreatePage = () => {
                 title: error.response.data.message,
                 icon: 'error',
             })
-            console.log('error', error.response.data);
+            console.log('error', error.response.data.message);
             setIsLoading(false)
         }
     }
@@ -69,7 +73,7 @@ export const AdminCreatePage = () => {
     title='Administradores'
     description='Pagina administrativa de Administradores'
 >
-    <Text h1>Órdenes</Text>
+    <Text h1>Crear administradores</Text>
         <Container css={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh'}}>
             <Card
                 css={{
@@ -123,9 +127,6 @@ export const AdminCreatePage = () => {
                         {!isLoading ? 'Registrarse' : <Loading type='points' />}
                     </Button>
                 </Card.Body>
-                <Card.Footer css={{display: 'flex', jc: 'center', ai: 'center'}}>
-                    <ThemeSwitcher/>
-                </Card.Footer>
             </Card>
         </Container>
 </DashboardLayout>

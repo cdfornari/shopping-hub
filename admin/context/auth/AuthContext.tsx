@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { RegisterDto, RegisterAdmin } from '../../dtos/register.dto';
+import { RegisterDto } from '../../dtos/register.dto';
 import { User } from '../../models/User';
 
 interface ContextProps {
@@ -7,7 +7,7 @@ interface ContextProps {
     user?: User;
     login: (email: string, password: string, type: 'admin'|'stores') => void;
     registerStore: (dto: RegisterDto) => void;
-    registerAdmin: (dto: RegisterAdmin) => void;
+    registerAdmin: (dto: RegisterDto) => void;
     logout: () => void;
 }
 
