@@ -7,7 +7,7 @@ const Home: NextPage = () => {
   return (
     <ShopLayout
       title='Home'
-      description='This is the home page'
+      description='Shopping Hub - best place to buy clothing'
     >
       <Grid.Container gap={4} css={{w:'100vw', px: '$24'}}>
         <Grid xs={12} sm={6} md={4}>

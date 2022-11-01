@@ -27,7 +27,7 @@ export const SidebarWrapper = () => {
             boxSizing: 'border-box'
          }}
       >
-         { collapsed && <Sidebar.Overlay onClick={()=>setCollapsed(prev => !prev)}/>}
+         {collapsed && <Sidebar.Overlay onClick={()=>setCollapsed(prev => !prev)}/>}
 
          <Sidebar collapsed={collapsed}>
             <Flex
@@ -39,7 +39,7 @@ export const SidebarWrapper = () => {
                   <SidebarItem
                      title="Inicio"
                      isActive={router.pathname === '/dashboard'}
-                     href="/"
+                     href="/dashboard"
                      icon={<AiTwotoneHome/>}
                   />
                   <SidebarItem
@@ -75,9 +75,9 @@ export const SidebarWrapper = () => {
                   {
                      user?.role === 'SUPER-ADMIN' && (
                         <SidebarItem
-                           isActive={router.pathname === '/dashboard/admins'}
+                           isActive={router.pathname === '/dashboard/admin'}
                            title="Administradores"
-                           href="/dashboard/admins"
+                           href="/dashboard/admin"
                            icon={<RiAdminFill/>}
                         />
                      )

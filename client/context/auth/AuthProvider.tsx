@@ -21,36 +21,35 @@ interface Props {
 
 export const AuthProvider: FC<Props> = ({children}) => {
     const [state,dispatch] = useReducer(authReducer, initialState);
-
     const validateToken = async () => {
         if(!Cookies.get('token')) return;
         try {
             const { data } = await api.post<{client: Client, token: string}>(
-                '/clients/renew'
+                '/clients/renew',
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${Cookies.get('token')}`
+                    }
+                }
             )
             const { token,client } = data;
-            Cookies.set('token', token)
+            Cookies.set('token', token, { expires: 7 })
             dispatch({
                 type: '[AUTH] Login',
                 payload: client
             });
         } catch (error) {
-            console.log(error);
             Cookies.remove('token');
         }
     }
-
-    useEffect(() => {
-        validateToken();
-    }, [])
-
     const login = async(email: string, password: string) => {
         try {
             const { data } = await api.post<{client: Client, token: string}>(
                 '/clients/login', {email, password}
             );
             const { token,client } = data;
-            Cookies.set('token', token);
+            Cookies.set('token', token, { expires: 7 });
             dispatch({
                 type: '[AUTH] Login',
                 payload: client
@@ -59,7 +58,6 @@ export const AuthProvider: FC<Props> = ({children}) => {
             console.log(error);
         }
     }
-
     const register = async(
         {fullName, email, password,dni,phoneNumber}: RegisterDto
     ) => {
@@ -69,19 +67,20 @@ export const AuthProvider: FC<Props> = ({children}) => {
                 {fullName, email, password, dni, phoneNumber}
             );
             const { token } = data;
-            Cookies.set('token', token);
+            Cookies.set('token', token, { expires: 7 });
          } catch (error) {
             console.log(error)
         }
     }
-
     const logout = () => {
         Cookies.remove('token');
         dispatch({
             type: '[AUTH] Logout'
         });
     }
-
+    useEffect(() => {
+        validateToken();
+    }, [])
     return (
         <AuthContext.Provider value={{...state,login,register,logout}}>
             {children}

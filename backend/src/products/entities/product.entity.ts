@@ -65,41 +65,31 @@ export class Product extends Document {
 
     @Prop({
         type: [
-            raw({
-                size: {
-                    type: String,
-                    required: true,
-                    enum: {
-                        values: ValidSizes,
-                        message: 'Size is not valid'
-                    }
-                },
-                stock: {
-                    type: Number,
-                    default: 0
+            {
+                type: String,
+                enum: {
+                    values: ValidSizes,
+                    message: 'Size is not valid'
                 }
-            })
+            }
         ],
         default: []
     })
-    sizes?: {size: Size, stock: number}[];
+    sizes?: Size[];
 
     @Prop({
         type: [
-            raw({
-                size: {
-                    type: Number,
-                    required: true,
-                },
-                stock: {
-                    type: Number,
-                    default: 0
+            {
+                type: String,
+                enum: {
+                    values: ValidSizes,
+                    message: 'Size is not valid'
                 }
-            })
+            }
         ],
         default: []
     })
-    shoeSizes?: {size: number, stock: number}[];
+    shoeSizes?: number[];
 
 }
 

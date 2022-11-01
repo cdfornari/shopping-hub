@@ -1,18 +1,17 @@
-import { useContext, useState } from 'react';
-import NextLink from 'next/link';
-import { useRouter } from 'next/router';
-import { Button, Card, Input, Link, Loading, Spacer, Text, useTheme } from '@nextui-org/react'
-import { AuthLayout } from '../../../layouts/AuthLayout'
-import { AuthContext } from '../../../context/auth';
-import { useForm } from '../../../hooks/useForm';
-import { Notification } from '../../../notification';
-import { ThemeSwitcher } from '../../../components/navbar/ThemeSwitcher';
+import { Button, Card, Container, Input, Link, Loading, Spacer, Text, useTheme } from '@nextui-org/react'
+import React, { useContext, useState } from 'react'
+import { Box } from '../../../../components/containers'
+import { useForm } from '../../../../hooks/useForm'
+import { DashboardLayout } from '../../../../layouts'
+import { AuthLayout } from '../../../../layouts/AuthLayout';
+import { Notification } from '../../../../notification'
+import NextLink from 'next/link'
+import { ThemeSwitcher } from '../../../../components/ThemeSwitcher'
+import { AuthContext } from '../../../../context/auth'
+import { useRouter } from 'next/router'
 
-const LoginPage = () => {
-    const {isDark} = useTheme()
-    const {replace} = useRouter()
-    const {login} = useContext(AuthContext)
-    const [isLoading,setIsLoading] = useState(false)
+export const AdminCreatePage = () => {
+  
     const {allowSubmit,parsedFields} = useForm([
         {
             name: 'email',
@@ -28,8 +27,14 @@ const LoginPage = () => {
             errorMessage: 'Debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número',
             initialValue: '',
         },
-    ])
+    ]);
+
+    const {isDark} = useTheme();
     const [email,password] = parsedFields;
+    const [isLoading,setIsLoading] = useState(false)
+    const {registerAdmin} = useContext(AuthContext);
+    const {replace} = useRouter();
+
     const handleSubmit = async() => {
         setIsLoading(true)
         Notification(isDark).fire({
@@ -38,11 +43,15 @@ const LoginPage = () => {
 
         })
         try {
-            await login(email.value,password.value)
+            await registerAdmin({
+                email: email.value,
+                password: password.value
+            });
             setTimeout(() => replace('/dashboard'),500)
             Notification(isDark).fire({
-                title: 'Sesión iniciada',
+                title: 'El administrador se registró correctamente',
                 icon: 'success',
+                timer: 5000,
             })
             setIsLoading(false)
         } catch (error: any) {
@@ -50,28 +59,32 @@ const LoginPage = () => {
                 title: error.response.data.message,
                 icon: 'error',
             })
+            console.log('error', error.response.data.message);
             setIsLoading(false)
         }
     }
+
     return (
-        <AuthLayout
-            title='Login'
-            description='Login page'
-        >
+    <DashboardLayout 
+    title='Administradores'
+    description='Pagina administrativa de Administradores'
+>
+    <Text h1>Crear administradores</Text>
+        <Container css={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh'}}>
             <Card
                 css={{
-                    width: 'fit-content',
                     py: '$10',
                     px: '$7',
+                    mw: '500px'
                 }}
             >
                 <Card.Header
-                  css={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                  }}
+                    css={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}
                 >
-                    <Text h1>Iniciar Sesión</Text>
+                    <Text h2>Registra un administrador</Text>
                 </Card.Header>
                 <Card.Body css={{
                     gap: '$17',
@@ -105,25 +118,15 @@ const LoginPage = () => {
                     <Button
                         size='lg'
                         onPress={handleSubmit}
-                        css={{
-                            mt: '$5',
-                        }}
-                        disabled={!allowSubmit || isLoading}
+                        disabled={!allowSubmit}
                     >
-                        {!isLoading ? 'Iniciar Sesión' : <Loading type='points' />}
+                        {!isLoading ? 'Registrarse' : <Loading type='points' />}
                     </Button>
                 </Card.Body>
-                <Card.Footer>
-                    <NextLink href='/auth/register'>
-                        <Link>
-                            No tienes cuenta? Regístrate aquí
-                        </Link>
-                    </NextLink>
-                    <Spacer x={6} />
-                    <ThemeSwitcher/>
-                </Card.Footer>
             </Card>
-        </AuthLayout>
-    )
+        </Container>
+</DashboardLayout>
+  )
 }
-export default LoginPage
+
+export default AdminCreatePage

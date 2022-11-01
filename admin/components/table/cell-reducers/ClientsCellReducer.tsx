@@ -1,45 +1,41 @@
-import { Avatar, Badge, Text } from '@nextui-org/react';
+import { Badge, Text } from '@nextui-org/react';
 import { TableActions } from '../TableActions';
 
 interface Row {
   _id: string
-  logo: string;
-  name: string;
-  rif: string;
+  email: string;
+  dni: string;
   phoneNumber: string;
+  fullName: string;
   active: boolean;
 }
 
-export const StoresCellReducer = (row: Row, columnKey: string) => {
+export const ClientsCellReducer = (row: Row, columnKey: string) => {
   switch (columnKey) {
-    case "logo":
-      return (
-        <Avatar 
-          squared 
-          size='xl'
-          src={row.logo} 
-          bordered
-          color='gradient'
-        />
-      );
-    case "name":
+    case "email":
       return (
         <Text>
-          {row.name}
+          {row.email}
         </Text>
       );
-    case "rif":
+    case "fullName":
       return (
         <Text>
-          {row.rif}
+          {row.fullName}
+        </Text>
+      );
+    case "dni":
+      return (
+        <Text>
+          {row.dni}
         </Text>
       );
     case "phoneNumber":
-      return (
-        <Text>
-          {row.phoneNumber}
-        </Text>
-      );
+        return (
+          <Text>
+            {row.phoneNumber}
+          </Text>
+        );
     case "active":
       return( 
         <Badge 

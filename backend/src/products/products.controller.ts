@@ -1,14 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipeBuilder } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { v4 as uuid } from 'uuid';
-import { diskStorage } from 'multer';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { ReqUser } from 'src/auth/decorators/req-user.decorator';
-import { IUser } from 'src/auth/interfaces/user.interface';
 import { ParseMongoIdPipe } from '../common/pipes/ParseMongoIdPipe';
+import { User } from 'src/auth/entities/user.entity';
 
 @Controller('products')
 export class ProductsController {
@@ -18,34 +15,11 @@ export class ProductsController {
 
   @Post('create')
   @Auth('STORE')
-  @UseInterceptors(
-    FileInterceptor('image',{
-      limits: {
-        files: 1,
-      },
-      storage: diskStorage({
-        destination: './images',
-        filename: (req, file, cb) => {
-          const fileExtension = file.mimetype.split('/')[1];
-          const fileName = `${uuid()}.${fileExtension}`;
-          cb(null,fileName)
-        }
-      })
-    })
-  )
   create(
     @Body() createProductDto: CreateProductDto,
-    @ReqUser() user: IUser,
-    @UploadedFile(
-      new ParseFilePipeBuilder()
-      .addFileTypeValidator({
-        fileType: new RegExp(/(png|jpe?g)/),
-      })
-      .build()
-    ) 
-    file: Express.Multer.File
+    @ReqUser() user: User, 
   ) {
-    return this.productsService.create(createProductDto,user,file.path);
+    return this.productsService.create(createProductDto,user);
   }
 
   @Get()

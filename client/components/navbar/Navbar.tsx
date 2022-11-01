@@ -1,4 +1,4 @@
-import { Dropdown, Navbar, Spacer, Text } from '@nextui-org/react'
+import { Dropdown, Navbar, Text } from '@nextui-org/react'
 import Link from 'next/link'
 import { CartButton } from './CartButton'
 import { NavbarMenu } from './NavbarMenu'

@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import { Loading, Text } from '@nextui-org/react';
+import useSWR from 'swr';
 import { DashboardLayout } from '../../../layouts/DashboardLayout';
 import { Box } from '../../../components/containers';
 import { TableWrapper } from '../../../components/table';
-import useSWR from 'swr';
 import { fetcher } from '../../../api/fetcher';
-import { storesCellReducer } from '../../../components/table/cell-reducers/StoresCellReducer';
+import { StoresCellReducer } from '../../../components/table/cell-reducers/StoresCellReducer';
 import { Store } from '../../../models/Store';
 
 const columns = [
@@ -42,7 +42,7 @@ const StoresPage = () => {
             <TableWrapper
               columns={columns}
               rows={stores!}
-              cellReducer={storesCellReducer}
+              cellReducer={StoresCellReducer}
             />
           </Box>
         ) : <Loading/>
