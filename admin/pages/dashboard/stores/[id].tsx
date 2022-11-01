@@ -2,78 +2,91 @@ import { DashboardLayout } from '../../../layouts/DashboardLayout';
 import { Card, Grid, Image, Input, Spacer, Text, Badge, Col } from '@nextui-org/react';
 import { FC } from 'react';
 import { GetServerSideProps } from 'next'
-import { api } from '../../../api/api';
-import Cookies from 'js-cookie';
+import axios from 'axios';
+import { Store } from '../../../models/Store';
 
 interface Props{
-
+  store: Store;
 }
 
-const DetailsBrandsPage: FC<Props>= ( props ) => {
-  console.log({props})
+const DetailsBrandsPage: FC<Props>= ( {store} ) => {  
   return (
     <DashboardLayout 
         title='Detalles de la Tienda'
         description='Pagina administrativa de Tienda'
     >
-        <Text h1> { "Apa" } </Text>
+        <Text h1> { "Detalles de Tienda" } </Text>
 
         
         <Grid.Container gap={2} justify="center" >
-            <Grid alignContent='space-between'   alignItems='center' xs={ 12 } sm={ 6 }>
-              <Card>
+            <Grid alignContent='space-between'   alignItems='center' xs={ 12 } sm={ 7 }>
+              <Card isHoverable>
                 <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
                   <Col>
-                    <Text size={12} weight="bold" transform="uppercase" color="#ffffffAA">
-                      logo
+                    <Text size={12} weight="bold" transform="uppercase">
+                      LOGO
                     </Text>
                   </Col>
                 </Card.Header>
                 <Card.Divider />
                 <Card.Image 
-                  src='https://github.com/nextui-org/nextui/blob/next/apps/docs/public/nextui-banner.jpeg?raw=true'
+                  src= {store.logo}
                   objectFit="cover"
-                  width="100%"
+                  width="absolute"
                   height={340}
                   alt="Card image background"
                 />
               </Card> 
             </Grid>
 
-            <Grid xs={12} sm={ 6 } direction="column">
+            <Grid xs={12} sm={ 5 } direction="column">
                     <Spacer y={1} />
                     <Input
-                        labelPlaceholder='RIF'
+                        labelPlaceholder='Nombre'
+                        value={store.name}
                         fullWidth
                         clearable
                         bordered
+                        readOnly
+                    />
+                    <Spacer y={2} />
+                    <Input
+                        labelPlaceholder='RIF'
+                        value={store.rif}
+                        fullWidth
+                        clearable
+                        bordered
+                        readOnly
                     />
                     <Spacer y={2} />
 
                     <Input
                         labelPlaceholder='Telefono'
+                        value={store.phoneNumber}
                         fullWidth
                         clearable
                         bordered
+                        readOnly
                     />
                     <Spacer y={2} />
 
                     <Input
                         labelPlaceholder='Correo'
+                        value={store.user.email}
                         fullWidth
                         clearable
                         bordered
                         type={"email"}
+                        readOnly
                     />
                     <Spacer y={2} />
 
                     <Badge 
-                      //color={row.active ? 'success' : 'error'}
+                      color={store.user.isActive ? 'success' : 'error'}
                       variant='bordered'
                       css={{width: "100%", height: "100%"}}
                     >
-                      {/* {row.active ? 'Activo' : 'Inactivo'} */}
-                      Active
+                      {store.user.isActive ? 'Activo' : 'Inactivo'}
                     </Badge>
                 </Grid>
         </Grid.Container>
@@ -86,16 +99,34 @@ const DetailsBrandsPage: FC<Props>= ( props ) => {
 // - Only if you need to pre-render a page whose data must be fetched at request time
 
 
-export const getServerSideProps: GetServerSideProps = async ({params}) => {
-  const {id} = params as {id: string};
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  
+  const { token } = ctx.req.cookies;
+  const { id = '' } = ctx.params as {id: string}; 
+  const {data: store} = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/stores/${id}`,
+    {
+      headers: { 
+        Cookie: `token=${token};`, 
+        Authorization: `Bearer ${token}`
+      },
+    }
+  );
 
-  //const { data } = await api.get( `/stores/${id}`)
+  
 
-
+  if (!store) {
+    return{
+      redirect: {
+        destination: '/404',
+        permanent: false
+      }
+    }
+  }
 
   return {
     props: {
-      id
+      store,
     }
   }
 }
