@@ -7,6 +7,8 @@ import { ClientsModule } from './clients/clients.module';
 import { CommonModule } from './common/common.module';
 import { ProductsModule } from './products/products.module';
 import { StoresModule } from './stores/stores.module';
+import { AdminModule } from './admin/admin.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { StoresModule } from './stores/stores.module';
     CommonModule,
     ProductsModule,
     StoresModule,
+    AdminModule,
+    OrdersModule,
   ],
   controllers: [],
   providers: [],

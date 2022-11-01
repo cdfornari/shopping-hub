@@ -1,4 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipeBuilder } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { v4 as uuid } from 'uuid';
 import { StoresService } from './stores.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
@@ -10,12 +13,37 @@ import { Auth } from 'src/auth/decorators/auth.decorator';
 export class StoresController {
   constructor(private readonly storesService: StoresService) {}
 
-  @Post('/register')
-  create(@Body() createStoreDto: CreateStoreDto) {
-    return this.storesService.create(createStoreDto);
+  @Post('register')
+  @UseInterceptors(
+    FileInterceptor('image',{
+      limits: {
+        files: 1,
+      },
+      storage: diskStorage({
+        destination: './images',
+        filename: (req, file, cb) => {
+          const fileExtension = file.mimetype.split('/')[1];
+          const fileName = `${uuid()}.${fileExtension}`;
+          cb(null,fileName)
+        }
+      })
+    })
+  )
+  create(
+    @Body() createStoreDto: CreateStoreDto,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+      .addFileTypeValidator({
+        fileType: new RegExp(/(png|jpe?g)/),
+      })
+      .build()
+    ) 
+    file: Express.Multer.File
+  ) {
+    return this.storesService.create(createStoreDto,file.path);
   }
 
-  @Post('/login')
+  @Post('login')
   login(@Body() loginDto: LoginDto) {
     return this.storesService.login(loginDto);
   }

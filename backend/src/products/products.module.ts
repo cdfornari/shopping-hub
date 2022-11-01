@@ -18,6 +18,7 @@ import { StoresModule } from 'src/stores/stores.module';
     StoresModule
   ],
   controllers: [ProductsController],
-  providers: [ProductsService]
+  providers: [ProductsService],
+  exports: [MongooseModule,ProductsService]
 })
 export class ProductsModule {}

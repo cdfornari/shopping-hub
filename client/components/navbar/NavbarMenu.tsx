@@ -1,47 +1,48 @@
-import { Avatar, Dropdown, Navbar, Text } from '@nextui-org/react'
+import { useContext } from 'react';
+import { Avatar, Dropdown } from '@nextui-org/react'
+import { AiOutlineUser } from 'react-icons/ai';
+import { AuthContext } from '../../context/auth';
 
 export const NavbarMenu = () => {
+  const { user } =useContext(AuthContext);
   return (
     <Dropdown placement="bottom-right">
         <Dropdown.Trigger>
             <Avatar
                 bordered
-                zoomed
                 as="button"
                 color="gradient"
                 size="md"
-                src="https://www.tonica.la/__export/1665268080767/sites/debate/img/2022/10/08/daredevil-shehulk-serie.jpg_1037907269.jpg"
+                icon={<AiOutlineUser style={{color: 'white'}} />}
             />
         </Dropdown.Trigger>
-        <Dropdown.Menu
-            aria-label="User menu actions"
-            color="secondary"
-            onAction={(actionKey) => console.log({ actionKey })}
-        >
-            <Dropdown.Item key="profile" css={{ height: "$18" }}>
-                <Text b color="inherit" css={{ d: "flex" }}>
-                Signed in as
-                </Text>
-                <Text b color="inherit" css={{ d: "flex" }}>
-                zoey@example.com
-                </Text>
-            </Dropdown.Item>
-            <Dropdown.Item key="settings" withDivider>
-                My Settings
-            </Dropdown.Item>
-            <Dropdown.Item key="team_settings">Team Settings</Dropdown.Item>
-            <Dropdown.Item key="analytics" withDivider>
-                Analytics
-            </Dropdown.Item>
-            <Dropdown.Item key="system">System</Dropdown.Item>
-            <Dropdown.Item key="configurations">Configurations</Dropdown.Item>
-            <Dropdown.Item key="help_and_feedback" withDivider>
-                Help & Feedback
-            </Dropdown.Item>
-            <Dropdown.Item key="logout" withDivider color="error">
-                Log Out
-            </Dropdown.Item>
-        </Dropdown.Menu>
+        {
+            user ? (
+                <Dropdown.Menu
+                    aria-label="User menu actions"
+                    color="secondary"
+                >
+                    <Dropdown.Item key="profile">
+                        Mi Perfil
+                    </Dropdown.Item>
+                    <Dropdown.Item key="orders">
+                        Mis Órdenes
+                    </Dropdown.Item>
+                    <Dropdown.Item key="logout" withDivider color="error">
+                        Cerrar sesión
+                    </Dropdown.Item>
+                </Dropdown.Menu>
+            ) : (
+                <Dropdown.Menu
+                    aria-label="User menu actions"
+                    color="secondary"
+                >
+                    <Dropdown.Item key="login">
+                        Iniciar Sesión
+                    </Dropdown.Item>
+                </Dropdown.Menu>
+            )
+        }
     </Dropdown>
   )
 }

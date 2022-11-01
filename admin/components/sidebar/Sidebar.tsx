@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Sidebar } from './sidebar.styles';
 import { SidebarItem } from './SidebarItem';
@@ -9,8 +9,10 @@ import { FaShoppingCart } from 'react-icons/fa';
 import { BsFillPeopleFill,BsFillPersonFill } from 'react-icons/bs';
 import { RiAdminFill } from 'react-icons/ri';
 import { LogoutButton } from '../LogoutButton';
+import { AuthContext } from '../../context/auth';
 
 export const SidebarWrapper = () => {
+   const {user} = useContext(AuthContext);
    const router = useRouter();
    const [collapsed,setCollapsed] = useState(false)
 
@@ -25,10 +27,9 @@ export const SidebarWrapper = () => {
             boxSizing: 'border-box'
          }}
       >
-         { collapsed && <Sidebar.Overlay onClick={()=>setCollapsed(prev => !prev)}/>}
+         {collapsed && <Sidebar.Overlay onClick={()=>setCollapsed(prev => !prev)}/>}
 
          <Sidebar collapsed={collapsed}>
-
             <Flex
                direction='column'
                justify='between'
@@ -37,44 +38,54 @@ export const SidebarWrapper = () => {
                <Sidebar.Body className="body sidebar">
                   <SidebarItem
                      title="Inicio"
-                     isActive={router.pathname === '/'}
-                     href="/"
+                     isActive={router.pathname === '/dashboard'}
+                     href="/dashboard"
                      icon={<AiTwotoneHome/>}
                   />
                   <SidebarItem
-                     isActive={router.pathname === '/products'}
+                     isActive={router.pathname === '/dashboard/products'}
                      title="Productos"
-                     href="products"
+                     href="/dashboard/products"
                      icon={<FaShoppingCart/>}
                   />
+                  {
+                     user?.role === 'ADMIN' || user?.role === 'SUPER-ADMIN' && (
+                        <>
+                           <SidebarItem
+                              isActive={router.pathname === '/dashboard/orders'}
+                              title="Órdenes"
+                              href="/dashboard/orders"
+                              icon={<AiTwotoneShopping/>}
+                           />
+                           <SidebarItem
+                              isActive={router.pathname === '/dashboard/clients'}
+                              title="Clientes"
+                              href="/dashboard/clients"
+                              icon={<BsFillPeopleFill/>}
+                           />
+                           <SidebarItem
+                              isActive={router.pathname === '/dashboard/stores'}
+                              title="Tiendas"
+                              href="/dashboard/stores"
+                              icon={<AiTwotoneShop/>}
+                           />
+                        </>
+                     )
+                  } 
+                  {
+                     user?.role === 'SUPER-ADMIN' && (
+                        <SidebarItem
+                           isActive={router.pathname === '/dashboard/admin'}
+                           title="Administradores"
+                           href="/dashboard/admin"
+                           icon={<RiAdminFill/>}
+                        />
+                     )
+                  }
                   <SidebarItem
-                     isActive={router.pathname === '/orders'}
-                     title="Órdenes"
-                     href="orders"
-                     icon={<AiTwotoneShopping/>}
-                  />
-                  <SidebarItem
-                     isActive={router.pathname === '/clients'}
-                     title="Clientes"
-                     href="clients"
-                     icon={<BsFillPeopleFill/>}
-                  />
-                  <SidebarItem
-                     isActive={router.pathname === '/brands'}
-                     title="Marcas"
-                     href="brands"
-                     icon={<AiTwotoneShop/>}
-                  />
-                  <SidebarItem
-                     isActive={router.pathname === '/admins'}
-                     title="Administradores"
-                     href="admins"
-                     icon={<RiAdminFill/>}
-                  />
-                  <SidebarItem
-                     isActive={router.pathname === '/profile'}
+                     isActive={router.pathname === '/dashboard/profile'}
                      title="Perfil"
-                     href="profile"
+                     href="/dashboard/profile"
                      icon={<BsFillPersonFill/>}
                   />
                </Sidebar.Body>

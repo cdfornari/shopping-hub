@@ -1,4 +1,4 @@
-import { IsDate, IsEmail, IsString, Matches, MaxLength, MinLength  } from 'class-validator';
+import { IsEmail, IsString, Matches, MaxLength, MinLength  } from 'class-validator';
 
 export class CreateClientDto {
 
@@ -24,7 +24,7 @@ export class CreateClientDto {
     dni: string;
 
     @IsString()
-    @Matches(/^(414|424|412|416|426)[0-9]{7}$/g, {message: 'numero de telefono invalido'})
+    @Matches(/^(0414|0424|0412|0416|0426)[0-9]{7}$/, {message: 'numero de telefono invalido'})
     phoneNumber: string;
     
 }

@@ -4,8 +4,8 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { ReqUser } from 'src/auth/decorators/req-user.decorator';
-import { IUser } from 'src/auth/interfaces/user.interface';
 import { ParseMongoIdPipe } from '../common/pipes/ParseMongoIdPipe';
+import { User } from 'src/auth/entities/user.entity';
 
 @Controller('products')
 export class ProductsController {
@@ -17,7 +17,7 @@ export class ProductsController {
   @Auth('STORE')
   create(
     @Body() createProductDto: CreateProductDto,
-    @ReqUser() user: IUser
+    @ReqUser() user: User, 
   ) {
     return this.productsService.create(createProductDto,user);
   }

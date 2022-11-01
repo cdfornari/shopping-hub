@@ -37,6 +37,7 @@ export const DashboardLayout: FC<Props> = ({children,title,description}) => {
                   '@sm': {
                     pt: '$10',
                   },
+                  width: '100%'
               }}
               justify={'center'}
             ></Flex>

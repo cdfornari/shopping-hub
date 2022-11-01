@@ -5,19 +5,29 @@ import { ClientsService } from './clients.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { LoginDto } from '../auth/dto/login.dto';
+import { ReqUser } from 'src/auth/decorators/req-user.decorator';
+import { User } from 'src/auth/entities/user.entity';
 
 @Controller('clients')
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
 
-  @Post('/register')
+  @Post('register')
   create(@Body() createClientDto: CreateClientDto) {
     return this.clientsService.create(createClientDto);
   }
 
-  @Post('/login')
+  @Post('login')
   login(@Body() loginDto: LoginDto) {
     return this.clientsService.login(loginDto);
+  }
+
+  @Post('renew')
+  @Auth('CLIENT')
+  validate(
+    @ReqUser() user: User
+  ) {
+    return this.clientsService.validate(user);
   }
 
   @Get()
