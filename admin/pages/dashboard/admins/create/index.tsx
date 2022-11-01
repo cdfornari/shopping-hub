@@ -45,11 +45,7 @@ export const AdminCreatePage = () => {
         try {
             await registerAdmin({
                 email: email.value,
-                password: password.value,
-                logo: new File([],''),
-                name: '',
-                phoneNumber: '',
-                rif: '',
+                password: password.value
             });
             setTimeout(() => replace('/dashboard'),500)
             Notification(isDark).fire({
