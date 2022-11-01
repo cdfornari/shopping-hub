@@ -7,7 +7,7 @@ import { useState } from 'react';
 const CheckoutPage = () => {
     const {allowSubmit,parsedFields} = useForm([
         {
-          name: 'direction',
+          name: 'address',
           validate: (value: string) => value.length >= 3,
           validMessage: 'Dirección válida',
           errorMessage: 'Dirección inválida',
@@ -28,14 +28,14 @@ const CheckoutPage = () => {
           initialValue: '',
         },
         {
-          name: 'codeConfirmed',
+          name: 'code',
           validate: (value: string) => value.length >= 3,
           validMessage: 'Codigo de confirmación válido',
           errorMessage: 'Codigo de confirmación inválido',
           initialValue: '',
         },
       ])
-    const [direction, state, city,codeConfirmed] = parsedFields;
+    const [address, state, city, code] = parsedFields;
     const [ paymentMethod, setPaymentMethod] = useState("");
     return (
         <ShopLayout title='Checkout - Order' description='Finalizar Orden'>
@@ -60,11 +60,11 @@ const CheckoutPage = () => {
                     >
                         <Input
                             labelPlaceholder='Dirección'
-                            value={direction.value}
-                            onChange={(e) => direction.setValue(e.target.value)}
-                            helperColor={direction.color}
-                            status={direction.color}
-                            color={direction.color}
+                            value={address.value}
+                            onChange={(e) => address.setValue(e.target.value)}
+                            helperColor={address.color}
+                            status={address.color}
+                            color={address.color}
                             clearable
                             bordered
                             width='50%'
@@ -102,11 +102,11 @@ const CheckoutPage = () => {
                         <Spacer y={2} />
                         <Input
                             labelPlaceholder='Codigo Confirmación'
-                            value={codeConfirmed.value}
-                            onChange={(e) => codeConfirmed.setValue(e.target.value)}
-                            helperColor={codeConfirmed.color}
-                            status={codeConfirmed.color}
-                            color={codeConfirmed.color}
+                            value={code.value}
+                            onChange={(e) => code.setValue(e.target.value)}
+                            helperColor={code.color}
+                            status={code.color}
+                            color={code.color}
                             clearable
                             bordered
                             width='50%'
@@ -128,7 +128,7 @@ const CheckoutPage = () => {
                         </Radio.Group>
                         <Spacer y={1} />
                         <Button
-                            size='xl'
+                            size='lg'
                         >
                             Confirmar Compra    
                         </Button>
