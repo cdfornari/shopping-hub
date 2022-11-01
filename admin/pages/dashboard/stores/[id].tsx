@@ -1,100 +1,119 @@
 import { DashboardLayout } from '../../../layouts/DashboardLayout';
-import { Box } from '../../../components/containers';
-import { Button, Card, Grid, Image, Input } from '@nextui-org/react';
+import { Card, Grid, Image, Input, Spacer, Text, Badge, Col } from '@nextui-org/react';
+import { FC } from 'react';
+import { GetServerSideProps } from 'next'
+import { api } from '../../../api/api';
+import Cookies from 'js-cookie';
 
-const DetailsBrandsPage = (  ) => {
+interface Props{
+
+}
+
+const DetailsBrandsPage: FC<Props>= ( props ) => {
+  console.log({props})
   return (
     <DashboardLayout 
         title='Detalles de la Tienda'
         description='Pagina administrativa de Tienda'
     >
-        <h1>Nombre Marca/Tienda/Store</h1>
+        <Text h1> { "Apa" } </Text>
 
         
-        <Grid.Container gap={2} >
-            <Grid alignContent='space-between'   alignItems='center' direction='column'>
-              <Image
-                
-                css={{border: "$background"}}
-                src="https://github.com/nextui-org/nextui/blob/next/apps/docs/public/nextui-banner.jpeg?raw=true"
-                alt="Default Image"
-                width={"50%"}
-                height={"100%"}
-
-              />
+        <Grid.Container gap={2} justify="center" >
+            <Grid alignContent='space-between'   alignItems='center' xs={ 12 } sm={ 6 }>
+              <Card>
+                <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
+                  <Col>
+                    <Text size={12} weight="bold" transform="uppercase" color="#ffffffAA">
+                      logo
+                    </Text>
+                  </Col>
+                </Card.Header>
+                <Card.Divider />
+                <Card.Image 
+                  src='https://github.com/nextui-org/nextui/blob/next/apps/docs/public/nextui-banner.jpeg?raw=true'
+                  objectFit="cover"
+                  width="100%"
+                  height={340}
+                  alt="Card image background"
+                />
+              </Card> 
             </Grid>
 
-            <Grid xs sm>
-                <Input
-                    labelPlaceholder='RIF'
-                    placeholder="RIF-Tienda"
-                    size="lg"
-                    type="text" 
-                    fullWidth
-                />
-            </Grid>
-            <Grid xs={12} sm={ 6 }>
-                <Input
-                    labelPlaceholder='Telefono'
-                    placeholder="Next UI"
-                    size="lg"
-                    type="tel"
-                    fullWidth
-                />
-            </Grid>
-            <Grid xs={12} sm={ 6 }>
-                <Input 
-                  placeholder="Status"
-                  size="lg"
-                  type="text"
-                  fullWidth
-                />
-            </Grid>
+            <Grid xs={12} sm={ 6 } direction="column">
+                    <Spacer y={1} />
+                    <Input
+                        labelPlaceholder='RIF'
+                        fullWidth
+                        clearable
+                        bordered
+                    />
+                    <Spacer y={2} />
 
-            {/* <Grid xs={12} sm={ 6 }>
-                <Input 
-                  placeholder="Next UI"
-                  size="lg"
-                  type="text"
-                  fullWidth
-                />
-            </Grid>
-            <Grid xs={12} sm={ 6 }>
-                <Input
-                  placeholder="Next UI"
-                  size="lg"
-                  fullWidth
-                />
-            </Grid>
-            
-            <Grid xs={12} sm={ 6 }>
-                <Input                        
-                  placeholder="Next UI"
-                  size="lg"
-                  type="text"
-                  fullWidth
-                />
+                    <Input
+                        labelPlaceholder='Telefono'
+                        fullWidth
+                        clearable
+                        bordered
+                    />
+                    <Spacer y={2} />
 
-            </Grid>
-            <Grid xs={12} sm={ 6 }>
-                <Input
-                  placeholder="Next UI"   
-                  size="lg" 
-                  type="text"
-                  readOnly
-                  fullWidth
-                />
-            </Grid> */}
+                    <Input
+                        labelPlaceholder='Correo'
+                        fullWidth
+                        clearable
+                        bordered
+                        type={"email"}
+                    />
+                    <Spacer y={2} />
 
+                    <Badge 
+                      //color={row.active ? 'success' : 'error'}
+                      variant='bordered'
+                      css={{width: "100%", height: "100%"}}
+                    >
+                      {/* {row.active ? 'Activo' : 'Inactivo'} */}
+                      Active
+                    </Badge>
+                </Grid>
         </Grid.Container>
-        <Box>
-            <Button type="submit" color="secondary" className="circular-btn">
-                Revisar pedido
-            </Button>
-        </Box>
         
     </DashboardLayout>
   )
+}
+
+// You should use getServerSideProps when:
+// - Only if you need to pre-render a page whose data must be fetched at request time
+
+
+export const getServerSideProps: GetServerSideProps = async ({params}) => {
+  const {id} = params as {id: string};
+
+  //const { data } = await api.get( `/stores/${id}`)
+
+  const validateToken = async () => {
+    if(!Cookies.get('token')) return;
+    try {
+        const { data } = await api.get(
+          `/stores/${id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${Cookies.get('token')}`
+                }
+            }
+        )
+        const { token } = data;
+        Cookies.set('token', token, { expires: 7 });
+    } catch (error) {
+        Cookies.remove('token');
+    }
+  }
+
+  return {
+    props: {
+      id
+    }
+  }
 }
 
 export default DetailsBrandsPage
