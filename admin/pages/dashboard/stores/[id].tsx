@@ -91,23 +91,7 @@ export const getServerSideProps: GetServerSideProps = async ({params}) => {
 
   //const { data } = await api.get( `/stores/${id}`)
 
-  const validateToken = async () => {
-    if(!Cookies.get('token')) return;
-    try {
-        const { data } = await api.get(
-          `/stores/${id}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${Cookies.get('token')}`
-                }
-            }
-        )
-        const { token } = data;
-        Cookies.set('token', token, { expires: 7 });
-    } catch (error) {
-        Cookies.remove('token');
-    }
-  }
+
 
   return {
     props: {

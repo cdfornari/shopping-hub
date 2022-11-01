@@ -19,7 +19,7 @@ const columns = [
 
 const StoresPage = () => {
   const {data,error} = useSWR<Store[]>('stores', fetcher);
-  
+
   const stores = useMemo(() => (
     data?.map((store,i) => ({
       id: i,

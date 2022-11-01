@@ -5,6 +5,7 @@ import { MdRemoveShoppingCart }  from "react-icons/md";
 
 
 const EmptyPage = () => {
+
   return (
     <ShopLayout title="Carrito vació" description="No hay artículos en el carrito de compras">
          <Grid.Container 
