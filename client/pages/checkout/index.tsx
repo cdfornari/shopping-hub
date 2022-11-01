@@ -1,9 +1,42 @@
-import { Grid, Text, Card, Spacer, Button, Input, Container } from '@nextui-org/react';
+import { Grid, Text, Card, Spacer, Button, Input, Container, Radio } from '@nextui-org/react';
 import { Box } from '../../components/containers';
+import { useForm } from '../../hooks/useForm';
 import { ShopLayout } from '../../layouts';
+import { useState } from 'react';
 
 const CheckoutPage = () => {
-
+    const {allowSubmit,parsedFields} = useForm([
+        {
+          name: 'direction',
+          validate: (value: string) => value.length >= 3,
+          validMessage: 'Dirección válida',
+          errorMessage: 'Dirección inválida',
+          initialValue: '',
+        },
+        {
+          name: 'state',
+          validate: (value: string) => value.length >= 3,
+          validMessage: 'Estado válido',
+          errorMessage: 'Estado inválido',
+          initialValue: '',
+        },
+        {
+          name: 'city',
+          validate: (value: string) => value.length >= 3,
+          validMessage: 'Ciudad válida',
+          errorMessage: 'Ciudad inválida',
+          initialValue: '',
+        },
+        {
+          name: 'codeConfirmed',
+          validate: (value: string) => value.length >= 3,
+          validMessage: 'Codigo de confirmación válido',
+          errorMessage: 'Codigo de confirmación inválido',
+          initialValue: '',
+        },
+      ])
+    const [direction, state, city,codeConfirmed] = parsedFields;
+    const [ paymentMethod, setPaymentMethod] = useState("");
     return (
         <ShopLayout title='Checkout - Order' description='Finalizar Orden'>
             <Container
@@ -27,6 +60,11 @@ const CheckoutPage = () => {
                     >
                         <Input
                             labelPlaceholder='Dirección'
+                            value={direction.value}
+                            onChange={(e) => direction.setValue(e.target.value)}
+                            helperColor={direction.color}
+                            status={direction.color}
+                            color={direction.color}
                             clearable
                             bordered
                             width='50%'
@@ -36,6 +74,11 @@ const CheckoutPage = () => {
                         <Spacer y={2} />
                         <Input
                             labelPlaceholder='Estado'
+                            value={state.value}
+                            onChange={(e) => state.setValue(e.target.value)}
+                            helperColor={state.color}
+                            status={state.color}
+                            color={state.color}
                             clearable
                             bordered
                             width='50%'
@@ -45,6 +88,11 @@ const CheckoutPage = () => {
                         <Spacer y={2} />
                         <Input
                             labelPlaceholder='Ciudad'
+                            value={city.value}
+                            onChange={(e) => city.setValue(e.target.value)}
+                            helperColor={city.color}
+                            status={city.color}
+                            color={city.color}
                             clearable
                             bordered
                             width='50%'
@@ -54,13 +102,31 @@ const CheckoutPage = () => {
                         <Spacer y={2} />
                         <Input
                             labelPlaceholder='Codigo Confirmación'
+                            value={codeConfirmed.value}
+                            onChange={(e) => codeConfirmed.setValue(e.target.value)}
+                            helperColor={codeConfirmed.color}
+                            status={codeConfirmed.color}
+                            color={codeConfirmed.color}
                             clearable
                             bordered
                             width='50%'
                             size='lg'
                             type='text'
                         />
-                        <Spacer y={3} />
+                        <Spacer y={1} />
+                        <Radio.Group
+                            label= "Metodo de Pago"
+                            value = {paymentMethod}
+                            onChange= {setPaymentMethod}
+                        >
+                            <Radio value ="pago-movil">
+                                Pago Movil
+                            </Radio>
+                            <Radio value = "zelle">
+                                Zelle
+                            </Radio>
+                        </Radio.Group>
+                        <Spacer y={1} />
                         <Button
                             size='xl'
                         >
