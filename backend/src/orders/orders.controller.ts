@@ -23,7 +23,7 @@ export class OrdersController {
 
   @Get('my-orders')
   @Auth('CLIENT')
-  findMyProducts(
+  findMyOrders(
     @ReqUser() user: User, 
   ) {
     return this.ordersService.findByUser(user);
