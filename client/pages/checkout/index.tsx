@@ -39,7 +39,7 @@ const CheckoutPage = () => {
         },
         {
           name: 'code',
-          validate: (value: string) => value.length >= 3,
+          validate: (value: string) => value.length >= 9,
           validMessage: 'Codigo de confirmación válido',
           errorMessage: 'Codigo de confirmación inválido',
           initialValue: '',
@@ -62,6 +62,7 @@ const CheckoutPage = () => {
                     city: city.value,
                     refCode: code.value,
                     paymentMethod,
+                    status: 'approved',
                     products: products.map(product => ({
                         product: product._id,
                         quantity: product.quantity,

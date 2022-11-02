@@ -100,7 +100,7 @@ export const ClientProfile: FC<Props> = ({user,title='Mi perfil', singleUser=tru
                     light
                     color='error'
                 >
-                  <NextLink href={singleUser ? '/dashboard/' : '/dashboard/clients'}>
+                  <NextLink href={singleUser ? '/' : '/dashboard/clients'}>
                         <Link>
                             Volver
                         </Link>
