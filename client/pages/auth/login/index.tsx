@@ -39,7 +39,7 @@ const LoginPage = () => {
         })
         try {
             await login(email.value,password.value)
-            setTimeout(() => replace('/dashboard'),500)
+            setTimeout(() => replace('/'),500)
             Notification(isDark).fire({
                 title: 'Sesión iniciada',
                 icon: 'success',
