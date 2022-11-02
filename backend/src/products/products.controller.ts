@@ -27,17 +27,17 @@ export class ProductsController {
     return this.productsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id', ParseMongoIdPipe) id: string) {
-    return this.productsService.findOne(id);
-  }
-
   @Get('my-products')
   @Auth('STORE')
   findMyProducts(
     @ReqUser() user: User, 
   ) {
     return this.productsService.findByUser(user);
+  }
+
+  @Get(':id')
+  findOne(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.productsService.findOne(id);
   }
 
   @Patch(':id')

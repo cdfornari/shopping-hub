@@ -81,7 +81,6 @@ export class StoresService {
     .populate('user', '-password -__v')
     .select('-__v') 
     .lean();
-    if(!store) throw new NotFoundException('tienda no encontrada')
     return store;
   }
 

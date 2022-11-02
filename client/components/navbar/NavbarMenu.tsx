@@ -44,7 +44,7 @@ export const NavbarMenu = () => {
                             <Link>
                                 Mis Órdenes
                             </Link>
-                        </NextLink> 
+                        </NextLink>
                     </Dropdown.Item>
                     <Dropdown.Item key="logout" withDivider color="error" >
                         <Button 
