@@ -71,6 +71,20 @@ export class OrdersService {
     } 
   }
 
+  async findByUser(user: User) {
+    const client = await this.clientModel.findOne({user: user.id});
+    if(!client) throw new NotFoundException('Cliente no encontrado');
+    try {
+      const products = await this.orderModel.find({client: client.id})
+      .populate('store')
+      .select('-__v') 
+      .lean();
+      return products;
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
+  }
+
   async findAll() {
     try {
       const orders = await this.orderModel.find()

@@ -45,6 +45,20 @@ export class ProductsService {
     }
   }
 
+  async findByUser(user: User) {
+    const store = await this.storeModel.findOne({user: user.id});
+    if(!store) throw new NotFoundException('Tienda no encontrada');
+    try {
+      const products = await this.productModel.find({store: store.id})
+      .populate('store')
+      .select('-__v') 
+      .lean();
+      return products;
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
+  }
+
   async findAll() {
     try {
       const products = await this.productModel.find()
