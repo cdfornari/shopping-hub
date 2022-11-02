@@ -47,7 +47,7 @@ export const ClientsCellReducer = (row: Row, columnKey: string) => {
       )
     case "actions": 
       return <TableActions
-        url={`/dashboard/stores/${row._id}`}
+        url={`/dashboard/clients/${row._id}`}
         onDelete={() => console.log()}
       />
     default:

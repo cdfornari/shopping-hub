@@ -39,7 +39,7 @@ const CheckoutPage = () => {
         },
         {
           name: 'code',
-          validate: (value: string) => value.length >= 3,
+          validate: (value: string) => value.length >= 9,
           validMessage: 'Codigo de confirmación válido',
           errorMessage: 'Codigo de confirmación inválido',
           initialValue: '',

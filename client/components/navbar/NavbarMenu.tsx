@@ -23,10 +23,18 @@ export const NavbarMenu = () => {
                     aria-label="User menu actions"
                 >
                     <Dropdown.Item key="profile">
-                        Mi Perfil
+                        <NextLink href='/profile'>
+                            <Link>
+                                Iniciar Sesión
+                            </Link>
+                        </NextLink>
                     </Dropdown.Item>
                     <Dropdown.Item key="orders">
-                        Mis Órdenes
+                        <NextLink href='/orders'>
+                            <Link>
+                                Mis Órdenes
+                            </Link>
+                        </NextLink>
                     </Dropdown.Item>
                     <Dropdown.Item key="logout" withDivider color="error">
                         Cerrar sesión

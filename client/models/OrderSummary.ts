@@ -1,4 +1,5 @@
 import { Client } from './Client';
+import { PaymentMethod, Status } from './Order';
 import { OrderProduct } from './OrderProduct';
 
 export interface Order {
@@ -12,8 +13,3 @@ export interface Order {
     products: OrderProduct[];
     client: Client;
 }
-
-export type PaymentMethod = 'pago-movil' | 'zelle';
-export const ValidPaymentMethods = ['pago-movil', 'zelle'];
-export type Status = 'pending' | 'approved' | 'shipped' | 'canceled' | 'delivered';
-export const ValidStatus = ['pending', 'approved', 'shipped', 'canceled', 'delivered'];
