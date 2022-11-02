@@ -38,7 +38,7 @@ export const ProductsCellReducer = (row: Row, columnKey: string) => {
       );
     case "store":
       return (
-        <User name={row.storeName} src={row.storeLogo}/>
+          <User name={row.storeName} src={row.storeLogo}/>
       );
     case "price":
       return(
