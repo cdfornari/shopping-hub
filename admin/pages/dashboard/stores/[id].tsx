@@ -45,7 +45,6 @@ const DetailsBrandsPage: FC<Props>= ( {store} ) => {
                         labelPlaceholder='Nombre'
                         value={store.name}
                         fullWidth
-                        clearable
                         bordered
                         readOnly
                     />
@@ -54,7 +53,6 @@ const DetailsBrandsPage: FC<Props>= ( {store} ) => {
                         labelPlaceholder='RIF'
                         value={store.rif}
                         fullWidth
-                        clearable
                         bordered
                         readOnly
                     />
@@ -64,7 +62,6 @@ const DetailsBrandsPage: FC<Props>= ( {store} ) => {
                         labelPlaceholder='Telefono'
                         value={store.phoneNumber}
                         fullWidth
-                        clearable
                         bordered
                         readOnly
                     />
@@ -74,7 +71,6 @@ const DetailsBrandsPage: FC<Props>= ( {store} ) => {
                         labelPlaceholder='Correo'
                         value={store.user.email}
                         fullWidth
-                        clearable
                         bordered
                         type={"email"}
                         readOnly
@@ -95,10 +91,6 @@ const DetailsBrandsPage: FC<Props>= ( {store} ) => {
   )
 }
 
-// You should use getServerSideProps when:
-// - Only if you need to pre-render a page whose data must be fetched at request time
-
-
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   
   const { token } = ctx.req.cookies;
@@ -112,8 +104,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     }
   );
-
-  
 
   if (!store) {
     return{
