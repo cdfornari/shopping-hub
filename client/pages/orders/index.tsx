@@ -1,12 +1,12 @@
 import { Loading, Text } from '@nextui-org/react';
-import { DashboardLayout } from '../../../layouts/DashboardLayout';
-import { Box } from '../../../components/containers';
-import useSWR from 'swr';
-import { fetcher } from '../../../api/fetcher';
 import { useMemo } from 'react';
-import { Order } from '../../../models/Order';
-import { TableWrapper } from '../../../components/table';
-import { OrdersCellReducer } from '../../../components/table/cell-reducers/OrdersCellReducer';
+import { Box } from '../../components/containers';
+import { TableWrapper } from '../../components/table';
+import { OrdersCellReducer } from '../../components/table/cell-reducers/OrdersCellReducer';
+import { ShopLayout } from '../../layouts';
+import useSWR from 'swr';
+import { fetcher } from '../../api/fetcher';
+import { Order } from '../../models/Order';
 
 const columns = [
   { label: "Cliente", uid: "orderName" },
@@ -18,7 +18,7 @@ const columns = [
 ];
 
 const OrdersPage = () => {
-  const {data,error} = useSWR<Order[]>('orders', fetcher);
+  const {data,error} = useSWR<Order[]>('/orders/my-orders', fetcher);
   console.log(data)
 
   const orders = useMemo(() => (
@@ -32,7 +32,7 @@ const OrdersPage = () => {
   if(error) return <Text>Error</Text>
 
   return (
-    <DashboardLayout 
+    <ShopLayout 
         title='Órdenes'
         description='Pagina administrativa de las Ordenes'
     >
@@ -50,7 +50,7 @@ const OrdersPage = () => {
           </Box>
         ) : <Loading/>
       }
-    </DashboardLayout>
+    </ShopLayout>
   )
 }
 

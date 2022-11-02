@@ -1,21 +1,19 @@
-import { DashboardLayout } from '../../../layouts/DashboardLayout';
 import { Dropdown, Grid, Input, Spacer, Text, Link, Container, Card } from '@nextui-org/react';
 import { GetServerSideProps } from 'next'
 import axios from 'axios';
-import { Order } from '../../../models/Order';
 import { FC } from 'react';
-import { OrderStatusReducer } from '../../../components/table/cell-reducers/OrderStatusReducer';
-import { useState } from 'react';
-import { DropDownProducts } from '../../../components/DropDownProducts';
+import { ShopLayout } from '../../layouts';
+import { Order } from '../../models/Order';
+import { OrderStatusReducer } from '../../components/table/cell-reducers/OrderStatusReducer';
+
 
 interface Props{
   order: Order;
 }
 
 const DetailsBrandsPage: FC<Props> = ( {order} ) => {
-  const [selectedProduct, setSelectedProduct] = useState(1);
   return (
-    <DashboardLayout 
+    <ShopLayout 
         title='Detalles de la Tienda'
         description='Pagina administrativa de Tienda'
     >
@@ -131,23 +129,22 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
               </Grid>
 
               <Grid xs= {12}>
-                <DropDownProducts products={ order.products }/>
+                
               </Grid>
 
             </Container>
 
 
         </Grid.Container>
-    </DashboardLayout>
+    </ShopLayout>
   )
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   
   const { token } = ctx.req.cookies;
-  const { id = '' } = ctx.params as {id: string}; 
   const {data: order} = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/orders/my-orders`,
     {
       headers: { 
         Cookie: `token=${token};`, 
