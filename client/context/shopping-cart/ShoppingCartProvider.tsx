@@ -51,6 +51,13 @@ export const ShoppingCartProvider: FC<Props> = ({children}) => {
         })
         Cookies.set('cart', JSON.stringify(state.products), {expires: 31});
     }
+
+    const clearCart = () => {
+        dispatch({
+            type: 'DELETE_CART'
+        })
+        Cookies.remove('cart');
+    }
     
     return (
         <ShoppingCartContext.Provider  
@@ -58,7 +65,8 @@ export const ShoppingCartProvider: FC<Props> = ({children}) => {
                 ...state,
                 addProductToCart,
                 updateProductQuantity,
-                removeProduct
+                removeProduct,
+                clearCart
             }}
         >
             {children}

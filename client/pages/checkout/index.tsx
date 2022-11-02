@@ -1,30 +1,40 @@
-import { Grid, Text, Card, Spacer, Button, Input, Container, Radio } from '@nextui-org/react';
+import { useRouter } from 'next/router';
+import { Grid, Text, Card, Spacer, Button, Input, Container, Radio, Loading, useTheme } from '@nextui-org/react';
+import Cookies from 'js-cookie';
 import { Box } from '../../components/containers';
 import { useForm } from '../../hooks/useForm';
 import { ShopLayout } from '../../layouts';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { ShoppingCartContext } from '../../context/shopping-cart';
+import { Notification } from '../../notification';
+import { api } from '../../api/api';
 
 const CheckoutPage = () => {
+    const {isDark} = useTheme()
+    const {push} = useRouter()
+    const {products,clearCart} = useContext(ShoppingCartContext);
+    const [isLoading,setIsLoading] = useState(false)
+    const [paymentMethod,setPaymentMethod] = useState('');
     const {allowSubmit,parsedFields} = useForm([
         {
           name: 'address',
           validate: (value: string) => value.length >= 3,
           validMessage: 'Dirección válida',
-          errorMessage: 'Dirección inválida',
+          errorMessage: 'Minimo 3 caracteres',
           initialValue: '',
         },
         {
           name: 'state',
           validate: (value: string) => value.length >= 3,
           validMessage: 'Estado válido',
-          errorMessage: 'Estado inválido',
+          errorMessage: 'Minimo 3 caracteres',
           initialValue: '',
         },
         {
           name: 'city',
           validate: (value: string) => value.length >= 3,
           validMessage: 'Ciudad válida',
-          errorMessage: 'Ciudad inválida',
+          errorMessage: 'Minimo 3 caracteres',
           initialValue: '',
         },
         {
@@ -36,7 +46,50 @@ const CheckoutPage = () => {
         },
       ])
     const [address, state, city, code] = parsedFields;
-    const [ paymentMethod, setPaymentMethod] = useState("");
+    const handleSubmit = async () => {
+        if(products.length === 0) {
+            return Notification(isDark).fire({
+                icon: 'error',
+                title: 'No hay productos en el carrito'
+            })
+        }
+        setIsLoading(true)
+        try {
+            await api.post('/orders/create', 
+                {
+                    address: address.value,
+                    state: state.value,
+                    city: city.value,
+                    refCode: code.value,
+                    paymentMethod,
+                    products: products.map(product => ({
+                        product: product._id,
+                        quantity: product.quantity,
+                        size: product.size,
+                        shoeSize: product.shoeSize
+                    }))
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${Cookies.get('token')}`
+                    }
+                }
+            )
+            setIsLoading(false)
+            Notification(isDark).fire({
+                icon: 'success',
+                title: 'Orden creada con éxito'
+            })
+            clearCart();
+            push('/orders')
+        } catch (error: any) {
+            setIsLoading(false)
+            Notification(isDark).fire({
+                icon: 'error',
+                title: error.response.data.message
+            })
+        }
+    }
     return (
         <ShopLayout title='Checkout - Order' description='Finalizar Orden'>
             <Container
@@ -64,6 +117,7 @@ const CheckoutPage = () => {
                             onChange={(e) => address.setValue(e.target.value)}
                             helperColor={address.color}
                             status={address.color}
+                            helperText={address.message}
                             color={address.color}
                             clearable
                             bordered
@@ -71,11 +125,12 @@ const CheckoutPage = () => {
                             size='lg'
                             type='text'
                         />
-                        <Spacer y={2} />
+                        <Spacer y={2.5} />
                         <Input
                             labelPlaceholder='Estado'
                             value={state.value}
                             onChange={(e) => state.setValue(e.target.value)}
+                            helperText={state.message}
                             helperColor={state.color}
                             status={state.color}
                             color={state.color}
@@ -85,12 +140,13 @@ const CheckoutPage = () => {
                             size='lg'
                             type='text'
                         />
-                        <Spacer y={2} />
+                        <Spacer y={2.5} />
                         <Input
                             labelPlaceholder='Ciudad'
                             value={city.value}
                             onChange={(e) => city.setValue(e.target.value)}
                             helperColor={city.color}
+                            helperText={city.message}
                             status={city.color}
                             color={city.color}
                             clearable
@@ -99,12 +155,13 @@ const CheckoutPage = () => {
                             size='lg'
                             type='text'
                         />
-                        <Spacer y={2} />
+                        <Spacer y={2.5} />
                         <Input
                             labelPlaceholder='Codigo Confirmación'
                             value={code.value}
                             onChange={(e) => code.setValue(e.target.value)}
                             helperColor={code.color}
+                            helperText={code.message}
                             status={code.color}
                             color={code.color}
                             clearable
@@ -129,8 +186,10 @@ const CheckoutPage = () => {
                         <Spacer y={1} />
                         <Button
                             size='lg'
+                            disabled={!allowSubmit || isLoading}
+                            onPress={handleSubmit}
                         >
-                            Confirmar Compra    
+                            {isLoading ? <Loading/> : 'Crear Orden'}   
                         </Button>
                     </Box>
                 </Grid>
@@ -147,7 +206,7 @@ const CheckoutPage = () => {
                         }}
                     >
                         <Card.Header css={{ py: "$0",d: 'flex',jc: 'center' }}>
-                          <Text h2>Pago Movil</Text>
+                          <Text h2>Pago Móvil</Text>
                         </Card.Header>
                         <Card.Body css={{ py: "$5" }} >
                             <Text>V28155389</Text>
@@ -160,8 +219,8 @@ const CheckoutPage = () => {
                             <Text h2>Zelle</Text>
                         </Card.Header>
                         <Card.Body css={{ py: "$5" }} >
-                            <Text>alejoguevarafm@gmail.com</Text>
-                            <Text>Alejandro Molina</Text>
+                            <Text>zelle@shoppinghub.com</Text>
+                            <Text>Shopping Hub</Text>
                             <Text>62,28$ </Text>
                         </Card.Body>
                     </Card>

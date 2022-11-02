@@ -49,7 +49,7 @@ const LoginPage = () => {
             Notification(isDark).fire({
                 title: error.response.data.message,
                 icon: 'error',
-            })
+            }) 
             setIsLoading(false)
         }
     }

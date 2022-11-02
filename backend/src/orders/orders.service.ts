@@ -15,8 +15,8 @@ import { Order } from './entities/order.entity';
 export class OrdersService {
 
   constructor(
-    private readonly productsService: ProductsService,
     private readonly exchangesService: ExchangesService,
+    @InjectModel(Product.name) private readonly productModel: Model<Product>,
     @InjectModel(Client.name) private readonly clientModel: Model<Client>,
     @InjectModel(Order.name) private readonly orderModel: Model<Order>,
   ) {}
@@ -24,30 +24,36 @@ export class OrdersService {
   async create(
     createOrderDto: CreateOrderDto, user: User
   ) {
-    let total = 0;
-    let productsDB: {
-      product: Product & {_id: Types.ObjectId;}
-      quantity: number,
-      size?: Size,
-      shoeSize?: number
-    }[] = [];
-    createOrderDto.products.forEach(
-      async ({product,quantity,size,shoeSize}) => {
-        const productDB = await this.productsService.findOne(product);
-        if(productDB.category === 'shoes'){
-          if(!shoeSize) throw new BadRequestException('Se necesita talla de zapato');
-        }else if(!size) throw new BadRequestException('Se necesita talla');
-        total += productDB.price * quantity;
-        productsDB.push({
-          product: productDB,
-          size,
-          shoeSize,
-          quantity
-        });
+    const productsDB = await this.productModel.find(
+      {
+        _id: {
+          '$in': createOrderDto.products.map(({product}) => product)
+        }
       }
     )
+    .populate('store', '-__v')
+    .select('-__v')
+    const products = createOrderDto.products.map((product) => {
+      const productDB = productsDB.find(({_id}) => _id.toString() === product.product.toString());
+      if(productDB.category === 'shoes'){
+        if(!product.shoeSize) throw new BadRequestException('Talla de zapato requerida');
+        if(!productDB.shoeSizes.includes(product.shoeSize)) throw new BadRequestException('Talla de zapato no disponible');
+      }else{
+        if(!product.size) throw new BadRequestException('Talla requerida');
+        if(!productDB.sizes.includes(product.size)) throw new BadRequestException('Talla no disponible');
+      }
+      return {
+        product: productDB,
+        quantity: product.quantity,
+        size: product.size,
+        shoeSize: product.shoeSize
+      }
+    });
+    let total = products.reduce((acc, {product,quantity}) => {
+      return acc + product.price * quantity
+    },0);
     if(createOrderDto.paymentMethod === 'pago-movil') 
-    total *= await this.exchangesService.getBolivarRate();;
+    total *= await this.exchangesService.getBolivarRate();
     const client = await this.clientModel.findOne({user: user.id});
     if(!client) throw new BadRequestException('Cliente no encontrado');
     try {
