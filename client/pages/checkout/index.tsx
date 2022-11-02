@@ -62,7 +62,6 @@ const CheckoutPage = () => {
                     city: city.value,
                     refCode: code.value,
                     paymentMethod,
-                    status: 'approved',
                     products: products.map(product => ({
                         product: product._id,
                         quantity: product.quantity,

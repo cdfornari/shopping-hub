@@ -18,7 +18,7 @@ const columns = [
 ];
 
 const OrdersPage = () => {
-  const {data,error} = useSWR<Order[]>('/orders/my-orders', fetcher);
+  const {data,error} = useSWR<Order[]>('orders/my-orders', fetcher);
   console.log(data)
 
   const orders = useMemo(() => (
