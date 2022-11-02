@@ -1,7 +1,8 @@
 import { useContext } from 'react';
-import { Avatar, Dropdown } from '@nextui-org/react'
+import { Avatar, Dropdown, Link } from '@nextui-org/react'
 import { AiOutlineUser } from 'react-icons/ai';
 import { AuthContext } from '../../context/auth';
+import NextLink from 'next/link';
 
 export const NavbarMenu = () => {
   const { user } =useContext(AuthContext);
@@ -20,7 +21,6 @@ export const NavbarMenu = () => {
             user ? (
                 <Dropdown.Menu
                     aria-label="User menu actions"
-                    color="secondary"
                 >
                     <Dropdown.Item key="profile">
                         Mi Perfil
@@ -35,10 +35,13 @@ export const NavbarMenu = () => {
             ) : (
                 <Dropdown.Menu
                     aria-label="User menu actions"
-                    color="secondary"
                 >
                     <Dropdown.Item key="login">
-                        Iniciar Sesión
+                        <NextLink href='/auth/login'>
+                            <Link>
+                                Iniciar Sesión
+                            </Link>
+                        </NextLink>
                     </Dropdown.Item>
                 </Dropdown.Menu>
             )

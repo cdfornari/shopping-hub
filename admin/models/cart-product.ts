@@ -1,4 +1,4 @@
-import { Product,Size } from './';
+import { Product,Size } from './product';
 
 export interface CartProduct extends Product{
     size?: Size;

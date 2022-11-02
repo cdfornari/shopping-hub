@@ -6,6 +6,7 @@ import { Order, orderSchema } from './entities/order.entity';
 import { ProductsModule } from 'src/products/products.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { ClientsModule } from 'src/clients/clients.module';
+import { ExchangesModule } from '../exchanges/exchanges.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { ClientsModule } from 'src/clients/clients.module';
     ]),
     ProductsModule,
     AuthModule,
-    ClientsModule
+    ClientsModule,
+    ExchangesModule,
   ],
   controllers: [OrdersController],
   providers: [OrdersService]

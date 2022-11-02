@@ -10,13 +10,23 @@ import { User } from 'src/auth/entities/user.entity';
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  @Post('/create')
+  @Post('create')
   @Auth('CLIENT')
   create(
     @Body() createOrderDto: CreateOrderDto,
     @ReqUser() user: User
   ) {
-    return this.ordersService.create(createOrderDto,user);
+    return this.ordersService.create(
+      createOrderDto,user
+    );
+  }
+
+  @Get('my-orders')
+  @Auth('CLIENT')
+  findMyProducts(
+    @ReqUser() user: User, 
+  ) {
+    return this.ordersService.findByUser(user);
   }
 
   @Get()

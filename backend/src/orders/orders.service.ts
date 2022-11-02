@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { User } from 'src/auth/entities/user.entity';
 import { Client } from 'src/clients/entities/client.entity';
+import { ExchangesService } from 'src/exchanges/exchanges.service';
 import { Product } from 'src/products/entities/product.entity';
 import { ProductsService } from 'src/products/products.service';
 import { Size } from 'src/products/types/size';
@@ -14,43 +15,45 @@ import { Order } from './entities/order.entity';
 export class OrdersService {
 
   constructor(
-    private readonly productsService: ProductsService,
+    private readonly exchangesService: ExchangesService,
+    @InjectModel(Product.name) private readonly productModel: Model<Product>,
     @InjectModel(Client.name) private readonly clientModel: Model<Client>,
     @InjectModel(Order.name) private readonly orderModel: Model<Order>,
   ) {}
 
-  async create(createOrderDto: CreateOrderDto, user: User) {
-    let total = 0;
-    let productsDB: {
-      product: Product & {_id: Types.ObjectId;}
-      quantity: number,
-      size?: Size,
-      shoeSize?: number
-    }[] = [];
-    createOrderDto.products.forEach(
-      async ({product,quantity,size,shoeSize}) => {
-        const productDB = await this.productsService.findOne(product);
-        if(productDB.category === 'shoes') {
-          if(!shoeSize) throw new BadRequestException('Se necesita talla de zapato');
-          const productSize = productDB.shoeSizes.find(sizeDB => sizeDB.size === shoeSize);
-          if(!productSize) throw new BadRequestException('Talla de zapato no disponible');
-          if(productSize.stock < quantity) throw new BadRequestException('No hay suficiente stock');
-        }else{
-          if(!size) throw new BadRequestException('Se necesita talla');
-          const productSize = productDB.sizes.find(sizeDB => sizeDB.size === size);
-          if(!productSize) throw new BadRequestException('Talla no disponible');
-          if(productSize.stock < quantity) throw new BadRequestException('No hay suficiente stock');
+  async create(
+    createOrderDto: CreateOrderDto, user: User
+  ) {
+    const productsDB = await this.productModel.find(
+      {
+        _id: {
+          '$in': createOrderDto.products.map(({product}) => product)
         }
-        total += productDB.price * quantity;
-        productsDB.push({
-          product: productDB,
-          size,
-          shoeSize,
-          quantity
-        });
       }
     )
-    if(createOrderDto.paymentMethod === 'pago-movil') total *= 1.05;
+    .populate('store', '-__v')
+    .select('-__v')
+    const products = createOrderDto.products.map((product) => {
+      const productDB = productsDB.find(({_id}) => _id.toString() === product.product.toString());
+      if(productDB.category === 'shoes'){
+        if(!product.shoeSize) throw new BadRequestException('Talla de zapato requerida');
+        if(!productDB.shoeSizes.includes(product.shoeSize)) throw new BadRequestException('Talla de zapato no disponible');
+      }else{
+        if(!product.size) throw new BadRequestException('Talla requerida');
+        if(!productDB.sizes.includes(product.size)) throw new BadRequestException('Talla no disponible');
+      }
+      return {
+        product: productDB,
+        quantity: product.quantity,
+        size: product.size,
+        shoeSize: product.shoeSize
+      }
+    });
+    let total = products.reduce((acc, {product,quantity}) => {
+      return acc + product.price * quantity
+    },0);
+    if(createOrderDto.paymentMethod === 'pago-movil') 
+    total *= await this.exchangesService.getBolivarRate();
     const client = await this.clientModel.findOne({user: user.id});
     if(!client) throw new BadRequestException('Cliente no encontrado');
     try {
@@ -59,26 +62,26 @@ export class OrdersService {
         total,
         client: client.id
       })
-      productsDB.forEach(async({product,quantity,shoeSize,size})=>{
-        if(product.category === 'shoes') {
-          const productSize = product.shoeSizes.map(
-            sizeDB => sizeDB.size === shoeSize ? {...sizeDB,stock: sizeDB.stock - quantity} : sizeDB
-          );
-          product.shoeSizes = productSize;
-        }else{
-          const productSizes = product.sizes.map(
-            sizeDB => sizeDB.size === size ? {...sizeDB,stock: sizeDB.stock - quantity} : sizeDB
-          );
-          product.sizes = productSizes;
-        }
-        await product.save();
-      })
       return {
         ok: true,
         order
       }
     } catch (error) {
       throw new InternalServerErrorException(error);
+    } 
+  }
+
+  async findByUser(user: User) {
+    const client = await this.clientModel.findOne({user: user.id});
+    if(!client) throw new NotFoundException('Cliente no encontrado');
+    try {
+      const products = await this.orderModel.find({client: client.id})
+      .populate('store')
+      .select('-__v') 
+      .lean();
+      return products;
+    } catch (error) {
+      throw new InternalServerErrorException(error)
     }
   }
 

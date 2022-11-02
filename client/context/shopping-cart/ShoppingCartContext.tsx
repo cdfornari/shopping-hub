@@ -5,6 +5,7 @@ interface ContextProps extends ShoppingCart{
     addProductToCart: (product: CartProduct) => void;
     updateProductQuantity: (product: CartProduct) => void;
     removeProduct: (product: CartProduct) => void;
+    clearCart: () => void;
 }
 
 export const ShoppingCartContext = createContext({} as ContextProps);

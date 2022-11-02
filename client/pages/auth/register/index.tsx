@@ -46,7 +46,7 @@ const RegisterPage = () => {
       },
       {
         name: 'dni',
-        validate: (value: string) => value.match(/^[0-9]{8}[-][0-9]{1}$/),
+        validate: (value: string) => value.match(/^[0-9]{4,8}$/),
         validMessage: 'Documento de identidad válido',
         errorMessage: 'Documento de identidad inválido',
         initialValue: '',

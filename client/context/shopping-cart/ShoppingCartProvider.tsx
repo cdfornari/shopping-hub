@@ -1,4 +1,5 @@
-import { FC, useReducer } from 'react';
+import Cookies from 'js-cookie';
+import { FC, useEffect, useReducer } from 'react';
 import { CartProduct, ShoppingCart } from '../../models';
 import { shoppingCartReducer,ShoppingCartContext } from './';
 
@@ -13,6 +14,11 @@ interface Props {
 export const ShoppingCartProvider: FC<Props> = ({children}) => {
     const [state,dispatch] = useReducer(shoppingCartReducer, initialState);
 
+    useEffect(() => {
+        const cookiesCart = Cookies.get('cart') ? JSON.parse(Cookies.get('cart')!) : [];
+        dispatch({type: 'SET_CART', payload: cookiesCart});
+    },[])
+
     const addProductToCart = (product: CartProduct) => {
         let foundProduct = false;
         const newCart = state.products.map(productInCart => {
@@ -25,6 +31,7 @@ export const ShoppingCartProvider: FC<Props> = ({children}) => {
             return productInCart;
         })
         if(!foundProduct) newCart.unshift(product)
+        Cookies.set('cart', JSON.stringify(newCart), {expires: 31});
         dispatch({
             type: 'SET_CART',
             payload: newCart
@@ -35,12 +42,21 @@ export const ShoppingCartProvider: FC<Props> = ({children}) => {
             type: 'UPDATE_PRODUCT_QUANTITY',
             payload: product
         })
+        Cookies.set('cart', JSON.stringify(state.products), {expires: 31});
     }
     const removeProduct = (product: CartProduct) => {
         dispatch({
             type: 'REMOVE_PRODUCT',
             payload: product
         })
+        Cookies.set('cart', JSON.stringify(state.products), {expires: 31});
+    }
+
+    const clearCart = () => {
+        dispatch({
+            type: 'DELETE_CART'
+        })
+        Cookies.remove('cart');
     }
     
     return (
@@ -49,7 +65,8 @@ export const ShoppingCartProvider: FC<Props> = ({children}) => {
                 ...state,
                 addProductToCart,
                 updateProductQuantity,
-                removeProduct
+                removeProduct,
+                clearCart
             }}
         >
             {children}

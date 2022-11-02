@@ -8,7 +8,7 @@ export const Notification = (isDark?: boolean) => {
         popup: 'colored-toast'
         },
         showConfirmButton: false,
-        timer: 1500,
+        timer: 2500,
         timerProgressBar: true,
         background: isDark ? '#1e1e1e' : '#fff',
         color: isDark ? '#fff' : '#000',

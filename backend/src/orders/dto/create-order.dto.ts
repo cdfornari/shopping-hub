@@ -27,10 +27,6 @@ export class CreateOrderDto {
     @MinLength(9)
     refCode: string;
 
-    @IsString()
-    @IsIn(ValidStatus)
-    status: Status;
-
     @IsArray()
     @IsObject({ each: true })
     @ValidateNested({ each: true })
