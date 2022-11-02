@@ -78,7 +78,6 @@ export class ClientsService {
     .populate('user', '-password -__v')
     .select('-__v')
     .lean();
-    if(!client) throw new NotFoundException('cliente no encontrado')
     return {
       client,
       token: (await this.authService.renewToken(user)).token

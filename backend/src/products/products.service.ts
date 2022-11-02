@@ -75,7 +75,6 @@ export class ProductsService {
     const product = await this.productModel.findById(id)
     .populate('store')
     .select('-__v') 
-    if(!product) throw new NotFoundException('producto no encontrado')
     return product;
   }
 

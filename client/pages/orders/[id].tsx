@@ -1,11 +1,11 @@
-import { Dropdown, Grid, Input, Spacer, Text, Link, Container, Card } from '@nextui-org/react';
-import { GetServerSideProps } from 'next'
-import axios from 'axios';
 import { FC } from 'react';
+import { GetServerSideProps } from 'next'
+import { Grid, Input, Spacer, Text, Link, Container, Card } from '@nextui-org/react';
+import axios from 'axios';
 import { ShopLayout } from '../../layouts';
 import { Order } from '../../models/Order';
 import { OrderStatusReducer } from '../../components/table/cell-reducers/OrderStatusReducer';
-
+import NextLink from 'next/link';
 
 interface Props{
   order: Order;
@@ -17,40 +17,29 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
         title='Detalles de la Tienda'
         description='Pagina administrativa de Tienda'
     >
-        <Text h1>Detalles de la orden</Text>
+        <Text h1 css={{ml: '$14'}}>Detalles de la orden</Text>
         <Spacer y={2} />
-        
+        <NextLink href='/profile'>
+          <Link>
+              {order.client.fullName}
+          </Link>
+        </NextLink>
         <Grid.Container gap={2} >
             <Grid direction='column' xs={12} sm={6} >
-              <Grid xs={12}>
-                  <Link href={`/dashboard/clients/${order.client._id}`}>
-                      <Input 
-                        labelPlaceholder='Cliente'
-                        value={ order.client.fullName }
-                        fullWidth
-                        bordered
-                        readOnly
-                        size="lg"
-                        type={"text"}
-                      />
-                  </Link>
-              </Grid>
-              <Spacer y={1} />
               <Grid xs={12} >
                   <Input
-                      labelPlaceholder='Dirección'
-                      value={ order.address }
-                      fullWidth
-                      bordered
-                      readOnly
-                      size="lg"
-                      type={"text"}
+                    label='Dirección'
+                    value={ order.address }
+                    fullWidth
+                    bordered
+                    readOnly
+                    size="lg"
+                    type={"text"}
                   />
               </Grid>
-              <Spacer y={1} />
               <Grid xs={12}>
                   <Input 
-                    labelPlaceholder='Estado'
+                    label='Estado'
                     value={ order.state }
                     fullWidth
                     bordered
@@ -59,10 +48,9 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
                     type={"text"}
                   />
               </Grid>
-              <Spacer y={1} />
               <Grid xs={12}>
                   <Input 
-                    labelPlaceholder='Ciudad'
+                    label='Ciudad'
                     value={ order.city }
                     fullWidth
                     bordered
@@ -76,7 +64,7 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
             <Grid direction='column' xs={12} sm={6}>              
               <Grid xs={12} >
                   <Input                        
-                    labelPlaceholder='Metodo de pago'
+                    label='Metodo de pago'
                     value={ order.paymentMethod }
                     fullWidth
                     bordered
@@ -89,7 +77,7 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
               <Spacer y={1} />
               <Grid xs={12} >
                   <Input
-                    labelPlaceholder='Código de referencia'
+                    label='Código de referencia'
                     value={ order.refCode }
                     fullWidth
                     bordered
@@ -102,7 +90,7 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
 
               <Grid xs={12}>
                   <Input
-                    labelPlaceholder='Total de la orden'
+                    label='Total de la orden'
                     value={`${ order.paymentMethod === 'zelle' ? "$": "bs"}${order.total}` }
                     fullWidth
                     bordered
@@ -141,10 +129,10 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  
+  const { id } = ctx.params as {id: string};
   const { token } = ctx.req.cookies;
   const {data: order} = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/orders/my-orders`,
+    `${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`,
     {
       headers: { 
         Cookie: `token=${token};`, 
