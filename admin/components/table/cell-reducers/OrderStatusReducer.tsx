@@ -13,7 +13,7 @@ export const OrderStatusReducer: FC<Props> = ({statusKey}) => {
             color= 'warning'
             variant='bordered'
         >
-            pending
+            Procesando
         </Badge>
       );
     case "approved":
@@ -22,7 +22,7 @@ export const OrderStatusReducer: FC<Props> = ({statusKey}) => {
             color={'success'}
             variant='bordered'
         >
-            approved
+            Aprobado
         </Badge>
       );
     case "shipped":
@@ -31,7 +31,7 @@ export const OrderStatusReducer: FC<Props> = ({statusKey}) => {
             color={ 'secondary'}
             variant='bordered'
         >
-            shipped
+            Enviado
         </Badge>
       );
     case "canceled":
@@ -40,7 +40,7 @@ export const OrderStatusReducer: FC<Props> = ({statusKey}) => {
             color={'error'}
             variant='bordered'
         >
-            canceled
+            Cancelado
         </Badge>
       );
     case "delivered":
@@ -49,7 +49,7 @@ export const OrderStatusReducer: FC<Props> = ({statusKey}) => {
             color={'primary'}
             variant='bordered'
         >
-            delivered
+            Entregado
         </Badge>
       )
     default:

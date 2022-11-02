@@ -14,6 +14,8 @@ interface Props{
 
 const DetailsBrandsPage: FC<Props> = ( {order} ) => {
   const [selectedProduct, setSelectedProduct] = useState(1);
+  console.log(order)
+  console.log(order.products)
   return (
     <DashboardLayout 
         title='Detalles de la Tienda'
@@ -120,17 +122,17 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
               </Grid>
             </Grid>
 
-            <Container >
-              <Grid xs= {12}>
+            <Container alignContent='center' alignItems='center' direction='column'>
+              <Grid xs= {12} sm={7} direction= 'column'>
                 <Card>
                   <Text h1>PEPE</Text>
                   <Card.Image 
-                    src={ order.products[0].image }
+                    src={ order.products[0].product.image }
                   />
                 </Card>
               </Grid>
 
-              <Grid xs= {12}>
+              <Grid xs= {12} sm={5} direction= 'column'>
                 <DropDownProducts products={ order.products }/>
               </Grid>
 

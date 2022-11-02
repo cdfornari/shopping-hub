@@ -2,10 +2,11 @@ import { useState, useMemo, FC } from 'react';
 import { Badge, Dropdown, Text } from "@nextui-org/react";
 import { CartProduct } from '../models/cart-product';
 import { FaShoppingCart } from 'react-icons/fa'
+import { OrderProduct } from '../models/OrderProduct';
 
 
 interface Props{
-    products: CartProduct[];
+    products:OrderProduct[];
 }
 
 export const DropDownProducts: FC<Props> = ( {products} ) => {
@@ -22,10 +23,10 @@ console.log( products )
       </Dropdown.Trigger>
       <Dropdown.Menu color="secondary" aria-label="Avatar Actions">
         {
-          products.map( ({_id, quantity}) => (
-            <Dropdown.Item key={_id} css={{ height: "$18" }}>
+          products.map( ( product ) => (
+            <Dropdown.Item key={ product._id } css={{ height: "$18" }}>
               <Text b color="inherit" css={{ d: "flex" }}>
-                {quantity}
+                {product.product.title}
               </Text>
           </Dropdown.Item>
           ))
