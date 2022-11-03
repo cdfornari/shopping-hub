@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AuthService } from 'src/auth/auth.service';
 import { LoginDto } from 'src/auth/dto/login.dto';
+import { User } from 'src/auth/entities/user.entity';
 import { UploadsService } from 'src/uploads/uploads.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
@@ -57,6 +58,14 @@ export class StoresService {
       },
       token
     };
+  }
+
+  async current(user: User) {
+    const client = await this.storeModel.findOne({user: user.id})
+    .populate('user', '-password -__v')
+    .select('-__v')
+    .lean();
+    return client
   }
 
   async findAll() {

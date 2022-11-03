@@ -1,26 +1,55 @@
+import { GetServerSideProps, NextPage } from 'next'
+import axios from 'axios';
 import { DashboardLayout } from '../../../layouts/DashboardLayout';
-import { Card, Grid, Image, Input, Spacer, Text, Badge, Col } from '@nextui-org/react';
-import { FC, useContext } from 'react';
-import { GetServerSideProps } from 'next'
 import { Store } from '../../../models/Store';
-import { AuthContext } from '../../../context/auth';
 import StoreProfile from '../../../components/profiles/StoreProfile';
 
-const ProfilePage = () => {
-    const {user} = useContext(AuthContext)
+interface Props {
+  store: Store;
+}
+
+const ProfilePage: NextPage<Props> = ({store}) => {
     return (
       <DashboardLayout 
         title='Perfil'
         description='Pagina administrativa de Tienda'
       >
         {
-          user?.role === "STORE" 
-          ?  <StoreProfile user={user}>
-             </StoreProfile>
+          store.user.role === "STORE" 
+          ?  <StoreProfile store={store}/>
           : <></>
         }
       </DashboardLayout>
     )
+}
+
+  export const getServerSideProps: GetServerSideProps = async (ctx) => {
+    const { token } = ctx.req.cookies;
+
+    try {
+      const {data: store} = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/stores/current`,
+        {
+          headers: { 
+            Cookie: `token=${token};`, 
+            Authorization: `Bearer ${token}`
+          },
+        }
+      );
+      return {
+        props: {
+          store,
+        }
+      }
+    } catch (error) {
+      return{
+        redirect: {
+          destination: '/auth/store/login',
+          permanent: false
+        }
+      }
+    }
+
   }
   
   export default ProfilePage

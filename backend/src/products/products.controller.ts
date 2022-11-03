@@ -6,6 +6,8 @@ import { Auth } from 'src/auth/decorators/auth.decorator';
 import { ReqUser } from 'src/auth/decorators/req-user.decorator';
 import { ParseMongoIdPipe } from '../common/pipes/ParseMongoIdPipe';
 import { User } from 'src/auth/entities/user.entity';
+import { Gender } from './types/gender';
+import { Category } from './types/category';
 
 @Controller('products')
 export class ProductsController {
@@ -38,6 +40,14 @@ export class ProductsController {
   @Get(':id')
   findOne(@Param('id', ParseMongoIdPipe) id: string) {
     return this.productsService.findOne(id);
+  }
+
+  @Get(':gender/:category')
+  filter(
+    @Param('gender') gender: Gender,
+    @Param('category') category: Category,
+  ) {
+    return this.productsService.filter(gender,category);
   }
 
   @Patch(':id')

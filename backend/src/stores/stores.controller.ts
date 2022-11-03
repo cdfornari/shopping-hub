@@ -8,6 +8,8 @@ import { UpdateStoreDto } from './dto/update-store.dto';
 import { LoginDto } from '../auth/dto/login.dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/ParseMongoIdPipe';
 import { Auth } from 'src/auth/decorators/auth.decorator';
+import { ReqUser } from 'src/auth/decorators/req-user.decorator';
+import { User } from 'src/auth/entities/user.entity';
 
 @Controller('stores')
 export class StoresController {
@@ -46,6 +48,14 @@ export class StoresController {
   @Post('login')
   login(@Body() loginDto: LoginDto) {
     return this.storesService.login(loginDto);
+  }
+
+  @Get('current')
+  @Auth('STORE')
+  currentStore(
+    @ReqUser() user: User
+  ) {
+    return this.storesService.current(user);
   }
 
   @Get()

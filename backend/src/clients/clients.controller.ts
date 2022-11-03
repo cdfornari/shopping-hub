@@ -30,6 +30,14 @@ export class ClientsController {
     return this.clientsService.validate(user);
   }
 
+  @Get('current')
+  @Auth('CLIENT')
+  currentClient(
+    @ReqUser() user: User
+  ) {
+    return this.clientsService.current(user);
+  }
+
   @Get()
   @Auth('ADMIN','SUPER-ADMIN')
   findAll() {

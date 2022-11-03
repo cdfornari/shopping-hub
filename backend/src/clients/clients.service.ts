@@ -84,6 +84,14 @@ export class ClientsService {
     }
   }
 
+  async current(user: User) {
+    const client = await this.clientModel.findOne({user: user.id})
+    .populate('user', '-password -__v')
+    .select('-__v')
+    .lean();
+    return client
+  }
+
   update(id: number, updateClientDto: UpdateClientDto) {
     return `This action updates a #${id} client`;
   }

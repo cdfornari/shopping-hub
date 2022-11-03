@@ -1,11 +1,15 @@
-import { useContext } from 'react'
-import { AuthContext } from '../../context/auth';
-import { Card, Input, Loading, Spacer, Text } from '@nextui-org/react';
+import { GetServerSideProps, NextPage } from 'next';
+import { Card, Input, Loading, Text } from '@nextui-org/react';
+import axios from 'axios';
 import { Box } from '../../components/containers';
 import { ShopLayout } from '../../layouts/ShopLayout';
+import { Client } from '../../models/Client';
 
-export const ProfilePage = () => {
-  const {user} = useContext(AuthContext)
+interface Props {
+  client: Client;
+}
+
+export const ProfilePage: NextPage<Props> = ({client}) => {
   return (
     <ShopLayout
       title="Perfil"
@@ -45,34 +49,34 @@ export const ProfilePage = () => {
             }}
           >
             {
-              user ? (
+              client ? (
                 <>
                   <Input
                     bordered
                     readOnly
                     labelPlaceholder="Nombre Completo" 
-                    initialValue={user?.fullName} 
+                    initialValue={client.fullName} 
                     size='lg'
                   />
                   <Input
                     bordered
                     readOnly
                     labelPlaceholder="Email" 
-                    initialValue={user?.user?.email}  
+                    initialValue={client.user.email}  
                     size='lg'
                   />
                   <Input 
                     bordered 
                     readOnly
                     labelPlaceholder="Documento de Identidad" 
-                    initialValue={user?.dni} 
+                    initialValue={client.dni} 
                     size='lg'
                   />
                   <Input 
                     bordered
                     labelPlaceholder="Número de teléfono"
                     readOnly
-                    initialValue={user?.phoneNumber} 
+                    initialValue={client.phoneNumber} 
                     size='lg'
                   />
                 </>
@@ -85,6 +89,34 @@ export const ProfilePage = () => {
       </Box>
     </ShopLayout>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { token } = ctx.req.cookies;
+  const {data: client} = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/clients/current`,
+    {
+      headers: { 
+        Cookie: `token=${token};`, 
+        Authorization: `Bearer ${token}`
+      },
+    }
+  );
+  
+  if (!client) {
+    return{
+      redirect: {
+        destination: '/auth/login',
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {
+      client,
+    }
+  }
 }
 
 export default ProfilePage

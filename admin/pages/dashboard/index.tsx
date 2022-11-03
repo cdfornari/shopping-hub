@@ -7,7 +7,7 @@ const DashboardPage = () => {
       title='Dashboard'
       description='Pagina administrativa'
     >
-      <Text h1>Home</Text>
+      <Text h1>Inicio</Text>
     </DashboardLayout>
   )
 }

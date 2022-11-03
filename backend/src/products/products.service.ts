@@ -6,6 +6,8 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
 import { Store } from 'src/stores/entities/store.entity';
 import { User } from 'src/auth/entities/user.entity';
+import { Gender, ValidGenders } from './types/gender';
+import { Category, ValidCategories } from './types/category';
 
 @Injectable()
 export class ProductsService {
@@ -77,6 +79,36 @@ export class ProductsService {
     .populate('store')
     .select('-__v') 
     return product;
+  }
+
+  async filter(gender: Gender, category: Category){
+    if(!ValidGenders.includes(gender)) throw new BadRequestException('Género no válido');
+    if(!ValidCategories.includes(category)) throw new BadRequestException('Categoría no válida')
+    const products = gender === 'kid' ? (
+      await this.productModel.find({
+        gender: gender,
+        category: category
+      })
+    ):(
+      await this.productModel.find({
+        $or: [
+          {
+            gender: gender
+          },
+          {
+            gender: 'unisex'
+          }
+        ],
+        $and: [
+          {
+            category: category
+          }
+        ]
+      })
+      .populate('store')
+      .select('-__v') 
+    )
+    return products;
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {
