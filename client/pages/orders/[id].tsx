@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import { GetServerSideProps } from 'next'
-import { Grid, Input, Spacer, Text, Link, Container, Card } from '@nextui-org/react';
+import { Grid, Input, Spacer, Text, Link, Container, Card, Divider, User } from '@nextui-org/react';
 import axios from 'axios';
 import { ShopLayout } from '../../layouts';
-import { Order } from '../../models/Order';
+import { Order } from '../../models/OrderSummary';
 import { OrderStatusReducer } from '../../components/table/cell-reducers/OrderStatusReducer';
 import NextLink from 'next/link';
 
@@ -19,13 +19,16 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
     >
         <Text h1 css={{ml: '$14'}}>Detalles de la orden</Text>
         <Spacer y={2} />
-        <NextLink href='/profile'>
-          <Link>
-              {order.client.fullName}
-          </Link>
-        </NextLink>
+
         <Grid.Container gap={2} >
             <Grid direction='column' xs={12} sm={6} >
+              <Grid xs={12}>
+                <NextLink href='/profile'>
+                  <Link>
+                    {order.client.fullName}
+                  </Link>
+                </NextLink>
+              </Grid>
               <Grid xs={12} >
                   <Input
                     label='Dirección'
@@ -106,21 +109,35 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
               </Grid>
             </Grid>
 
-            <Container >
-              <Grid xs= {12}>
-                <Card>
-                  <Text h1>PEPE</Text>
-                  <Card.Image 
-                    src={ order.products[0].image }
-                  />
+            <Grid.Container 
+              alignContent='center' 
+              alignItems='center' 
+              direction='column' 
+              gap={4} 
+              css={ { py: '$8'}}
+            >
+              <Grid xs= {12}  direction= 'column' css={{width: '100%'}}>
+                <Card >
+                  <Card.Header css={{}} >
+                    Productos:
+                  </Card.Header>
+                  <Divider />
+                  <Card.Body >
+                    {
+                      order.products.map( (prod) => (
+                        <User
+                          size="xl"
+                          src={ prod.product.image}
+                          name={prod.product.title }
+                          description= {`Cantidad: ${prod.quantity}, Talla: ${prod.size}`}
+                          css={{py: '$4'}}
+                        />
+                      ))
+                    }
+                  </Card.Body>
                 </Card>
               </Grid>
-
-              <Grid xs= {12}>
-                
-              </Grid>
-
-            </Container>
+            </Grid.Container>
 
 
         </Grid.Container>
