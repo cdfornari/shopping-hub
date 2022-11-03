@@ -29,7 +29,7 @@ export const OrdersCellReducer = (row: Row, columnKey: string) => {
     case "total":
       return (
         <Text>
-          { `${ row.paymentMethod === 'zelle' ? "$": "bs"}${row.total.toFixed(2)}`}
+          { `${ row.paymentMethod === 'zelle' ? "$": "Bs."}${row.total.toFixed(2)}`}
         </Text>
       );
     case "paymentMethod":

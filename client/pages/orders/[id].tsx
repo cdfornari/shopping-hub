@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import { GetServerSideProps } from 'next'
-import { Grid, Input, Spacer, Text, Link, Container, Card, Divider, User } from '@nextui-org/react';
+import NextLink from 'next/link';
+import { Grid, Input, Spacer, Text, Link, Card, Divider, User } from '@nextui-org/react';
 import axios from 'axios';
 import { ShopLayout } from '../../layouts';
 import { Order } from '../../models/OrderSummary';
 import { OrderStatusReducer } from '../../components/table/cell-reducers/OrderStatusReducer';
-import NextLink from 'next/link';
 
 interface Props{
   order: Order;
@@ -94,7 +94,7 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
               <Grid xs={12}>
                   <Input
                     label='Total de la orden'
-                    value={`${ order.paymentMethod === 'zelle' ? "$": "bs"}${order.total}` }
+                    value={`${ order.paymentMethod === 'zelle' ? "$": "Bs."}${order.total.toFixed(2)}` }
                     fullWidth
                     bordered
                     readOnly
