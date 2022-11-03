@@ -1,9 +1,11 @@
 import { DashboardLayout } from '../../../layouts/DashboardLayout';
-import { Card, Grid, Image, Input, Spacer, Text, Badge, Col } from '@nextui-org/react';
+import { Card, Grid, Image, Input, Spacer, Text, Badge, Link } from '@nextui-org/react';
 import { FC } from 'react';
 import { GetServerSideProps } from 'next'
 import axios from 'axios';
 import { Store } from '../../../models/Store';
+import { Flex } from '../../../components/containers';
+import NextLink from 'next/link';
 
 interface Props{
   store: Store;
@@ -15,7 +17,27 @@ const DetailsBrandsPage: FC<Props>= ( {store} ) => {
         title='Detalles de la Tienda'
         description='Pagina administrativa de Tienda'
     >
-        <Text h1> { "Detalles de Tienda" } </Text>
+      <Flex
+        css={{
+          'mt': '$5',
+          'px': '$6',
+          '@sm': {
+                    mt: '$10',
+                    px: '$16',
+                },
+        }}
+        justify='between'
+        align='center'
+      >
+        <Text h1>
+        Detalles de Tienda
+        </Text>
+        <NextLink href='/dashboard/stores'>
+          <Link>
+            Volver
+          </Link>
+        </NextLink>
+      </Flex>
 
         
         <Grid.Container gap={2} justify="center" >

@@ -8,6 +8,7 @@ import { ValidGenders } from '../../../types/gender';
 import { ValidCategories } from '../../../types/category';
 import {Product} from '../../../models/product'
 import NextLink from 'next/link';
+import { genderReducer, categoryReducer } from '../../../helpers';
 
 interface Props {
     product: Product;
@@ -72,7 +73,7 @@ const DetailsProductPage: NextPage<Props> = ({product}) => {
                             {
                                 ValidGenders.map((gender) => (
                                     <Radio value={gender} key={gender}>
-                                        {gender}
+                                        {genderReducer(gender)}
                                     </Radio>
                                 ))
                             }
@@ -88,7 +89,7 @@ const DetailsProductPage: NextPage<Props> = ({product}) => {
                             {
                                 ValidCategories.map((category) => (
                                     <Radio value={category} key={category}>
-                                        {category}
+                                        {categoryReducer(category)}
                                     </Radio>
                                 ))
                             }
