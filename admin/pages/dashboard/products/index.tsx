@@ -57,9 +57,9 @@ const ProductsPage: NextPage = () => {
                 css={{width: '100%'}} 
             >
                 <TableWrapper
-                    columns={columns}
-                    rows={products!}
-                    cellReducer={ProductsCellReducer}
+                  columns={columns}
+                  rows={products!}
+                  cellReducer={ProductsCellReducer}
                 />
             </Box>
           ) : <Text>No hay productos</Text>

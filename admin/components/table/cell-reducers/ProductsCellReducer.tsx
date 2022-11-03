@@ -1,5 +1,7 @@
 import { Text } from '@nextui-org/react';
 import { User } from "@nextui-org/react";
+import { categoryReducer } from '../../../helpers';
+import { Category } from '../../../types/category';
 import { TableActions } from '../TableActions';
 import { ProductCategoryReducer } from './ProductCategoryReducer';
 import { ProductGenderReducer } from './ProductGenderReducer';
@@ -8,7 +10,7 @@ interface Row {
   _id: string
   title: string;
   image:string;
-  category: string;
+  category: Category;
   storeName: string;
   storeLogo: string;
   price: number;
@@ -21,10 +23,11 @@ export const ProductsCellReducer = (row: Row, columnKey: string) => {
     case "title":
       return (
         <User 
-            name={row.title} 
-            src={row.image} 
-            description={row.category} 
-            size="xl"/>
+          name={row.title} 
+          src={row.image} 
+          description={categoryReducer(row.category)} 
+          size="xl"
+        />
       );
     case "category":
       return (

@@ -39,9 +39,9 @@ export const ProductCategoryReducer: FC<Props> = ({statusKey}) => {
         );
     case "pijamas":
         return (
-            <Text>
-                Pijamas
-            </Text>
+          <Text>
+            Pijamas
+          </Text>
         );
     default:
       return <></>
