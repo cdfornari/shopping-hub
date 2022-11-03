@@ -7,6 +7,7 @@ import { ShopLayout } from "../../layouts";
 import { Product, Size } from '../../models';
 import { ShoppingCartContext } from '../../context/shopping-cart';
 import { Notification } from '../../notification';
+import NextLink from 'next/link';
 
 interface Props {
     product: Product;
@@ -144,10 +145,13 @@ const ProductPage: NextPage<Props> = ({product}: Props) => {
                     initialValue={product.description}
                 />
                 <Spacer y={1} />
+                <NextLink href={`/store/${product.store.name}`}>
                 <User 
                     src={product.store.logo}
                     name={product.store.name}
-                />
+                    pointer
+                    />
+                </NextLink>  
             </Grid>
         </Grid.Container>
     </ShopLayout>
