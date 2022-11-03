@@ -4,5 +4,5 @@ export interface OrderProduct{
     _id: string;
     quantity: number;
     size: Size;
-    products: Product;
+    product: Product;
 }
