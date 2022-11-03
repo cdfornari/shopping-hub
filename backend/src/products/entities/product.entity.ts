@@ -1,5 +1,6 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { Store } from 'src/stores/entities/store.entity';
 import { Category, ValidCategories } from '../types/category';
 import { Gender, ValidGenders } from '../types/gender';
 import { Size, ValidSizes } from '../types/size';
@@ -12,7 +13,7 @@ export class Product extends Document {
         required: true,
         ref: 'Store'
     })
-    store: Types.ObjectId;
+    store: Store;
 
     @Prop({
         type: String,

@@ -8,20 +8,28 @@ import { IconButton } from './IconButton';
 interface Props {
     url: string;
     onDelete: () => void;
+    edit?: boolean;
 }
 
-export const TableActions: FC<Props> = ({url,onDelete}) => {
+export const TableActions: FC<Props> = ({url,onDelete,edit=true}) => {
   return (
     <Row justify="center" align="center">
-        <Col css={{ d: "flex" }}>
-            <Tooltip content="Detalles">
-            <NextLink href={url} passHref > 
-                <IconButton>
-                    <EyeIcon height={20} width={20} size={20} fill="#979797" />
-                </IconButton>
-            </NextLink>
-            </Tooltip>
-        </Col>
+        {
+            edit && (
+                <Col css={{ d: "flex" }}>
+                    <Tooltip 
+                        content="Detalles"
+                        color='primary'
+                    >
+                        <NextLink href={url} passHref > 
+                            <IconButton>
+                                <EyeIcon height={20} width={20} size={20} fill="#979797" />
+                            </IconButton>
+                        </NextLink>
+                    </Tooltip>
+                </Col>
+            )
+        }
         <Col css={{ d: "flex" }}>
             <Tooltip
                 content="Eliminar"

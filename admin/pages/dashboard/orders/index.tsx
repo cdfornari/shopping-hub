@@ -19,8 +19,6 @@ const columns = [
 
 const OrdersPage = () => {
   const {data,error} = useSWR<Order[]>('orders', fetcher);
-  console.log(data)
-
   const orders = useMemo(() => (
     data?.map((order,i) => ({
       id: i,
@@ -30,14 +28,13 @@ const OrdersPage = () => {
     }))
   ),[data])
   if(error) return <Text>Error</Text>
-
   return (
     <DashboardLayout 
         title='Órdenes'
         description='Pagina administrativa de las Ordenes'
     >
-        <Text h1>Órdenes</Text>
-        {
+      <Text h1>Órdenes</Text>
+      {
         data ? (
           <Box
             css={{width: '100%'}} 

@@ -1,5 +1,5 @@
 import { useMemo, useContext } from 'react';
-import { Loading, Text } from '@nextui-org/react';
+import { Link, Loading, Text } from '@nextui-org/react';
 import useSWR from 'swr';
 import { DashboardLayout } from '../../../layouts/DashboardLayout';
 import { Box } from '../../../components/containers';
@@ -9,7 +9,7 @@ import { NextPage } from 'next';
 import { Product } from '../../../models/product';
 import { ProductsCellReducer } from '../../../components/table/cell-reducers/ProductsCellReducer';
 import { AuthContext } from '../../../context/auth/AuthContext';
-
+import NextLink from 'next/link';
 
 const columns = [
   { label: "Titulo", uid: "title" },
@@ -20,11 +20,12 @@ const columns = [
   { label: "Acciones", uid: "actions" },
 ];
 
-
 const ProductsPage: NextPage = () => {
-    const { user } = useContext(AuthContext);
-    const {data,error} = useSWR<Product[]>(user?.role === 'ADMIN' ?  'products' : 'products/my-products', fetcher);
-    console.log(data)
+  const { user } = useContext(AuthContext);
+  const {data,error} = useSWR<Product[]>(
+    user?.role !== 'STORE' ?  'products' : 'products/my-products', 
+    fetcher
+  )
   const products = useMemo(() => (
     data?.map((product,i) => ({
       id: i,
@@ -33,7 +34,6 @@ const ProductsPage: NextPage = () => {
       ...product
     }))
   ),[data])
-  
   if(error) return (<Text>Error</Text>)
   return (
     <DashboardLayout 
@@ -41,6 +41,15 @@ const ProductsPage: NextPage = () => {
       description='tabla de productos'
     >
       <Text h1>Productos</Text>
+      {
+        user?.role === 'STORE' && (
+          <NextLink href='/dashboard/products/create'>
+            <Link>
+                Crear producto
+            </Link>
+          </NextLink>
+        )
+      }
       {
         data ? (
           data.length > 0 ? (

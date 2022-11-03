@@ -14,7 +14,10 @@ export const TableActions: FC<Props> = ({url,onDelete}) => {
   return (
     <Row justify="center" align="center">
         <Col css={{ d: "flex" }}>
-            <Tooltip content="Detalles">
+            <Tooltip 
+                content="Detalles"
+                color='primary'
+            >
             <NextLink href={url} passHref > 
                 <IconButton>
                     <EyeIcon height={20} width={20} size={20} fill="#979797" />
