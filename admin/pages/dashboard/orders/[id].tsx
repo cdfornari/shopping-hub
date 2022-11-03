@@ -1,5 +1,5 @@
 import { DashboardLayout } from '../../../layouts/DashboardLayout';
-import { Dropdown, Grid, Input, Spacer, Text, Link, Container, Card } from '@nextui-org/react';
+import { Grid, Input, Spacer, Text, Link, Card, User, Divider } from '@nextui-org/react';
 import { GetServerSideProps } from 'next'
 import axios from 'axios';
 import { Order } from '../../../models/Order';
@@ -29,7 +29,7 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
               <Grid xs={12}>
                   <Link href={`/dashboard/clients/${order.client._id}`}>
                       <Input 
-                        labelPlaceholder='Cliente'
+                        label='Cliente'
                         value={ order.client.fullName }
                         fullWidth
                         bordered
@@ -39,10 +39,9 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
                       />
                   </Link>
               </Grid>
-              <Spacer y={1} />
               <Grid xs={12} >
                   <Input
-                      labelPlaceholder='Dirección'
+                      label='Dirección'
                       value={ order.address }
                       fullWidth
                       bordered
@@ -51,10 +50,9 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
                       type={"text"}
                   />
               </Grid>
-              <Spacer y={1} />
               <Grid xs={12}>
                   <Input 
-                    labelPlaceholder='Estado'
+                    label='Estado'
                     value={ order.state }
                     fullWidth
                     bordered
@@ -63,10 +61,9 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
                     type={"text"}
                   />
               </Grid>
-              <Spacer y={1} />
               <Grid xs={12}>
                   <Input 
-                    labelPlaceholder='Ciudad'
+                    label='Ciudad'
                     value={ order.city }
                     fullWidth
                     bordered
@@ -80,7 +77,7 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
             <Grid direction='column' xs={12} sm={6}>              
               <Grid xs={12} >
                   <Input                        
-                    labelPlaceholder='Metodo de pago'
+                    label='Metodo de pago'
                     value={ order.paymentMethod }
                     fullWidth
                     bordered
@@ -90,10 +87,9 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
                   />
 
               </Grid>
-              <Spacer y={1} />
               <Grid xs={12} >
                   <Input
-                    labelPlaceholder='Código de referencia'
+                    label='Código de referencia'
                     value={ order.refCode }
                     fullWidth
                     bordered
@@ -102,11 +98,9 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
                     type={"text"}
                   />
               </Grid>
-              <Spacer y={1} />
-
               <Grid xs={12}>
                   <Input
-                    labelPlaceholder='Total de la orden'
+                    label='Total de la orden'
                     value={`${ order.paymentMethod === 'zelle' ? "$": "bs"}${order.total}` }
                     fullWidth
                     bordered
@@ -115,28 +109,49 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
                     type={"text"}
                   />
               </Grid>
-              <Spacer y={1} />
 
-              <Grid xs={12} css={{width: "100%"}} >
+              <Grid xs={12} css={{height: 'max-content', width: 'max-content'}}
+              >
                 <OrderStatusReducer statusKey = {order.status} />
               </Grid>
             </Grid>
 
-            <Container alignContent='center' alignItems='center' direction='column'>
-              <Grid xs= {12} sm={7} direction= 'column'>
-                <Card>
-                  <Text h1>PEPE</Text>
-                  <Card.Image 
-                    src={ order.products[0].product.image }
-                  />
+            <Grid.Container 
+              alignContent='center' 
+              alignItems='center' 
+              direction='column' 
+              gap={4} 
+              css={ { py: '$8'}}
+            >
+              <Grid xs= {12}  direction= 'column' css={{width: '100%'}}>
+                <Card >
+                  <Card.Header css={{}} >
+                    Productos:
+                  </Card.Header>
+                  <Divider />
+                  <Card.Body >
+                    {
+                      order.products.map( (prod) => (
+                        <User
+                          size="xl"
+                          src={ prod.product.image}
+                          name={prod.product.title }
+                          description= {`Cantidad: ${prod.quantity}, Talla: ${prod.size}`}
+                          css={{py: '$4'}}
+                        />
+                      ))
+                    }
+                    <User
+                          size="xl"
+                          src={ order.products[0].product.image}
+                          name={order.products[0].product.title }
+                          description= {`Cantidad: ${order.products[0].quantity}, Talla: ${order.products[0].size}`}
+                          css={{py: '$4'}}
+                        />
+                  </Card.Body>
                 </Card>
               </Grid>
-
-              <Grid xs= {12} sm={5} direction= 'column'>
-                <DropDownProducts products={ order.products }/>
-              </Grid>
-
-            </Container>
+            </Grid.Container>
 
 
         </Grid.Container>

@@ -21,13 +21,6 @@ const DetailsBrandsPage: FC<Props>= ( {store} ) => {
         <Grid.Container gap={2} justify="center" >
             <Grid alignContent='space-between'   alignItems='center' xs={ 12 } sm={ 7 }>
               <Card isHoverable>
-                <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
-                  <Col>
-                    <Text size={12} weight="bold" transform="uppercase">
-                      LOGO
-                    </Text>
-                  </Col>
-                </Card.Header>
                 <Card.Divider />
                 <Card.Image 
                   src= {store.logo}

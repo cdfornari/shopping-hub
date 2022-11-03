@@ -1,13 +1,13 @@
 import { Button, Card, Container, Input, Link, Loading, Spacer, Text, useTheme } from '@nextui-org/react'
 import React, { useContext, useState } from 'react'
-import { Box } from '../../../../components/containers'
-import { useForm } from '../../../../hooks/useForm'
-import { DashboardLayout } from '../../../../layouts'
-import { AuthLayout } from '../../../../layouts/AuthLayout';
-import { Notification } from '../../../../notification'
+import { Box } from '../../../components/containers'
+import { useForm } from '../../../hooks/useForm'
+import { DashboardLayout } from '../../../layouts'
+import { AuthLayout } from '../../../layouts/AuthLayout';
+import { Notification } from '../../../notification'
 import NextLink from 'next/link'
-import { ThemeSwitcher } from '../../../../components/ThemeSwitcher'
-import { AuthContext } from '../../../../context/auth'
+import { ThemeSwitcher } from '../../../components/ThemeSwitcher'
+import { AuthContext } from '../../../context/auth'
 import { useRouter } from 'next/router'
 
 export const AdminCreatePage = () => {
