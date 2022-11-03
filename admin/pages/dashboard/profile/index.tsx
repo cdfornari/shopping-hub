@@ -1,5 +1,4 @@
 import { Text } from "@nextui-org/react"
-import ClientProfile from "../../../components/profiles/ClientProfile"
 import { DashboardLayout } from "../../../layouts"
 
 const ProfilePage = () => {

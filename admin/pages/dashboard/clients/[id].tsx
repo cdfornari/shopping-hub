@@ -1,35 +1,102 @@
-import axios from 'axios'
-import { GetServerSideProps } from 'next'
 import React from 'react'
-import ClientProfile from '../../../components/profiles/ClientProfile'
+import { GetServerSideProps } from 'next'
+import NextLink from 'next/link';
+import axios from 'axios'
 import { DashboardLayout } from '../../../layouts'
 import { Client } from '../../../models/Client'
 import { FC } from 'react';
 import { Box } from '../../../components/containers'
+import { Card, Input, Link, Spacer, Text } from '@nextui-org/react'
 
 interface Props {
-    client: Client
+  client: Client
 }
 
 export const ClientsProfile: FC<Props> = ({client}) => {
-
-    return (
-    <DashboardLayout 
-        title='Detalles del Cliente'
-        description='Pagina administrativa de Cliente'
-    >
-      <Box
+  return (
+  <DashboardLayout 
+    title='Detalles del Cliente'
+    description='Pagina administrativa de Cliente'
+  >
+    <Box
+      css={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+      }}
+      >
+        <Card
+          variant='bordered'
           css={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100vh',
+            width: 'fit-content',
+            py: '$15',
+            px: '$10',
           }}
-        >
-            <ClientProfile user={client} title={'Perfil'} singleUser={false}>
-            </ClientProfile>
-        </Box>
+          >
+            <Card.Header
+              css={{
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <Text h1>Detalle de cliente</Text>
+            </Card.Header>
+            <Card.Body
+              css={{
+                gap: '$17',
+                display: 'flex',
+                py: '$12',
+              }}
+            >
+              <Input 
+                bordered
+                readOnly
+                labelPlaceholder="Nombre Completo" 
+                initialValue={client.fullName} 
+                size='lg'
+              />
+              <Input 
+                bordered
+                readOnly
+                labelPlaceholder="Email" 
+                initialValue={client.user.email}  
+                size='lg'
+              />
+              <Input
+                bordered 
+                readOnly
+                labelPlaceholder="Documento de Identidad" 
+                initialValue={client.dni} 
+                size='lg'
+              />
+              <Input 
+                bordered
+                labelPlaceholder="Número de teléfono"
+                readOnly
+                initialValue={client.phoneNumber} 
+                size='lg'
+              />
+            </Card.Body>
+            <Card.Footer>
+              <Box
+                css={{
+                  gap: '$6',
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <NextLink href='/dashboard/clients'>
+                  <Link>
+                      Volver
+                  </Link>
+                </NextLink>
+              </Box>
+              <Spacer x={6} />
+            </Card.Footer>
+          </Card>
+      </Box>
     </DashboardLayout>
   )
 }

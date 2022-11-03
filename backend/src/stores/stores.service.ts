@@ -20,24 +20,20 @@ export class StoresService {
   async create(createStoreDto: CreateStoreDto, imagePath: string) {
     if(await this.storeModel.findOne({rif: createStoreDto.rif})) throw new BadRequestException('rif ya registrado');
     if(await this.storeModel.findOne({phoneNumber: createStoreDto.phoneNumber})) throw new BadRequestException('telefono ya registrado');
-    try {
-      const { email, password, ...storeData } = createStoreDto;
-      const {user} = await this.authService.createUser({
-        email,
-        password,
-        role: 'STORE',
-        isActive: false
-      });
-      const imgUrl = await this.uploadsService.uploadImage(imagePath);
-      await this.storeModel.create({
-        ...storeData,
-        user: user.id,
-        logo: imgUrl
-      })
-      return {ok : true};
-    } catch (error) {
-      throw new InternalServerErrorException(error)
-    }
+    const { email, password, ...storeData } = createStoreDto;
+    const {user} = await this.authService.createUser({
+      email,
+      password,
+      role: 'STORE',
+      isActive: false
+    });
+    const imgUrl = await this.uploadsService.uploadImage(imagePath);
+    await this.storeModel.create({
+      ...storeData,
+      user: user.id,
+      logo: imgUrl
+    })
+    return {ok : true};
   }
 
   async login(loginDto: LoginDto) {
@@ -55,7 +51,6 @@ export class StoresService {
         logo: store.logo,
         phoneNumber: store.phoneNumber,
         rif: store.rif,
-        products: store.products,
         email: user.email,
         role: user.role,
         isActive: user.isActive,

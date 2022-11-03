@@ -47,7 +47,7 @@ export const AdminCreatePage = () => {
                 email: email.value,
                 password: password.value
             });
-            setTimeout(() => replace('/dashboard'),500)
+            setTimeout(() => replace('/dashboard/admin'),500)
             Notification(isDark).fire({
                 title: 'El administrador se registró correctamente',
                 icon: 'success',
@@ -65,68 +65,67 @@ export const AdminCreatePage = () => {
     }
 
     return (
-    <DashboardLayout 
-    title='Administradores'
-    description='Pagina administrativa de Administradores'
->
-    <Text h1>Crear administradores</Text>
-        <Container css={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh'}}>
-            <Card
-                css={{
-                    py: '$10',
-                    px: '$7',
-                    mw: '500px'
-                }}
-            >
-                <Card.Header
+        <DashboardLayout 
+            title='Administradores'
+            description='Pagina administrativa de Administradores'
+        >
+            <Container css={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh'}}>
+                <Card
                     css={{
-                        display: 'flex',
-                        justifyContent: 'center',
+                        py: '$10',
+                        px: '$7',
+                        mw: '600px'
                     }}
                 >
-                    <Text h2>Registra un administrador</Text>
-                </Card.Header>
-                <Card.Body css={{
-                    gap: '$17',
-                    display: 'flex',
-                    py: '$12',
-                }}>
-                    <Input
-                        labelPlaceholder='Email'
-                        type='email'
-                        value={email.value}
-                        onChange={(e) => email.setValue(e.target.value)}
-                        helperText={email.message}
-                        helperColor={email.color}
-                        status={email.color}
-                        color={email.color}
-                        size='lg'
-                        bordered
-                        clearable
-                    />
-                    <Input.Password
-                        labelPlaceholder='Contraseña'
-                        value={password.value}
-                        onChange={(e) => password.setValue(e.target.value)}
-                        helperText={password.message}
-                        helperColor={password.color}
-                        status={password.color}
-                        color={password.color}
-                        size='lg'
-                        bordered
-                    />
-                    <Button
-                        size='lg'
-                        onPress={handleSubmit}
-                        disabled={!allowSubmit}
+                    <Card.Header
+                        css={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                        }}
                     >
-                        {!isLoading ? 'Registrarse' : <Loading type='points' />}
-                    </Button>
-                </Card.Body>
-            </Card>
-        </Container>
-</DashboardLayout>
-  )
+                        <Text h1>Registra un administrador</Text>
+                    </Card.Header>
+                    <Card.Body css={{
+                        gap: '$17',
+                        display: 'flex',
+                        py: '$12',
+                    }}>
+                        <Input
+                            labelPlaceholder='Email'
+                            type='email'
+                            value={email.value}
+                            onChange={(e) => email.setValue(e.target.value)}
+                            helperText={email.message}
+                            helperColor={email.color}
+                            status={email.color}
+                            color={email.color}
+                            size='lg'
+                            bordered
+                            clearable
+                        />
+                        <Input.Password
+                            labelPlaceholder='Contraseña'
+                            value={password.value}
+                            onChange={(e) => password.setValue(e.target.value)}
+                            helperText={password.message}
+                            helperColor={password.color}
+                            status={password.color}
+                            color={password.color}
+                            size='lg'
+                            bordered
+                        />
+                        <Button
+                            size='lg'
+                            onPress={handleSubmit}
+                            disabled={!allowSubmit}
+                        >
+                            {!isLoading ? 'Registrarse' : <Loading type='points' />}
+                        </Button>
+                    </Card.Body>
+                </Card>
+            </Container>
+        </DashboardLayout>
+    )
 }
 
 export default AdminCreatePage

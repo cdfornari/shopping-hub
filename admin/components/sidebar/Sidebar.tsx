@@ -15,7 +15,6 @@ export const SidebarWrapper = () => {
    const {user} = useContext(AuthContext);
    const router = useRouter();
    const [collapsed,setCollapsed] = useState(false)
-
    return (
       <Box
          as="aside"
@@ -28,7 +27,6 @@ export const SidebarWrapper = () => {
          }}
       >
          {collapsed && <Sidebar.Overlay onClick={()=>setCollapsed(prev => !prev)}/>}
-
          <Sidebar collapsed={collapsed}>
             <Flex
                direction='column'
@@ -49,7 +47,7 @@ export const SidebarWrapper = () => {
                      icon={<FaShoppingCart/>}
                   />
                   {
-                     user?.role === 'ADMIN' || user?.role === 'SUPER-ADMIN' && (
+                     (user?.role === 'ADMIN' || user?.role === 'SUPER-ADMIN') && (
                         <>
                            <SidebarItem
                               isActive={router.pathname === '/dashboard/orders'}
@@ -82,12 +80,16 @@ export const SidebarWrapper = () => {
                         />
                      )
                   }
-                  <SidebarItem
-                     isActive={router.pathname === '/dashboard/profile'}
-                     title="Perfil"
-                     href="/dashboard/profile"
-                     icon={<BsFillPersonFill/>}
-                  />
+                  {
+                     user?.role === 'STORE' && (
+                        <SidebarItem
+                           isActive={router.pathname === '/dashboard/profile'}
+                           title="Perfil"
+                           href="/dashboard/profile"
+                           icon={<BsFillPersonFill/>}
+                        />
+                     )
+                  }
                </Sidebar.Body>
                <Sidebar.Footer>
                   <ThemeSwitcher/>

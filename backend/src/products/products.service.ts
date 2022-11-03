@@ -48,7 +48,6 @@ export class ProductsService {
   async findByUser(user: User) {
     const store = await this.storeModel.findOne({user: user.id});
     if(!store) throw new NotFoundException('Tienda no encontrada');
-    console.log(store.id)
     try {
       const products = await this.productModel.find({store: store._id})
       .populate('store', '-__v')

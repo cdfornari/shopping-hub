@@ -25,10 +25,13 @@ export const AdminCellReducer = (row: Row, columnKey: string) => {
         </Badge>
       )
     case "actions": 
-      return <TableActions
-        url={`/dashboard/admin/${row._id}`}
-        onDelete={() => console.log()}
-      />
+      return (
+        <TableActions
+          url={`/dashboard/admin/${row._id}`}
+          onDelete={() => console.log()}
+          edit={false}
+        />
+      )
     default:
       return <></>
   }

@@ -17,18 +17,13 @@ export class AdminService {
   ){}
 
   async create(createAdminDto: LoginDto) {
-    try {
-      const user = await this.userModel.create({
-        ...createAdminDto,
-        role: 'ADMIN',
-        isActive: true
-      })
-      delete user.password;
-      return {
-        user
-      }
-    } catch (error) {
-      throw new InternalServerErrorException(error)
+    const user = await this.authService.createUser({
+      ...createAdminDto,
+      role: 'ADMIN',
+      isActive: true
+    })
+    return {
+      user
     }
   }
 
@@ -56,7 +51,6 @@ export class AdminService {
           logo: store.logo,
           phoneNumber: store.phoneNumber,
           rif: store.rif,
-          products: store.products,
           email: userToValidate.email,
           role: userToValidate.role,
           isActive: userToValidate.isActive,

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Loading, Text } from '@nextui-org/react';
+import { Link, Loading, Text } from '@nextui-org/react';
 import useSWR from 'swr';
 import { DashboardLayout } from '../../../layouts/DashboardLayout';
 import { Box } from '../../../components/containers';
@@ -7,6 +7,7 @@ import { TableWrapper } from '../../../components/table';
 import { fetcher } from '../../../api/fetcher';
 import { UserProps } from '../../../models/User';
 import { AdminCellReducer } from '../../../components/table/cell-reducers/AdminCellReducer';
+import NextLink from 'next/link';
 
 const columns = [
   { label: "Email", uid: "email" },
@@ -30,6 +31,11 @@ const AdminPage = () => {
       description='tabla de administradores'
     >
       <Text h1>Administradores</Text>
+      <NextLink href='/dashboard/admin/create'>
+        <Link>
+          Crear administrador
+        </Link>
+      </NextLink>
       {
         data ? (
           data.length > 0 ? (
