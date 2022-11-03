@@ -194,7 +194,7 @@ const CreateProductPage: NextPage = () => {
                         >
                             {
                                 ValidGenders.map((gender) => (
-                                    <Radio value={gender}>
+                                    <Radio value={gender} key={gender}>
                                         {gender}
                                     </Radio>
                                 ))
@@ -210,7 +210,7 @@ const CreateProductPage: NextPage = () => {
                         >
                             {
                                 ValidCategories.map((category) => (
-                                    <Radio value={category}>
+                                    <Radio value={category} key={category}>
                                         {category}
                                     </Radio>
                                 ))
@@ -231,6 +231,7 @@ const CreateProductPage: NextPage = () => {
                                                 <Checkbox
                                                     size='xs'
                                                     value={size.toString()}
+                                                    key={size}
                                                 >
                                                     {size}
                                                 </Checkbox>
@@ -248,6 +249,7 @@ const CreateProductPage: NextPage = () => {
                                                 <Checkbox
                                                     size='xs'
                                                     value={size}
+                                                    key={size}
                                                 >
                                                     {size}
                                                 </Checkbox>

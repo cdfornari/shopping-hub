@@ -16,7 +16,7 @@ export const StoreProfile: FC<Props> = ({user}) => {
               <Card isHoverable>
                 <Card.Divider />
                 <Card.Image 
-                  src={user.logo}
+                  src={user?.logo || ''}
                   objectFit="cover"
                   width="absolute"
                   height={340}

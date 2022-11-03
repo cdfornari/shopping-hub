@@ -24,7 +24,7 @@ export const ItemCounter: FC<Props> = ({count,maxValue,onChange}) => {
             onPress={() => maxValue > 0 && onChange(Math.min(count + 1, maxValue))}
             light 
             aria-label = "Increment"
-            light color="default"
+            color="default"
             auto
             icon={<MdAddCircleOutline size={25} />}
         />

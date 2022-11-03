@@ -71,7 +71,7 @@ const DetailsProductPage: NextPage<Props> = ({product}) => {
                         >
                             {
                                 ValidGenders.map((gender) => (
-                                    <Radio value={gender}>
+                                    <Radio value={gender} key={gender}>
                                         {gender}
                                     </Radio>
                                 ))
@@ -87,7 +87,7 @@ const DetailsProductPage: NextPage<Props> = ({product}) => {
                         >
                             {
                                 ValidCategories.map((category) => (
-                                    <Radio value={category}>
+                                    <Radio value={category} key={category}>
                                         {category}
                                     </Radio>
                                 ))
@@ -106,6 +106,7 @@ const DetailsProductPage: NextPage<Props> = ({product}) => {
                                     {
                                         shoeSizes.map((size) => (
                                             <Checkbox
+                                                key={size}
                                                 size='xs'
                                                 value={size.toString()}
                                             >
@@ -123,6 +124,7 @@ const DetailsProductPage: NextPage<Props> = ({product}) => {
                                     {
                                         ValidSizes.map((size) => (
                                             <Checkbox
+                                                key={size}
                                                 size='xs'
                                                 value={size}
                                             >

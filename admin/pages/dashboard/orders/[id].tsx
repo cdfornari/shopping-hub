@@ -122,6 +122,7 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
                   {
                     order.products.map( (prod) => (
                       <User
+                        key={prod._id}
                         size="xl"
                         src={ prod.product.image}
                         name={prod.product.title }
