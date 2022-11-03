@@ -20,7 +20,7 @@ export const ProductCard: FC<Props> = ({product}) => {
           <Text size={12} weight="bold" transform="uppercase" color="#9E9E9E">
             {product.store.name}
           </Text>
-          <Text h3 color='$accents4'>
+          <Text h3 color='$accents7'>
             {product.title}
           </Text>
         </Col>

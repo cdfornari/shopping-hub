@@ -61,7 +61,7 @@ export const CartList: FC<Props> = ({ editable = false, products }) => {
                                                 
                                                 onClick={ () => removeProduct( product as CartProduct ) }
                                             >
-                                                Delete
+                                                Eliminar
                                             </Button>
                                         )
                                     }

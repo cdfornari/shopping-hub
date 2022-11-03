@@ -307,10 +307,10 @@ const CreateProductPage: NextPage = () => {
                                 step="0.1"
                                 value={compPrice}
                                 onChange={(e) => setCompPrice(Number(e.target.value))}
-                                helperText={compPrice > 0 && compPrice > price ? '' : 'El precio comparativo debe ser > 0 y >= precio'}
-                                helperColor={compPrice > 0 && compPrice > price ? 'success' : 'error'}
-                                status={compPrice > 0 && compPrice > price ? 'success' : 'error'}
-                                color={compPrice > 0 && compPrice > price ? 'success' : 'error'}
+                                helperText={compPrice > 0 && compPrice >= price ? '' : 'El precio comparativo debe ser > 0 y >= precio'}
+                                helperColor={compPrice > 0 && compPrice >= price ? 'success' : 'error'}
+                                status={compPrice > 0 && compPrice >= price ? 'success' : 'error'}
+                                color={compPrice > 0 && compPrice >= price ? 'success' : 'error'}
                             /> 
                         </Row>
                     </Col>

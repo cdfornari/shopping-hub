@@ -45,7 +45,7 @@ const CartListPage: FC<Props> = ( {products} ) => {
                   <Card.Body css={{ py: "$5" }} >
                       <OrderSummary
                         total={total}
-                        numberOfItems={products.length}
+                        numberOfItems={products.reduce((acc,product) => acc + product.quantity,0)}
                       />
                       <Card.Divider />
                       <Card.Footer >
