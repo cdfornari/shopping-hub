@@ -21,7 +21,7 @@ const Home: NextPage = () => {
           <Grid.Container gap={4} css={{w:'100vw', px: '$24'}}>
            {
             data.map((product) => (
-              <Grid xs={12} sm={6} md={4}>
+              <Grid xs={12} sm={6} md={4} key={product._id}>
                 <ProductCard 
                   key={product._id}
                   product={product}

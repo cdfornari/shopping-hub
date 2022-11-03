@@ -44,33 +44,25 @@ export const AuthProvider: FC<Props> = ({children}) => {
         }
     }
     const login = async(email: string, password: string) => {
-        try {
-            const { data } = await api.post<{client: Client, token: string}>(
-                '/clients/login', {email, password}
-            );
-            const { token,client } = data;
-            Cookies.set('token', token, { expires: 7 });
-            dispatch({
-                type: '[AUTH] Login',
-                payload: client
-            });
-        } catch (error) {
-            console.log(error);
-        }
+        const { data } = await api.post<{client: Client, token: string}>(
+            '/clients/login', {email, password}
+        );
+        const { token,client } = data;
+        Cookies.set('token', token, { expires: 7 });
+        dispatch({
+            type: '[AUTH] Login',
+            payload: client
+        });
     }
     const register = async(
         {fullName, email, password,dni,phoneNumber}: RegisterDto
     ) => {
-        try {
-            const { data } = await api.post<{token: string}>(
-                '/clients/register', 
-                {fullName, email, password, dni, phoneNumber}
-            );
-            const { token } = data;
-            Cookies.set('token', token, { expires: 7 });
-         } catch (error) {
-            console.log(error)
-        }
+        const { data } = await api.post<{token: string}>(
+            '/clients/register', 
+            {fullName, email, password, dni, phoneNumber}
+        );
+        const { token } = data;
+        Cookies.set('token', token, { expires: 7 });
     }
     const logout = () => {
         Cookies.remove('token');

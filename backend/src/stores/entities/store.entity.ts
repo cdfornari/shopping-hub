@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
+import { User } from 'src/auth/entities/user.entity';
 
 @Schema()
 export class Store {
@@ -16,15 +17,7 @@ export class Store {
         ref: 'User',
         required: true
     })
-    user: Types.ObjectId;
-
-    @Prop({
-        type: [Types.ObjectId],
-        ref: 'Product',
-        required: true,
-        default: []
-    })
-    products: Types.ObjectId[];
+    user: User;
 
     @Prop({
         type: String,

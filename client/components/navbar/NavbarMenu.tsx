@@ -12,8 +12,7 @@ export const NavbarMenu = () => {
     logout()
     Notification(isDark).fire({
         icon: 'info',
-        background: 'error',
-        title: 'Cerrando sesión'
+        title: 'Sesión cerrada',
     })
   }
   return (

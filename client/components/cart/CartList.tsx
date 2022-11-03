@@ -1,12 +1,9 @@
-import { useContext } from 'react';
-import { ShoppingCartContext } from '../../context/shopping-cart';
-import { FC } from 'react';
+import { FC,useContext } from 'react';
 import NextLink from 'next/link';
 import { Grid, Button, Link, Text, Card, Container } from '@nextui-org/react';
+import { ShoppingCartContext } from '../../context/shopping-cart';
 import { ItemCounter } from '../ui/ItemCounter';
 import { CartProduct } from '../../models';
-
-
 
 interface Props {
     editable?: boolean;
@@ -14,21 +11,19 @@ interface Props {
 }
 
 export const CartList: FC<Props> = ({ editable = false, products }) => {
-
     const { updateProductQuantity, removeProduct } = useContext( ShoppingCartContext );
-
     return (
         <>
             {
                 products.map ( (product) => ( 
                     <Grid.Container key={ 2} css={{ mb: 1 }} gap={ 1 }>
                         <Grid xs={3}>
-                        {/* TODO: llevar a la página del producto */}
-                            <NextLink href={`/`} passHref>
+                            <NextLink href={`/products/${product._id}`} passHref>
                                 <Link>
                                     <Card>
                                         <Card.Image 
                                             src={ product.image }
+                                            alt={ product.title }
                                         />
                                     </Card>
                                 </Link>
@@ -66,7 +61,7 @@ export const CartList: FC<Props> = ({ editable = false, products }) => {
                                                 
                                                 onClick={ () => removeProduct( product as CartProduct ) }
                                             >
-                                                Delete
+                                                Eliminar
                                             </Button>
                                         )
                                     }

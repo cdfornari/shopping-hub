@@ -1,9 +1,11 @@
 import { useState, useRef } from 'react';
 import { NextPage } from "next"
-import { Button, Container, Input, Spacer, Row, Col, Text, Textarea, Radio, Checkbox, useTheme, Loading } from '@nextui-org/react';
+import { useRouter } from 'next/router';
+import NextLink from 'next/link';
+import { Button, Container, Input, Spacer, Row, Col, Text, Textarea, Radio, Checkbox, useTheme, Loading, Link } from '@nextui-org/react';
 import Cookies from 'js-cookie';
 import { DashboardLayout } from '../../../layouts';
-import { Flex } from '../../../components/containers';
+import { Box, Flex } from '../../../components/containers';
 import { Size, ValidSizes, shoeSizes } from '../../../types/size';
 import { Gender, ValidGenders } from '../../../types/gender';
 import { Category, ValidCategories } from '../../../types/category';
@@ -13,6 +15,7 @@ import { api } from '../../../api/api';
 
 const CreateProductPage: NextPage = () => {
     const {isDark} = useTheme();
+    const { replace } = useRouter();
     const [selectedCategory, setSelectedCategory] = useState<Category>()
     const [selectedGender, setSelectedGender] = useState<Gender>()
     const [selectedSizes, setSelectedSizes] = useState<Size[]>([])
@@ -77,6 +80,7 @@ const CreateProductPage: NextPage = () => {
                     }
                 }
             )
+            setTimeout(() => replace('/dashboard/products'),500)
             Notification(isDark).fire({
                 title: 'Producto creado',
                 icon: 'success',
@@ -126,12 +130,28 @@ const CreateProductPage: NextPage = () => {
                 justify='between'
                 align='center'
             >
-                <Text h1>
-                    Crear producto
-                </Text>
+                <Box
+                    css={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexDirection: 'column',
+                        gap: '$2',
+                    }}
+                >
+                    <Text h1>
+                        Crear producto
+                    </Text>
+                    <NextLink href='/dashboard/products'>
+                        <Link>
+                            Volver
+                        </Link>
+                    </NextLink>
+                </Box>
                 <Button
                     disabled={!allowSubmit || !file || !selectedGender || !selectedCategory || isLoading}
                     onPress={onSubmit}
+                    size='lg'
                 >
                     {!isLoading ? 'Crear Producto' : <Loading type='points'/>}
                 </Button>
@@ -174,7 +194,7 @@ const CreateProductPage: NextPage = () => {
                         >
                             {
                                 ValidGenders.map((gender) => (
-                                    <Radio value={gender}>
+                                    <Radio value={gender} key={gender}>
                                         {gender}
                                     </Radio>
                                 ))
@@ -190,7 +210,7 @@ const CreateProductPage: NextPage = () => {
                         >
                             {
                                 ValidCategories.map((category) => (
-                                    <Radio value={category}>
+                                    <Radio value={category} key={category}>
                                         {category}
                                     </Radio>
                                 ))
@@ -211,6 +231,7 @@ const CreateProductPage: NextPage = () => {
                                                 <Checkbox
                                                     size='xs'
                                                     value={size.toString()}
+                                                    key={size}
                                                 >
                                                     {size}
                                                 </Checkbox>
@@ -228,6 +249,7 @@ const CreateProductPage: NextPage = () => {
                                                 <Checkbox
                                                     size='xs'
                                                     value={size}
+                                                    key={size}
                                                 >
                                                     {size}
                                                 </Checkbox>
@@ -287,10 +309,10 @@ const CreateProductPage: NextPage = () => {
                                 step="0.1"
                                 value={compPrice}
                                 onChange={(e) => setCompPrice(Number(e.target.value))}
-                                helperText={compPrice > 0 && compPrice > price ? '' : 'El precio comparativo debe ser > 0 y >= precio'}
-                                helperColor={compPrice > 0 && compPrice > price ? 'success' : 'error'}
-                                status={compPrice > 0 && compPrice > price ? 'success' : 'error'}
-                                color={compPrice > 0 && compPrice > price ? 'success' : 'error'}
+                                helperText={compPrice > 0 && compPrice >= price ? '' : 'El precio comparativo debe ser > 0 y >= precio'}
+                                helperColor={compPrice > 0 && compPrice >= price ? 'success' : 'error'}
+                                status={compPrice > 0 && compPrice >= price ? 'success' : 'error'}
+                                color={compPrice > 0 && compPrice >= price ? 'success' : 'error'}
                             /> 
                         </Row>
                     </Col>

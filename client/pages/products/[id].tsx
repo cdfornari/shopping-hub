@@ -80,7 +80,7 @@ const ProductPage: NextPage<Props> = ({product}: Props) => {
                                 textDecorationLine: "line-through",
                                 fontWeight: "$semibold",
                                 fontSize: "$lg",
-                                color: "$accents3",
+                                color: "$accents6",
                             }}>
                                 ${product.comparativePrice.toFixed(2)}
                             </Text>

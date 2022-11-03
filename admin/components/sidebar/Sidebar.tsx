@@ -15,7 +15,6 @@ export const SidebarWrapper = () => {
    const {user} = useContext(AuthContext);
    const router = useRouter();
    const [collapsed,setCollapsed] = useState(false)
-
    return (
       <Box
          as="aside"
@@ -28,7 +27,6 @@ export const SidebarWrapper = () => {
          }}
       >
          {collapsed && <Sidebar.Overlay onClick={()=>setCollapsed(prev => !prev)}/>}
-
          <Sidebar collapsed={collapsed}>
             <Flex
                direction='column'
@@ -43,28 +41,28 @@ export const SidebarWrapper = () => {
                      icon={<AiTwotoneHome/>}
                   />
                   <SidebarItem
-                     isActive={router.pathname === '/dashboard/products'}
+                     isActive={router.pathname.includes('products')}
                      title="Productos"
                      href="/dashboard/products"
                      icon={<FaShoppingCart/>}
                   />
                   {
-                     user?.role === 'ADMIN' || user?.role === 'SUPER-ADMIN' && (
+                     (user?.role === 'ADMIN' || user?.role === 'SUPER-ADMIN') && (
                         <>
                            <SidebarItem
-                              isActive={router.pathname === '/dashboard/orders'}
+                              isActive={router.pathname.includes('orders')}
                               title="Órdenes"
                               href="/dashboard/orders"
                               icon={<AiTwotoneShopping/>}
                            />
                            <SidebarItem
-                              isActive={router.pathname === '/dashboard/clients'}
+                              isActive={router.pathname.includes('clients')}
                               title="Clientes"
                               href="/dashboard/clients"
                               icon={<BsFillPeopleFill/>}
                            />
                            <SidebarItem
-                              isActive={router.pathname === '/dashboard/stores'}
+                              isActive={router.pathname.includes('stores')}
                               title="Tiendas"
                               href="/dashboard/stores"
                               icon={<AiTwotoneShop/>}
@@ -75,19 +73,23 @@ export const SidebarWrapper = () => {
                   {
                      user?.role === 'SUPER-ADMIN' && (
                         <SidebarItem
-                           isActive={router.pathname === '/dashboard/admin'}
+                           isActive={router.pathname.includes('admin')}
                            title="Administradores"
                            href="/dashboard/admin"
                            icon={<RiAdminFill/>}
                         />
                      )
                   }
-                  <SidebarItem
-                     isActive={router.pathname === '/dashboard/profile'}
-                     title="Perfil"
-                     href="/dashboard/profile"
-                     icon={<BsFillPersonFill/>}
-                  />
+                  {
+                     user?.role === 'STORE' && (
+                        <SidebarItem
+                           isActive={router.pathname.includes('profile')}
+                           title="Perfil"
+                           href="/dashboard/profile"
+                           icon={<BsFillPersonFill/>}
+                        />
+                     )
+                  }
                </Sidebar.Body>
                <Sidebar.Footer>
                   <ThemeSwitcher/>

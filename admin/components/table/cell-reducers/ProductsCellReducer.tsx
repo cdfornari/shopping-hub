@@ -43,7 +43,7 @@ export const ProductsCellReducer = (row: Row, columnKey: string) => {
     case "price":
       return(
         <Text>
-          {row.price}
+          ${row.price.toFixed(2)}
         </Text>
       )
     case "sizes":

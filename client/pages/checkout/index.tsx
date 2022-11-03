@@ -1,20 +1,30 @@
+import { GetServerSideProps, NextPage } from 'next';
+import { useState, useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Grid, Text, Card, Spacer, Button, Input, Container, Radio, Loading, useTheme } from '@nextui-org/react';
+import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Box } from '../../components/containers';
 import { useForm } from '../../hooks/useForm';
 import { ShopLayout } from '../../layouts';
-import { useState, useContext } from 'react';
 import { ShoppingCartContext } from '../../context/shopping-cart';
 import { Notification } from '../../notification';
 import { api } from '../../api/api';
 
-const CheckoutPage = () => {
+interface Props {
+    exchange: number;
+}
+
+const CheckoutPage: NextPage<Props> = ({exchange}) => {
     const {isDark} = useTheme()
     const {push} = useRouter()
     const {products,clearCart} = useContext(ShoppingCartContext);
     const [isLoading,setIsLoading] = useState(false)
     const [paymentMethod,setPaymentMethod] = useState('');
+    const [total,setTotal] = useState<number>()
+    useEffect(() => {
+        setTotal(products.reduce((acc,product) => acc + (product.price * product.quantity),0))
+    },[products])
     const {allowSubmit,parsedFields} = useForm([
         {
           name: 'address',
@@ -212,7 +222,9 @@ const CheckoutPage = () => {
                             <Text>V28155389</Text>
                             <Text>04141115826</Text>
                             <Text>Banco Mercantil (0102)</Text>
-                            <Text>570bs</Text>
+                            {
+                                !total ? <Loading/> : <Text>Bs.{(total*exchange).toFixed(2)}</Text>
+                            }
                         </Card.Body>
                         <Card.Divider css={{my: '$10'}} />
                         <Card.Header css={{ py: "$0",d: 'flex',jc: 'center' }}>
@@ -221,15 +233,26 @@ const CheckoutPage = () => {
                         <Card.Body css={{ py: "$5" }} >
                             <Text>zelle@shoppinghub.com</Text>
                             <Text>Shopping Hub</Text>
-                            <Text>62,28$ </Text>
+                            {
+                                !total ? <Loading/> : <Text>${total.toFixed(2)}</Text>
+                            }
                         </Card.Body>
                     </Card>
                 </Grid>
-
-            </Grid.Container>
-            
+            </Grid.Container>  
         </ShopLayout>
     )
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+    const {data: exchange} = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/exchanges/bolivar`,
+    );
+    return {
+      props: {
+        exchange,
+      }
+    }
 }
 
 export default CheckoutPage;

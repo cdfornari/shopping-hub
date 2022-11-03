@@ -1,10 +1,10 @@
 import { Loading, Text } from '@nextui-org/react';
 import { useMemo } from 'react';
+import useSWR from 'swr';
 import { Box } from '../../components/containers';
 import { TableWrapper } from '../../components/table';
 import { OrdersCellReducer } from '../../components/table/cell-reducers/OrdersCellReducer';
 import { ShopLayout } from '../../layouts';
-import useSWR from 'swr';
 import { fetcher } from '../../api/fetcher';
 import { Order } from '../../models/Order';
 
@@ -35,8 +35,8 @@ const OrdersPage = () => {
         title='Órdenes'
         description='Pagina administrativa de las Ordenes'
     >
-        <Text h1>Órdenes</Text>
-        {
+      <Text h1>Órdenes</Text>
+      {
         data ? (
           <Box
             css={{width: '100%'}} 

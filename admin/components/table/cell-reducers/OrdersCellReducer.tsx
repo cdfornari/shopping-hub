@@ -7,7 +7,7 @@ interface Row {
   _id: string
   orderName: string;
   dni: string;
-  total: string;
+  total: number;
   paymentMethod: string;
   status: Status;
 }
@@ -29,7 +29,7 @@ export const OrdersCellReducer = (row: Row, columnKey: string) => {
     case "total":
       return (
         <Text>
-          { `${ row.paymentMethod === 'zelle' ? "$": "bs"}${row.total}`}
+          { `${ row.paymentMethod === 'zelle' ? "$": "Bs."}${row.total.toFixed(2)}`}
         </Text>
       );
     case "paymentMethod":

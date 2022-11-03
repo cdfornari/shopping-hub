@@ -1,160 +1,141 @@
-import { DashboardLayout } from '../../../layouts/DashboardLayout';
-import { Grid, Input, Spacer, Text, Link, Card, User, Divider } from '@nextui-org/react';
-import { GetServerSideProps } from 'next'
-import axios from 'axios';
-import { Order } from '../../../models/Order';
 import { FC } from 'react';
+import { GetServerSideProps } from 'next'
+import { Grid, Input, Spacer, Text, Link, Card, User, Divider } from '@nextui-org/react';
+import axios from 'axios';
+import { DashboardLayout } from '../../../layouts/DashboardLayout';
+import { Order } from '../../../models/Order';
 import { OrderStatusReducer } from '../../../components/table/cell-reducers/OrderStatusReducer';
-import { useState } from 'react';
-import { DropDownProducts } from '../../../components/DropDownProducts';
 
 interface Props{
   order: Order;
 }
 
 const DetailsBrandsPage: FC<Props> = ( {order} ) => {
-  const [selectedProduct, setSelectedProduct] = useState(1);
-  console.log(order)
-  console.log(order.products)
   return (
     <DashboardLayout 
-        title='Detalles de la Tienda'
-        description='Pagina administrativa de Tienda'
+      title='Detalles de la Tienda'
+      description='Pagina administrativa de Tienda'
     >
-        <Text h1>Detalles de la orden</Text>
-        <Spacer y={2} />
-        
-        <Grid.Container gap={2} >
-            <Grid direction='column' xs={12} sm={6} >
-              <Grid xs={12}>
-                  <Link href={`/dashboard/clients/${order.client._id}`}>
-                      <Input 
-                        label='Cliente'
-                        value={ order.client.fullName }
-                        fullWidth
-                        bordered
-                        readOnly
-                        size="lg"
-                        type={"text"}
+      <Text h1>Detalles de la orden</Text>
+      <Spacer y={2} />
+      <Grid.Container gap={2} >
+          <Grid direction='column' xs={12} sm={6} >
+            <Grid xs={12}>
+                <Link href={`/dashboard/clients/${order.client._id}`}>
+                  <Input 
+                    label='Cliente'
+                    value={ order.client.fullName }
+                    fullWidth
+                    bordered
+                    readOnly
+                    size="lg"
+                    type={"text"}
+                  />
+                </Link>
+            </Grid>
+            <Grid xs={12} >
+                <Input
+                  label='Dirección'
+                  value={ order.address }
+                  fullWidth
+                  bordered
+                  readOnly
+                  size="lg"
+                  type={"text"}
+                />
+            </Grid>
+            <Grid xs={12}>
+              <Input 
+                label='Estado'
+                value={ order.state }
+                fullWidth
+                bordered
+                readOnly
+                size="lg"
+                type={"text"}
+              />
+            </Grid>
+            <Grid xs={12}>
+              <Input 
+                label='Ciudad'
+                value={ order.city }
+                fullWidth
+                bordered
+                readOnly
+                size="lg"
+                type={"text"}
+              />
+            </Grid>
+          </Grid>
+          <Grid direction='column' xs={12} sm={6}>              
+            <Grid xs={12} >
+              <Input                        
+                label='Metodo de pago'
+                value={ order.paymentMethod }
+                fullWidth
+                bordered
+                readOnly
+                size="lg"
+                type={"text"}
+              />
+            </Grid>
+            <Grid xs={12} >
+                <Input
+                  label='Código de referencia'
+                  value={ order.refCode }
+                  fullWidth
+                  bordered
+                  readOnly
+                  size="lg"
+                  type={"text"}
+                />
+            </Grid>
+            <Grid xs={12}>
+                <Input
+                  label='Total de la orden'
+                  value={`${ order.paymentMethod === 'zelle' ? "$": "bs"}${order.total}` }
+                  fullWidth
+                  bordered
+                  readOnly
+                  size="lg"
+                  type={"text"}
+                />
+            </Grid>
+            <Grid xs={12} css={{height: 'max-content', width: 'max-content'}}>
+              <OrderStatusReducer statusKey = {order.status} />
+            </Grid>
+          </Grid>
+          <Grid.Container 
+            alignContent='center' 
+            alignItems='center' 
+            direction='column' 
+            gap={4} 
+            css={ { py: '$8'}}
+          >
+            <Grid xs= {12}  direction= 'column' css={{width: '100%'}}>
+              <Card >
+                <Card.Header css={{}} >
+                  Productos:
+                </Card.Header>
+                <Divider />
+                <Card.Body >
+                  {
+                    order.products.map( (prod) => (
+                      <User
+                        key={prod._id}
+                        size="xl"
+                        src={ prod.product.image}
+                        name={prod.product.title }
+                        description= {`Cantidad: ${prod.quantity}, Talla: ${prod.size}`}
+                        css={{py: '$4'}}
                       />
-                  </Link>
-              </Grid>
-              <Grid xs={12} >
-                  <Input
-                      label='Dirección'
-                      value={ order.address }
-                      fullWidth
-                      bordered
-                      readOnly
-                      size="lg"
-                      type={"text"}
-                  />
-              </Grid>
-              <Grid xs={12}>
-                  <Input 
-                    label='Estado'
-                    value={ order.state }
-                    fullWidth
-                    bordered
-                    readOnly
-                    size="lg"
-                    type={"text"}
-                  />
-              </Grid>
-              <Grid xs={12}>
-                  <Input 
-                    label='Ciudad'
-                    value={ order.city }
-                    fullWidth
-                    bordered
-                    readOnly
-                    size="lg"
-                    type={"text"}
-                  />
-              </Grid>
+                    ))
+                  }
+                </Card.Body>
+              </Card>
             </Grid>
-
-            <Grid direction='column' xs={12} sm={6}>              
-              <Grid xs={12} >
-                  <Input                        
-                    label='Metodo de pago'
-                    value={ order.paymentMethod }
-                    fullWidth
-                    bordered
-                    readOnly
-                    size="lg"
-                    type={"text"}
-                  />
-
-              </Grid>
-              <Grid xs={12} >
-                  <Input
-                    label='Código de referencia'
-                    value={ order.refCode }
-                    fullWidth
-                    bordered
-                    readOnly
-                    size="lg"
-                    type={"text"}
-                  />
-              </Grid>
-              <Grid xs={12}>
-                  <Input
-                    label='Total de la orden'
-                    value={`${ order.paymentMethod === 'zelle' ? "$": "bs"}${order.total}` }
-                    fullWidth
-                    bordered
-                    readOnly
-                    size="lg"
-                    type={"text"}
-                  />
-              </Grid>
-
-              <Grid xs={12} css={{height: 'max-content', width: 'max-content'}}
-              >
-                <OrderStatusReducer statusKey = {order.status} />
-              </Grid>
-            </Grid>
-
-            <Grid.Container 
-              alignContent='center' 
-              alignItems='center' 
-              direction='column' 
-              gap={4} 
-              css={ { py: '$8'}}
-            >
-              <Grid xs= {12}  direction= 'column' css={{width: '100%'}}>
-                <Card >
-                  <Card.Header css={{}} >
-                    Productos:
-                  </Card.Header>
-                  <Divider />
-                  <Card.Body >
-                    {
-                      order.products.map( (prod) => (
-                        <User
-                          size="xl"
-                          src={ prod.product.image}
-                          name={prod.product.title }
-                          description= {`Cantidad: ${prod.quantity}, Talla: ${prod.size}`}
-                          css={{py: '$4'}}
-                        />
-                      ))
-                    }
-                    <User
-                          size="xl"
-                          src={ order.products[0].product.image}
-                          name={order.products[0].product.title }
-                          description= {`Cantidad: ${order.products[0].quantity}, Talla: ${order.products[0].size}`}
-                          css={{py: '$4'}}
-                        />
-                  </Card.Body>
-                </Card>
-              </Grid>
-            </Grid.Container>
-
-
-        </Grid.Container>
+          </Grid.Container>
+      </Grid.Container>
     </DashboardLayout>
   )
 }

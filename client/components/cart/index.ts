@@ -4,4 +4,4 @@ export * from './OrderSummary'
 
 export * from './EmptyCart'
 
-export * from './PageCart'
+export * from './CartPage'

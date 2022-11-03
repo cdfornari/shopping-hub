@@ -2,7 +2,6 @@ import { Dropdown, Navbar, Text } from '@nextui-org/react'
 import Link from 'next/link'
 import { CartButton } from './CartButton'
 import { NavbarMenu } from './NavbarMenu'
-import { SearchBar } from './SearchBar'
 import { ThemeSwitcher } from './ThemeSwitcher'
 
 export const NavbarWrapper = () => {
@@ -23,16 +22,11 @@ export const NavbarWrapper = () => {
                 }}
                 size='$4xl'
             >
-                Shopping Hub
+                <Link href='/'>
+                    Shopping Hub
+                </Link>
             </Text>
         </Navbar.Brand>
-        {/* <Navbar.Content
-            hideIn='sm'
-        >
-            <Navbar.Item>
-                <SearchBar/>
-            </Navbar.Item>
-        </Navbar.Content> */}
         <Navbar.Content
             hideIn='sm'
             enableCursorHighlight
@@ -53,24 +47,24 @@ export const NavbarWrapper = () => {
                     </Dropdown.Button>
                 </Navbar.Item>
                 <Dropdown.Menu
-                aria-label="ACME features"
-                css={{
-                    $$dropdownMenuWidth: "340px",
-                    $$dropdownItemHeight: "70px",
-                    "& .nextui-dropdown-item": {
-                    py: "$4",
-                    // dropdown item left icon
-                    svg: {
-                        color: "$secondary",
-                        mr: "$4",
-                    },
-                    // dropdown item title
-                    "& .nextui-dropdown-item-content": {
-                        w: "100%",
-                        fontWeight: "$semibold",
-                    },
-                    },
-                }}
+                    aria-label="ACME features"
+                    css={{
+                        $$dropdownMenuWidth: "340px",
+                        $$dropdownItemHeight: "70px",
+                        "& .nextui-dropdown-item": {
+                        py: "$4",
+                        // dropdown item left icon
+                        svg: {
+                            color: "$secondary",
+                            mr: "$4",
+                        },
+                        // dropdown item title
+                        "& .nextui-dropdown-item-content": {
+                            w: "100%",
+                            fontWeight: "$semibold",
+                        },
+                        },
+                    }}
                 >
                     <Dropdown.Item
                         key="prendas-superiores"
@@ -115,24 +109,24 @@ export const NavbarWrapper = () => {
                     </Dropdown.Button>
                 </Navbar.Item>
                 <Dropdown.Menu
-                aria-label="ACME features"
-                css={{
-                    $$dropdownMenuWidth: "340px",
-                    $$dropdownItemHeight: "70px",
-                    "& .nextui-dropdown-item": {
-                    py: "$4",
-                    // dropdown item left icon
-                    svg: {
-                        color: "$secondary",
-                        mr: "$4",
-                    },
-                    // dropdown item title
-                    "& .nextui-dropdown-item-content": {
-                        w: "100%",
-                        fontWeight: "$semibold",
-                    },
-                    },
-                }}
+                    aria-label="ACME features"
+                    css={{
+                        $$dropdownMenuWidth: "340px",
+                        $$dropdownItemHeight: "70px",
+                        "& .nextui-dropdown-item": {
+                        py: "$4",
+                        // dropdown item left icon
+                        svg: {
+                            color: "$secondary",
+                            mr: "$4",
+                        },
+                        // dropdown item title
+                        "& .nextui-dropdown-item-content": {
+                            w: "100%",
+                            fontWeight: "$semibold",
+                        },
+                        },
+                    }}
                 >
                     <Dropdown.Item
                         key="prendas-superiores"
@@ -177,24 +171,24 @@ export const NavbarWrapper = () => {
                     </Dropdown.Button>
                 </Navbar.Item>
                 <Dropdown.Menu
-                aria-label="ACME features"
-                css={{
-                    $$dropdownMenuWidth: "340px",
-                    $$dropdownItemHeight: "70px",
-                    "& .nextui-dropdown-item": {
-                    py: "$4",
-                    // dropdown item left icon
-                    svg: {
-                        color: "$secondary",
-                        mr: "$4",
-                    },
-                    // dropdown item title
-                    "& .nextui-dropdown-item-content": {
-                        w: "100%",
-                        fontWeight: "$semibold",
-                    },
-                    },
-                }}
+                    aria-label="ACME features"
+                    css={{
+                        $$dropdownMenuWidth: "340px",
+                        $$dropdownItemHeight: "70px",
+                        "& .nextui-dropdown-item": {
+                        py: "$4",
+                        // dropdown item left icon
+                        svg: {
+                            color: "$secondary",
+                            mr: "$4",
+                        },
+                        // dropdown item title
+                        "& .nextui-dropdown-item-content": {
+                            w: "100%",
+                            fontWeight: "$semibold",
+                        },
+                        },
+                    }}
                 >
                     <Dropdown.Item
                         key="prendas-superiores"

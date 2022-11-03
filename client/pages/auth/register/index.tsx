@@ -67,7 +67,7 @@ const RegisterPage = () => {
               dni: dniType + dni.value,
               phoneNumber: phoneNumber.value,
             })
-            setTimeout(() => replace('/'),500)
+            setTimeout(() => replace('/auth/login'),500)
             Notification(isDark).fire({
               title: 'Registro exitoso',
               icon: 'success',
