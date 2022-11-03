@@ -12,6 +12,8 @@ import { Category, ValidCategories } from '../../../types/category';
 import { useForm } from '../../../hooks/useForm';
 import { Notification } from '../../../notification';
 import { api } from '../../../api/api';
+import { genderReducer, categoryReducer } from '../../../helpers';
+
 
 const CreateProductPage: NextPage = () => {
     const {isDark} = useTheme();
@@ -195,7 +197,7 @@ const CreateProductPage: NextPage = () => {
                             {
                                 ValidGenders.map((gender) => (
                                     <Radio value={gender} key={gender}>
-                                        {gender}
+                                        {genderReducer(gender)}
                                     </Radio>
                                 ))
                             }
@@ -211,7 +213,7 @@ const CreateProductPage: NextPage = () => {
                             {
                                 ValidCategories.map((category) => (
                                     <Radio value={category} key={category}>
-                                        {category}
+                                        {categoryReducer(category)}
                                     </Radio>
                                 ))
                             }

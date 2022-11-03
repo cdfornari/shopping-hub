@@ -1,6 +1,8 @@
 import { Text } from '@nextui-org/react';
 import { User } from "@nextui-org/react";
 import { TableActions } from '../TableActions';
+import { ProductCategoryReducer } from './ProductCategoryReducer';
+import { ProductGenderReducer } from './ProductGenderReducer';
 
 interface Row {
   _id: string
@@ -26,15 +28,11 @@ export const ProductsCellReducer = (row: Row, columnKey: string) => {
       );
     case "category":
       return (
-        <Text>
-          {row.category}
-        </Text>
+        <ProductCategoryReducer statusKey= {row.category} />
       );
     case "gender":
       return (
-        <Text>
-          {row.gender}
-        </Text>
+        <ProductGenderReducer statusKey= {row.gender} />
       );
     case "store":
       return (

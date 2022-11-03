@@ -5,6 +5,8 @@ import axios from 'axios';
 import { DashboardLayout } from '../../../layouts/DashboardLayout';
 import { Order } from '../../../models/Order';
 import { OrderStatusReducer } from '../../../components/table/cell-reducers/OrderStatusReducer';
+import { Flex } from '../../../components/containers';
+import NextLink from 'next/link';
 
 interface Props{
   order: Order;
@@ -16,7 +18,28 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
       title='Detalles de la Tienda'
       description='Pagina administrativa de Tienda'
     >
-      <Text h1>Detalles de la orden</Text>
+      <Flex
+        css={{
+          'mt': '$5',
+          'px': '$6',
+          '@sm': {
+                    mt: '$10',
+                    px: '$16',
+                },
+        }}
+        justify='between'
+        align='center'
+      >
+        <Text h1>
+          Detalles de la Orden
+        </Text>
+        <NextLink href='/dashboard/orders'>
+          <Link>
+            Volver
+          </Link>
+        </NextLink>
+      </Flex>
+
       <Spacer y={2} />
       <Grid.Container gap={2} >
           <Grid direction='column' xs={12} sm={6} >
