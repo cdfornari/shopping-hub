@@ -1,5 +1,7 @@
 import { useState, useRef } from 'react';
 import { NextPage } from "next"
+import { useRouter } from 'next/router';
+import NextLink from 'next/link';
 import { Button, Container, Input, Spacer, Row, Col, Text, Textarea, Radio, Checkbox, useTheme, Loading, Link } from '@nextui-org/react';
 import Cookies from 'js-cookie';
 import { DashboardLayout } from '../../../layouts';
@@ -10,8 +12,6 @@ import { Category, ValidCategories } from '../../../types/category';
 import { useForm } from '../../../hooks/useForm';
 import { Notification } from '../../../notification';
 import { api } from '../../../api/api';
-import NextLink from 'next/link';
-import { useRouter } from 'next/router';
 
 const CreateProductPage: NextPage = () => {
     const {isDark} = useTheme();

@@ -157,6 +157,7 @@ const DetailsProductPage: NextPage<Props> = ({product}) => {
                                 min="0"
                                 step="0.1"
                                 value={product.price}
+                                readOnly
                             /> 
                             <Spacer x={2}/>
                             <Input 
