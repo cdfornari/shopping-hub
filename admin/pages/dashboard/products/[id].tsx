@@ -14,6 +14,7 @@ import {Product} from '../../../models/product'
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { GetServerSideProps } from 'next'
+import { genderReducer, categoryReducer } from '../../../helpers';
 
 interface Props {
     product: Product;
@@ -196,7 +197,7 @@ const DetailsProductPage: NextPage<Props> = ( {product}) => {
                             {
                                 ValidGenders.map((gender) => (
                                     <Radio value={gender}>
-                                        {gender}
+                                        {genderReducer(gender)}
                                     </Radio>
                                 ))
                             }
@@ -213,7 +214,7 @@ const DetailsProductPage: NextPage<Props> = ( {product}) => {
                             {
                                 ValidCategories.map((category) => (
                                     <Radio value={category}>
-                                        {category}
+                                        {categoryReducer(category)}
                                     </Radio>
                                 ))
                             }
