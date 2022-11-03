@@ -2,6 +2,7 @@ import { GetServerSideProps, NextPage } from 'next';
 import { useState, useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Grid, Text, Card, Spacer, Button, Input, Container, Radio, Loading, useTheme } from '@nextui-org/react';
+import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Box } from '../../components/containers';
 import { useForm } from '../../hooks/useForm';
@@ -9,7 +10,6 @@ import { ShopLayout } from '../../layouts';
 import { ShoppingCartContext } from '../../context/shopping-cart';
 import { Notification } from '../../notification';
 import { api } from '../../api/api';
-import axios from 'axios';
 
 interface Props {
     exchange: number;
