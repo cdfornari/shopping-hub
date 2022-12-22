@@ -8,10 +8,14 @@ import { StoresModule } from 'src/stores/stores.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
+    MongooseModule.forFeatureAsync([
       {
         name: Product.name,
-        schema: ProductSchema
+        useFactory: () => {
+          const schema = ProductSchema;
+          schema.plugin(require('mongoose-autopopulate'));
+          return schema;
+        }, 
       }
     ]),
     AuthModule,

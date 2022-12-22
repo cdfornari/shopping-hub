@@ -42,9 +42,7 @@ export class ClientsService {
     const { email, password } = loginDto;
     const { user,token } = await this.authService.login({email, password});
     const client = await this.clientModel.findOne({"user._id" : user.id})
-    .populate('user', '-password -__v')
-    .select('-__v')
-    .lean();
+    .populate('user', '-password')
     if(!client) throw new NotFoundException('cliente no encontrado')
     return {
       client,
@@ -55,9 +53,8 @@ export class ClientsService {
   async findAll() {
     try {
       const clients = await this.clientModel.find()
-      .populate('user', '-password -__v')
-      .select('-__v') 
-      .lean();
+      .populate('user', '-password')
+      ;
       return clients;
     } catch (error) {
       throw new InternalServerErrorException(error)
@@ -66,18 +63,16 @@ export class ClientsService {
 
   async findOne(id: string) {
     const client = await this.clientModel.findById(id)
-    .populate('user', '-password -__v')
-    .select('-__v') 
-    .lean();
+    .populate('user', '-password')
+    ;
     if(!client) throw new NotFoundException('cliente no encontrado')
     return client;
   }
 
   async validate(user: User) {
     const client = await this.clientModel.findOne({user: user.id})
-    .populate('user', '-password -__v')
-    .select('-__v')
-    .lean();
+    .populate('user', '-password')
+    ;
     return {
       client,
       token: (await this.authService.renewToken(user)).token
@@ -86,9 +81,8 @@ export class ClientsService {
 
   async current(user: User) {
     const client = await this.clientModel.findOne({user: user.id})
-    .populate('user', '-password -__v')
-    .select('-__v')
-    .lean();
+    .populate('user', '-password')
+    ;
     return client
   }
 

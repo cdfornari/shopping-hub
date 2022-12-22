@@ -17,8 +17,6 @@ export class AuthService {
 
   async login({email,password}: LoginDto){
     const user = await this.userModel.findOne({email})
-    .select('-__v')
-    .lean()
     if(!user) throw new UnauthorizedException('Credenciales inválidas')
     if(!user.isActive) throw new UnauthorizedException(
       user.role === 'STORE' ? 'La tienda no ha sido aprobada' :'Usuario inactivo'
@@ -45,7 +43,6 @@ export class AuthService {
         token: this.jwtService.sign({id: user._id})
       };
     } catch (error) {
-      console.log(error);
       throw new InternalServerErrorException(error)
     }
   }

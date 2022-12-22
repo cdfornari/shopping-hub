@@ -29,8 +29,6 @@ export class OrdersService {
         }
       }
     )
-    .populate('store', '-__v')
-    .select('-__v')
     const products = createOrderDto.products.map((product) => {
       const productDB = productsDB.find(({_id}) => _id.toString() === product.product.toString());
       if(productDB.category === 'shoes'){
@@ -73,11 +71,7 @@ export class OrdersService {
     const client = await this.clientModel.findOne({user: user.id});
     if(!client) throw new NotFoundException('Cliente no encontrado');
     try {
-      const orders = await this.orderModel.find({client: client.id})
-      .populate('client', '-__v')
-      .populate('products.product', '-__v')
-      .select('-__v')
-      .lean();
+      const orders = await this.orderModel.find({client: client.id});
       return orders;
     } catch (error) {
       console.log(error);
@@ -87,11 +81,7 @@ export class OrdersService {
 
   async findAll() {
     try {
-      const orders = await this.orderModel.find()
-      .populate('client', '-__v')
-      .populate('products.product', '-__v')
-      .select('-__v')
-      .lean();
+      const orders = await this.orderModel.find();
       return orders;
     } catch (error) {
       throw new InternalServerErrorException(error);
@@ -100,9 +90,6 @@ export class OrdersService {
 
   async findOne(id: string) {
     const order = await this.orderModel.findById(id)
-    .populate('client', '-__v')
-    .populate('products.product', '-__v')
-    .select('-__v') 
     return order;
   }
 

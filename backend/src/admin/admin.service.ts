@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from 'src/auth/entities/user.entity';
@@ -41,9 +41,8 @@ export class AdminService {
   async validate(userToValidate: User) {
     if(userToValidate.role === 'STORE') {
       const store = await this.storeModel.findOne({user : userToValidate.id})
-      .populate('user', '-password -__v')
-      .select('-__v')
-      .lean();
+      .populate('user', '-password')
+      ;
       if(!store) throw new UnauthorizedException('tienda no encontrada');
       return {
         user: {
@@ -70,8 +69,8 @@ export class AdminService {
 
   findAll() {
     const users = this.userModel.find({role: 'ADMIN'})
-    .select('-password -__v')
-    .lean();
+    .select('-password')
+    ;
     return users;
   }
 

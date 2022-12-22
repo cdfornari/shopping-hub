@@ -1,17 +1,20 @@
-import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { Store } from 'src/stores/entities/store.entity';
 import { Category, ValidCategories } from '../types/category';
 import { Gender, ValidGenders } from '../types/gender';
 import { Size, ValidSizes } from '../types/size';
 
-@Schema()
+@Schema({
+    versionKey: false,
+})
 export class Product extends Document {
 
    @Prop({
         type: Types.ObjectId,
         required: true,
-        ref: 'Store'
+        ref: 'Store',
+        autopopulate: true,
     })
     store: Store;
 

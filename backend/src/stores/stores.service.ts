@@ -41,9 +41,7 @@ export class StoresService {
     const { email, password } = loginDto;
     const { user,token } = await this.authService.login({email, password});
     const store = await this.storeModel.findOne({"user._id": user.id})
-    .populate('user', '-password -__v')
-    .select('-__v')
-    .lean();
+    .populate('user', '-password')
     if(!store) throw new NotFoundException('tienda no encontrada')
     delete store.user;
     return {
@@ -62,18 +60,14 @@ export class StoresService {
 
   async current(user: User) {
     const client = await this.storeModel.findOne({user: user.id})
-    .populate('user', '-password -__v')
-    .select('-__v')
-    .lean();
+    .populate('user', '-password')
     return client
   }
 
   async findAll() {
     try {
       const stores = await this.storeModel.find()
-      .populate('user', '-password -__v')
-      .select('-__v') 
-      .lean();
+      .populate('user', '-password')
       return stores;
     } catch (error) {
       throw new InternalServerErrorException(error)
@@ -82,9 +76,7 @@ export class StoresService {
 
   async findOne(id: string) {
     const store = await this.storeModel.findById(id)
-    .populate('user', '-password -__v')
-    .select('-__v') 
-    .lean();
+    .populate('user', '-password')
     return store;
   }
 

@@ -51,10 +51,7 @@ export class ProductsService {
     const store = await this.storeModel.findOne({user: user.id});
     if(!store) throw new NotFoundException('Tienda no encontrada');
     try {
-      const products = await this.productModel.find({store: store._id})
-      .populate('store', '-__v')
-      .select('-__v') 
-      .lean();
+      const products = await this.productModel.find({store: store._id});
       return products;
     } catch (error) {
       console.log(error)
@@ -65,9 +62,6 @@ export class ProductsService {
   async findAll() {
     try {
       const products = await this.productModel.find()
-      .populate('store')
-      .select('-__v') 
-      .lean();
       return products;
     } catch (error) {
       throw new InternalServerErrorException(error)
@@ -76,8 +70,6 @@ export class ProductsService {
 
   async findOne(id: string) {
     const product = await this.productModel.findById(id)
-    .populate('store')
-    .select('-__v') 
     return product;
   }
 
@@ -105,8 +97,6 @@ export class ProductsService {
           }
         ]
       })
-      .populate('store')
-      .select('-__v') 
     )
     return products;
   }

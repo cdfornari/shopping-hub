@@ -10,8 +10,15 @@ import { ExchangesModule } from '../exchanges/exchanges.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: Order.name, schema: orderSchema },
+    MongooseModule.forFeatureAsync([
+      { 
+        name: Order.name, 
+        useFactory: () => {
+          const schema = orderSchema;
+          schema.plugin(require('mongoose-autopopulate'));
+          return schema;
+        }, 
+      },
     ]),
     ProductsModule,
     AuthModule,
