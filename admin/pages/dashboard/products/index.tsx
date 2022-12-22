@@ -23,7 +23,7 @@ const columns = [
 const ProductsPage: NextPage = () => {
   const { user } = useContext(AuthContext);
   const {data,error} = useSWR<Product[]>(
-    user?.role !== 'STORE' ?  'products' : 'products/my-products', 
+    user?.role === 'STORE' ?  'products/my-products' : 'products?onlyActive=false' , 
     fetcher
   )
   const products = useMemo(() => (

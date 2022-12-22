@@ -183,7 +183,6 @@ const DetailsProductPage: NextPage<Props> = ({product}) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  
     const { token } = ctx.req.cookies;
     const { id = '' } = ctx.params as {id: string}; 
     const {data: product} = await axios.get(

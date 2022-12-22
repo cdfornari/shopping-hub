@@ -116,7 +116,7 @@ const DetailsBrandsPage: FC<Props> = ( {order} ) => {
             <Grid xs={12}>
                 <Input
                   label='Total de la orden'
-                  value={`${ order.paymentMethod === 'zelle' ? "$": "bs"}${order.total}` }
+                  value={`${ order.paymentMethod === 'zelle' ? "$" : "Bs. "}${order.total}` }
                   fullWidth
                   bordered
                   readOnly
