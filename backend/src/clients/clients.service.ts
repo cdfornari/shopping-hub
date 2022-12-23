@@ -85,7 +85,7 @@ export class ClientsService {
   }
 
   async update(user: User, updateClientDto: UpdateClientDto) {
-    const client = await this.clientModel.findOne({user: user._id});
+    const client = await this.clientModel.findOne({user: user.id});
     if(!client) throw new NotFoundException('cliente no encontrado')
     const { email, password, ...clientData } = updateClientDto;
     if(email || password) await this.authService.updateUser(

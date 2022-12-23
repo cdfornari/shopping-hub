@@ -12,6 +12,7 @@ export interface Product {
     shoeSizes?: number[];
     category: Category;
     gender: Gender;
+    isActive: boolean;
 }
 
 export type Size = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|'XXXL'|'UNI';

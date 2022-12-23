@@ -81,7 +81,7 @@ export class StoresService {
   }
 
   async update(user: User, updateStoreDto: UpdateStoreDto) {
-    const store = await this.storeModel.findOne({user: user._id});
+    const store = await this.storeModel.findOne({user: user.id});
     if(!store) throw new NotFoundException('cliente no encontrado')
     const { email, password, ...storeData } = updateStoreDto;
     if(email || password) await this.authService.updateUser(

@@ -54,165 +54,165 @@ const RegisterPage = () => {
     ])
     const [email,password,name,phoneNumber,dni] = parsedFields;
     const handleSubmit = async() => {
-        setIsLoading(true)
-        Notification(isDark).fire({
-          title: 'Cargando',
-          icon: 'info',
+      setIsLoading(true)
+      Notification(isDark).fire({
+        title: 'Cargando',
+        icon: 'info',
+      })
+      try {
+        await register({
+          email: email.value,
+          password: password.value,
+          fullName: name.value,
+          dni: dniType + dni.value,
+          phoneNumber: phoneNumber.value,
         })
-        try {
-            await register({
-              email: email.value,
-              password: password.value,
-              fullName: name.value,
-              dni: dniType + dni.value,
-              phoneNumber: phoneNumber.value,
-            })
-            setTimeout(() => replace('/auth/login'),500)
-            Notification(isDark).fire({
-              title: 'Registro exitoso',
-              icon: 'success',
-              timer: 5000,
-            })
-            setIsLoading(false)
-        } catch (error: any) {
-            Notification(isDark).fire({
-              title: error.response.data.message,
-              icon: 'error',
-            })
-            setIsLoading(false)
-        }
+        setTimeout(() => replace('/auth/login'),500)
+        Notification(isDark).fire({
+          title: 'Registro exitoso',
+          icon: 'success',
+          timer: 5000,
+        })
+        setIsLoading(false)
+      } catch (error: any) {
+        Notification(isDark).fire({
+          title: error.response.data.message,
+          icon: 'error',
+        })
+        setIsLoading(false)
+      }
     }
     return (
         <AuthLayout
           title='Regístrate'
           description='Registro de usuario'
         >
-            <Card
+          <Card
+            css={{
+              width: 'fit-content',
+              py: '$10',
+              px: '$7',
+            }}
+          >
+            <Card.Header
               css={{
-                width: 'fit-content',
-                py: '$10',
-                px: '$7',
+                display: 'flex',
+                justifyContent: 'center',
               }}
             >
-                <Card.Header
-                  css={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                  }}
+              <Text h1>Regístrate</Text>
+            </Card.Header>
+            <Card.Body 
+              css={{
+                gap: '$17',
+                display: 'flex',
+                py: '$12',
+              }}
+            >
+              <Input
+                labelPlaceholder='Nombre'
+                type='text'
+                value={name.value}
+                onChange={(e) => name.setValue(e.target.value)}
+                helperText={name.message}
+                helperColor={name.color}
+                status={name.color}
+                color={name.color}
+                size='lg'
+                bordered
+                clearable
+              />
+              <Input
+                labelPlaceholder='Email'
+                type='email'
+                value={email.value}
+                onChange={(e) => email.setValue(e.target.value)}
+                helperText={email.message}
+                helperColor={email.color}
+                status={email.color}
+                color={email.color}
+                size='lg'
+                bordered
+                clearable
+              />
+              <Input.Password
+                labelPlaceholder='Contraseña'
+                value={password.value}
+                onChange={(e) => password.setValue(e.target.value)}
+                helperText={password.message}
+                helperColor={password.color}
+                status={password.color}
+                color={password.color}
+                size='lg'
+                bordered
+              />
+              <Input
+                labelPlaceholder='Número de teléfono'
+                type='tel'
+                maxLength={11}
+                value={phoneNumber.value}
+                onChange={(e) => phoneNumber.setValue(e.target.value)}
+                helperText={phoneNumber.message}
+                helperColor={phoneNumber.color}
+                status={phoneNumber.color}
+                color={phoneNumber.color}
+                size='lg'
+                bordered
+                clearable
+              />
+              <Box 
+                css={{
+                  mt: '-$8',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Radio.Group 
+                  value={dniType}
+                  onChange={setDniType}
+                  orientation="horizontal"
+                  size='xs'
                 >
-                  <Text h1>Regístrate</Text>
-                </Card.Header>
-                <Card.Body 
-                  css={{
-                    gap: '$17',
-                    display: 'flex',
-                    py: '$12',
-                  }}
-                >
-                  <Input
-                    labelPlaceholder='Nombre'
-                    type='text'
-                    value={name.value}
-                    onChange={(e) => name.setValue(e.target.value)}
-                    helperText={name.message}
-                    helperColor={name.color}
-                    status={name.color}
-                    color={name.color}
-                    size='lg'
-                    bordered
-                    clearable
-                  />
-                  <Input
-                    labelPlaceholder='Email'
-                    type='email'
-                    value={email.value}
-                    onChange={(e) => email.setValue(e.target.value)}
-                    helperText={email.message}
-                    helperColor={email.color}
-                    status={email.color}
-                    color={email.color}
-                    size='lg'
-                    bordered
-                    clearable
-                  />
-                  <Input.Password
-                    labelPlaceholder='Contraseña'
-                    value={password.value}
-                    onChange={(e) => password.setValue(e.target.value)}
-                    helperText={password.message}
-                    helperColor={password.color}
-                    status={password.color}
-                    color={password.color}
-                    size='lg'
-                    bordered
-                  />
-                  <Input
-                    labelPlaceholder='Número de teléfono'
-                    type='tel'
-                    maxLength={11}
-                    value={phoneNumber.value}
-                    onChange={(e) => phoneNumber.setValue(e.target.value)}
-                    helperText={phoneNumber.message}
-                    helperColor={phoneNumber.color}
-                    status={phoneNumber.color}
-                    color={phoneNumber.color}
-                    size='lg'
-                    bordered
-                    clearable
-                  />
-                  <Box 
-                    css={{
-                      mt: '-$8',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Radio.Group 
-                      value={dniType}
-                      onChange={setDniType}
-                      orientation="horizontal"
-                      size='xs'
-                    >
-                      <Radio value="V">V</Radio>
-                      <Radio value="J">J</Radio>
-                      <Radio value="E">E</Radio>
-                      <Radio value="P">P</Radio>
-                    </Radio.Group>
-                    <Input
-                        labelPlaceholder='Documento de identidad'
-                        type='text'
-                        maxLength={9}
-                        value={dni.value}
-                        onChange={(e) => dni.setValue(e.target.value)}
-                        helperText={dni.message}
-                        helperColor={dni.color}
-                        status={dni.color}
-                        color={dni.color}
-                        size='lg'
-                        bordered
-                        clearable
-                    />
-                  </Box>
-                  <Button
-                    size='lg'
-                    onPress={handleSubmit}
-                    disabled={!allowSubmit || dniType === '' || isLoading }
-                  >
-                    {!isLoading ? 'Registrarse' : <Loading type='points' />}
-                  </Button>
-                </Card.Body>
-                <Card.Footer>
-                  <NextLink href='/auth/login'>
-                    <Link>
-                      Ya tienes una cuenta?
-                    </Link>
-                  </NextLink>
-                  <Spacer x={10.35} />
-                  <ThemeSwitcher/>
-                </Card.Footer>
-            </Card>
-        </AuthLayout>
+                  <Radio value="V">V</Radio>
+                  <Radio value="J">J</Radio>
+                  <Radio value="E">E</Radio>
+                  <Radio value="P">P</Radio>
+                </Radio.Group>
+                <Input
+                  labelPlaceholder='Documento de identidad'
+                  type='text'
+                  maxLength={9}
+                  value={dni.value}
+                  onChange={(e) => dni.setValue(e.target.value)}
+                  helperText={dni.message}
+                  helperColor={dni.color}
+                  status={dni.color}
+                  color={dni.color}
+                  size='lg'
+                  bordered
+                  clearable
+                />
+              </Box>
+              <Button
+                size='lg'
+                onPress={handleSubmit}
+                disabled={!allowSubmit || dniType === '' || isLoading }
+              >
+                {!isLoading ? 'Registrarse' : <Loading type='points' />}
+              </Button>
+            </Card.Body>
+            <Card.Footer>
+              <NextLink href='/auth/login'>
+                <Link>
+                  Ya tienes una cuenta?
+                </Link>
+              </NextLink>
+              <Spacer x={10.35} />
+              <ThemeSwitcher/>
+            </Card.Footer>
+        </Card>
+      </AuthLayout>
     )
 }
 export default RegisterPage

@@ -1,15 +1,95 @@
+import { useMemo, useState } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
-import { Card, Input, Loading, Text } from '@nextui-org/react';
+import { Button, Card, Input, Loading, Radio, Text, useTheme } from '@nextui-org/react';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import { Box } from '../../components/containers';
 import { ShopLayout } from '../../layouts/ShopLayout';
 import { Client } from '../../models/Client';
+import { useForm } from '../../hooks/useForm';
+import { Notification } from '../../notification';
+import { api } from '../../api/api';
 
 interface Props {
   client: Client;
 }
 
 export const ProfilePage: NextPage<Props> = ({client}) => {
+  const {isDark} = useTheme()
+  const [isLoading,setIsLoading] = useState(false)
+  const [dniType,setDniType] = useState(client.dni[0])
+  const {allowSubmit,parsedFields} = useForm([
+    {
+      name: 'email',
+      validate: (value: string) => value.match(/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi),
+      validMessage: 'Email válido',
+      errorMessage: 'Email inválido',
+      initialValue: client.user.email,
+    },
+    {
+      name: 'name',
+      validate: (value: string) => value.length >= 3,
+      validMessage: 'Nombre válido',
+      errorMessage: 'Mínimo 3 caracteres',
+      initialValue: client.fullName,
+    },
+    {
+      name: 'phoneNumber',
+      validate: (value: string) => value.match(/^(0414|0424|0412|0416|0426)[0-9]{7}$/),
+      validMessage: 'Teléfono válido',
+      errorMessage: 'Teléfono inválido',
+      initialValue: client.phoneNumber,
+    },
+    {
+      name: 'dni',
+      validate: (value: string) => value.match(/^[0-9]{4,8}$/),
+      validMessage: 'Documento de identidad válido',
+      errorMessage: 'Documento de identidad inválido',
+      initialValue: client.dni.slice(1),
+    },
+  ])
+  const [email,name,phoneNumber,dni] = parsedFields;
+  const infoChanged = useMemo(() => {
+    return email.value !== client.user.email ||
+      name.value !== client.fullName ||
+      phoneNumber.value !== client.phoneNumber ||
+      dni.value !== client.dni.slice(1) ||
+      dniType !== client.dni[0]
+  }, [email.value,name.value,phoneNumber.value,dni.value,dniType])
+  const handleSubmit = async() => {
+    setIsLoading(true)
+    Notification(isDark).fire({
+      title: 'Cargando',
+      icon: 'info',
+    })
+    try {
+      await api.patch('/clients/update', 
+        {
+          email: email.value === client.user.email ? null : email.value,
+          fullName: name.value === client.fullName ? null : name.value,
+          dni: dniType + dni.value === client.dni ? null : dniType + dni.value,
+          phoneNumber: phoneNumber.value === client.phoneNumber ? null : phoneNumber.value,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`
+          }
+        }
+      )
+      Notification(isDark).fire({
+        title: 'Perfil actualizado',
+        icon: 'success',
+        timer: 5000,
+      })
+      setIsLoading(false)
+    } catch (error: any) {
+      Notification(isDark).fire({
+        title: error.response.data.message,
+        icon: 'error',
+      })
+      setIsLoading(false)
+    }
+  }
   return (
     <ShopLayout
       title="Perfil"
@@ -45,40 +125,94 @@ export const ProfilePage: NextPage<Props> = ({client}) => {
             css={{
               gap: '$17',
               display: 'flex',
-              py: '$12',
+              py: '$10',
             }}
           >
             {
               client ? (
                 <>
                   <Input
-                    bordered
-                    readOnly
-                    labelPlaceholder="Nombre Completo" 
-                    initialValue={client.fullName} 
+                    labelPlaceholder='Nombre'
+                    type='text'
+                    value={name.value}
+                    onChange={(e) => name.setValue(e.target.value)}
+                    helperText={name.message}
+                    helperColor={name.color}
+                    status={name.color}
+                    color={name.color}
                     size='lg'
+                    bordered
+                    clearable
                   />
                   <Input
+                    labelPlaceholder='Email'
+                    type='email'
+                    value={email.value}
+                    onChange={(e) => email.setValue(e.target.value)}
+                    helperText={email.message}
+                    helperColor={email.color}
+                    status={email.color}
+                    color={email.color}
+                    size='lg'
                     bordered
-                    readOnly
-                    labelPlaceholder="Email" 
-                    initialValue={client.user.email}  
-                    size='lg'
+                    clearable
                   />
-                  <Input 
-                    bordered 
-                    readOnly
-                    labelPlaceholder="Documento de Identidad" 
-                    initialValue={client.dni} 
+                  <Input
+                    labelPlaceholder='Número de teléfono'
+                    type='tel'
+                    maxLength={11}
+                    value={phoneNumber.value}
+                    onChange={(e) => phoneNumber.setValue(e.target.value)}
+                    helperText={phoneNumber.message}
+                    helperColor={phoneNumber.color}
+                    status={phoneNumber.color}
+                    color={phoneNumber.color}
                     size='lg'
-                  />
-                  <Input 
                     bordered
-                    labelPlaceholder="Número de teléfono"
-                    readOnly
-                    initialValue={client.phoneNumber} 
-                    size='lg'
+                    clearable
                   />
+                  <Box 
+                    css={{
+                      mt: '-$6',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: '$10',
+                    }}
+                  >
+                    <Radio.Group 
+                      value={dniType}
+                      onChange={setDniType}
+                      orientation="horizontal"
+                      size='xs'
+                    >
+                      <Radio value="V">V</Radio>
+                      <Radio value="J">J</Radio>
+                      <Radio value="E">E</Radio>
+                      <Radio value="P">P</Radio>
+                    </Radio.Group>
+                    <Input
+                      labelPlaceholder='Documento de identidad'
+                      type='text'
+                      maxLength={9}
+                      value={dni.value}
+                      onChange={(e) => dni.setValue(e.target.value)}
+                      helperText={dni.message}
+                      helperColor={dni.color}
+                      status={dni.color}
+                      color={dni.color}
+                      size='lg'
+                      bordered
+                      clearable
+                    />
+                  </Box>
+                  <Button
+                    size='lg'
+                    onPress={handleSubmit}
+                    disabled={!allowSubmit || !infoChanged || isLoading }
+                  >
+                    {!isLoading ? 'Actualizar' : <Loading type='points' />}
+                  </Button>
                 </>
               ) : (
                 <Loading/>
