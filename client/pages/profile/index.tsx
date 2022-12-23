@@ -47,8 +47,16 @@ export const ProfilePage: NextPage<Props> = ({client}) => {
       errorMessage: 'Documento de identidad inválido',
       initialValue: client.dni.slice(1),
     },
+    {
+      name: 'password',
+      validate: (value: string) => 
+      value === '' || value.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/),
+      validMessage: 'Contraseña segura',
+      errorMessage: 'Debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número',
+      initialValue: '',
+    },
   ])
-  const [email,name,phoneNumber,dni] = parsedFields;
+  const [email,name,phoneNumber,dni,password] = parsedFields;
   const infoChanged = useMemo(() => {
     return email.value !== client.user.email ||
       name.value !== client.fullName ||
@@ -69,6 +77,7 @@ export const ProfilePage: NextPage<Props> = ({client}) => {
           fullName: name.value === client.fullName ? null : name.value,
           dni: dniType + dni.value === client.dni ? null : dniType + dni.value,
           phoneNumber: phoneNumber.value === client.phoneNumber ? null : phoneNumber.value,
+          password: password.value === '' ? null : password.value,
         },
         {
           headers: {
@@ -206,6 +215,17 @@ export const ProfilePage: NextPage<Props> = ({client}) => {
                       clearable
                     />
                   </Box>
+                  <Input.Password
+                    labelPlaceholder='Nueva Contraseña'
+                    value={password.value}
+                    onChange={(e) => password.setValue(e.target.value)}
+                    helperText={password.message}
+                    helperColor={password.color}
+                    status={password.color}
+                    color={password.color}
+                    size='lg'
+                    bordered
+                  />
                   <Button
                     size='lg'
                     onPress={handleSubmit}
