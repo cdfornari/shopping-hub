@@ -1,13 +1,16 @@
 import type { NextPage } from 'next'
 import { Grid, Loading, Text } from '@nextui-org/react';
 import useSWR from 'swr';
+import { useRouter } from 'next/router';
 import { ShopLayout } from '../layouts'
 import { ProductCard } from '../components/ProductCard';
 import { fetcher } from '../api/fetcher';
 import { Product } from '../models';
 
 const Home: NextPage = () => {
-  const {data,error} = useSWR<Product[]>('products?onlyActive=true',fetcher);
+  const {query} = useRouter()
+  const {gender,category} = query;
+  const {data,error} = useSWR<Product[]>(`products?onlyActive=true&gender=${gender || ''}&category=${category || ''}`,fetcher);
   if(error) return <Text>Error</Text>
   return (
     <ShopLayout

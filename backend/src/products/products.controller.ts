@@ -27,8 +27,10 @@ export class ProductsController {
   @Get()
   findAll(
     @Query('onlyActive', ParseBoolPipe) onlyActive: boolean,
+    @Query('gender') gender: Gender,
+    @Query('category') category: Category,
   ) {
-    return this.productsService.findAll(onlyActive);
+    return this.productsService.findAll(onlyActive,gender,category);
   }
 
   @Get('my-products')
@@ -42,14 +44,6 @@ export class ProductsController {
   @Get(':id')
   findOne(@Param('id', ParseMongoIdPipe) id: string) {
     return this.productsService.findOne(id);
-  }
-
-  @Get(':gender/:category')
-  filter(
-    @Param('gender') gender: Gender,
-    @Param('category') category: Category,
-  ) {
-    return this.productsService.filter(gender,category);
   }
 
   @Patch(':id')

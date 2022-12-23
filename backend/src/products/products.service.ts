@@ -59,13 +59,23 @@ export class ProductsService {
     }
   }
 
-  async findAll(onlyActive: boolean = true) {
+  async findAll(onlyActive: boolean = true, gender?: Gender, category?: Category) {
     try {
       const products = await this.productModel.find(
-        onlyActive ? {isActive: true} : {}
+        {
+          $and: [
+            { isActive: onlyActive ? true : {'$in': [true, false]} },
+            { gender: gender ?
+              (gender === 'kids' ? 'kids' : { '$in': ['unisex',gender] })
+              : {'$in': ValidGenders}
+            },
+            { category: category ? category : {'$in': ValidCategories} }
+          ]
+        }
       )
       return products;
     } catch (error) {
+      console.log(error)
       throw new InternalServerErrorException(error)
     }
   }
@@ -73,34 +83,6 @@ export class ProductsService {
   async findOne(id: string) {
     const product = await this.productModel.findById(id)
     return product;
-  }
-
-  async filter(gender: Gender, category: Category){
-    if(!ValidGenders.includes(gender)) throw new BadRequestException('Género no válido');
-    if(!ValidCategories.includes(category)) throw new BadRequestException('Categoría no válida')
-    const products = gender === 'kid' ? (
-      await this.productModel.find({
-        gender: gender,
-        category: category
-      })
-    ):(
-      await this.productModel.find({
-        $or: [
-          {
-            gender: gender
-          },
-          {
-            gender: 'unisex'
-          }
-        ],
-        $and: [
-          {
-            category: category
-          }
-        ]
-      })
-    )
-    return products;
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {

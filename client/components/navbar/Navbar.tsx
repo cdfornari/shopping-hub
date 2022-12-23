@@ -1,10 +1,18 @@
 import { Dropdown, Navbar, Text } from '@nextui-org/react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { Category, Gender } from '../../models'
 import { CartButton } from './CartButton'
 import { NavbarMenu } from './NavbarMenu'
 import { ThemeSwitcher } from './ThemeSwitcher'
 
 export const NavbarWrapper = () => {
+  const router = useRouter()
+  const onFilter = (gender?: Gender, category?: Category) => {
+    router.query.gender = gender;
+    router.query.category = category;
+    router.push(router);
+  }
   return (
     <Navbar
         variant='sticky'
@@ -61,6 +69,9 @@ export const NavbarWrapper = () => {
                         // dropdown item title
                         "& .nextui-dropdown-item-content": {
                             w: "100%",
+                            h: "100%",
+                            d: "flex",
+                            alignItems: "center",
                             fontWeight: "$semibold",
                         },
                         },
@@ -69,27 +80,52 @@ export const NavbarWrapper = () => {
                     <Dropdown.Item
                         key="prendas-superiores"
                     >
-                        Prendas Superiores
+                        <span 
+                            onClick={() => onFilter('men', 'tops')} 
+                            style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center'}}
+                        >
+                            Prendas Superiores
+                        </span>
                     </Dropdown.Item>
                     <Dropdown.Item
                         key="prendas-inferiores"
                     >
-                        Prendas Inferiores
+                        <span 
+                            onClick={() => onFilter('men','bottoms')}
+                            style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center'}}
+                        >
+                            Prendas Inferiores
+                        </span>
                     </Dropdown.Item>
                     <Dropdown.Item
                         key="ropa-interior"
                     >
-                        Ropa Interior
+                        <span 
+                            onClick={() => onFilter('men','underwear')}
+                            style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center'}}
+                        >
+                            Ropa Interior
+                        </span>
                     </Dropdown.Item>
                     <Dropdown.Item
                         key="zapatos"
                     >
-                        Zapatos
+                        <span 
+                            onClick={() => onFilter('men','shoes')}
+                            style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center'}}
+                        >
+                            Zapatos
+                        </span>
                     </Dropdown.Item>
                     <Dropdown.Item
                         key="accesorios"
                     >
-                        Accesorios
+                        <span 
+                            onClick={() => onFilter('men','accessories')}
+                            style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center'}}
+                        >
+                            Accesorios
+                        </span>
                     </Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
@@ -123,6 +159,9 @@ export const NavbarWrapper = () => {
                         // dropdown item title
                         "& .nextui-dropdown-item-content": {
                             w: "100%",
+                            h: "100%",
+                            d: "flex",
+                            alignItems: "center",
                             fontWeight: "$semibold",
                         },
                         },
@@ -131,27 +170,52 @@ export const NavbarWrapper = () => {
                     <Dropdown.Item
                         key="prendas-superiores"
                     >
-                        Prendas Superiores
+                        <span 
+                            onClick={() => onFilter('women', 'tops')}
+                            style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center'}}
+                        >
+                            Prendas Superiores
+                        </span>
                     </Dropdown.Item>
                     <Dropdown.Item
                         key="prendas-inferiores"
                     >
-                        Prendas Inferiores
+                        <span 
+                            onClick={() => onFilter('women','bottoms')}
+                            style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center'}}
+                        >
+                            Prendas Inferiores
+                        </span>
                     </Dropdown.Item>
                     <Dropdown.Item
                         key="ropa-interior"
                     >
-                        Ropa Interior
+                        <span 
+                            onClick={() => onFilter('women','underwear')}
+                            style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center'}}
+                        >
+                            Ropa Interior
+                        </span>
                     </Dropdown.Item>
                     <Dropdown.Item
                         key="zapatos"
                     >
-                        Zapatos
+                        <span 
+                            onClick={() => onFilter('women','shoes')}
+                            style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center'}}
+                        >
+                            Zapatos
+                        </span>
                     </Dropdown.Item>
                     <Dropdown.Item
                         key="accesorios"
                     >
-                        Accesorios
+                        <span 
+                            onClick={() => onFilter('women','accessories')}
+                            style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center'}}
+                        >
+                            Accesorios
+                        </span>
                     </Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
@@ -185,6 +249,9 @@ export const NavbarWrapper = () => {
                         // dropdown item title
                         "& .nextui-dropdown-item-content": {
                             w: "100%",
+                            h: "100%",
+                            d: "flex",
+                            alignItems: "center",
                             fontWeight: "$semibold",
                         },
                         },
@@ -193,27 +260,52 @@ export const NavbarWrapper = () => {
                     <Dropdown.Item
                         key="prendas-superiores"
                     >
-                        Prendas Superiores
+                        <span 
+                            onClick={() => onFilter('kids', 'tops')}
+                            style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center'}}
+                        >
+                            Prendas Superiores
+                        </span>
                     </Dropdown.Item>
                     <Dropdown.Item
                         key="prendas-inferiores"
                     >
-                        Prendas Inferiores
+                        <span 
+                            onClick={() => onFilter('kids','bottoms')}
+                            style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center'}}
+                        >
+                            Prendas Inferiores
+                        </span>
                     </Dropdown.Item>
                     <Dropdown.Item
                         key="ropa-interior"
                     >
-                        Ropa Interior
+                        <span 
+                            onClick={() => onFilter('kids','underwear')}
+                            style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center'}}
+                        >
+                            Ropa Interior
+                        </span>
                     </Dropdown.Item>
                     <Dropdown.Item
                         key="zapatos"
                     >
-                        Zapatos
+                        <span 
+                            onClick={() => onFilter('kids','shoes')}
+                            style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center'}}
+                        >
+                            Zapatos
+                        </span>
                     </Dropdown.Item>
                     <Dropdown.Item
                         key="accesorios"
                     >
-                        Accesorios
+                        <span 
+                            onClick={() => onFilter('kids','accessories')}
+                            style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center'}}
+                        >
+                            Accesorios
+                        </span>
                     </Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
@@ -249,17 +341,17 @@ export const NavbarWrapper = () => {
                 </Link>
             </Navbar.CollapseItem>
             <Navbar.CollapseItem>
-                <Link href='/orders'>
+                <Link href='/?gender=men'>
                     Hombres
                 </Link>
             </Navbar.CollapseItem>
             <Navbar.CollapseItem>
-                <Link href='/orders'>
+                <Link href='/?gender=women'>
                     Mujeres
                 </Link>
             </Navbar.CollapseItem>
             <Navbar.CollapseItem>
-                <Link href='/orders'>
+                <Link href='/?gender=kids'>
                     Niños
                 </Link>
             </Navbar.CollapseItem>
