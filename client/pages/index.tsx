@@ -7,7 +7,7 @@ import { fetcher } from '../api/fetcher';
 import { Product } from '../models';
 
 const Home: NextPage = () => {
-  const {data,error} = useSWR<Product[]>('products',fetcher);
+  const {data,error} = useSWR<Product[]>('products?onlyActive=true',fetcher);
   if(error) return <Text>Error</Text>
   return (
     <ShopLayout

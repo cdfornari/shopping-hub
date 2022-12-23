@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { AuthService } from 'src/auth/auth.service';
 import { LoginDto } from 'src/auth/dto/login.dto';
 import { User } from 'src/auth/entities/user.entity';
@@ -40,7 +40,7 @@ export class StoresService {
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
     const { user,token } = await this.authService.login({email, password});
-    const store = await this.storeModel.findOne({"user._id": user.id})
+    const store = await this.storeModel.findOne({user: user.id})
     .populate('user', '-password')
     if(!store) throw new NotFoundException('tienda no encontrada')
     delete store.user;
@@ -80,11 +80,33 @@ export class StoresService {
     return store;
   }
 
-  update(id: number, updateStoreDto: UpdateStoreDto) {
-    return `This action updates a #${id} store`;
+  async update(user: User, updateStoreDto: UpdateStoreDto) {
+    const store = await this.storeModel.findOne({user: user._id});
+    if(!store) throw new NotFoundException('cliente no encontrado')
+    const { email, password, ...storeData } = updateStoreDto;
+    if(email || password) await this.authService.updateUser(
+      store.user as Types.ObjectId, {
+        email: email ? email : null,
+        password: password ? password : null,
+      }
+    )
+    store.rif = storeData.rif ? storeData.rif : store.rif;
+    store.logo = storeData.logo ? storeData.logo : store.logo;
+    store.name = storeData.name ? storeData.name : store.name;
+    store.phoneNumber = storeData.phoneNumber ? storeData.phoneNumber : store.phoneNumber;
+    return (await store.save()).populate('user', '-password')
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} store`;
+  async remove(id: string) {
+    const store = await this.storeModel.findById(id);
+    if(!store) throw new NotFoundException('tienda no encontrada')
+    return this.authService.deactivateUser(store.user as Types.ObjectId);
   }
+
+  async activate(id: string) {
+    const store = await this.storeModel.findById(id);
+    if(!store) throw new NotFoundException('tienda no encontrada')
+    return this.authService.activateUser(store.user as Types.ObjectId);
+  }
+
 }

@@ -45,6 +45,6 @@ export class CreateProductDto {
     @IsNumber({}, { each: true })
     @Min(6, { each: true })
     @Max(13, { each: true })
-    shoeSizes?: {size: number, stock: number}[];
+    shoeSizes?: number[];
     
 }

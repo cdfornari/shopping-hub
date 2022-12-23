@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { ReqUser } from 'src/auth/decorators/req-user.decorator';
 import { LoginDto } from 'src/auth/dto/login.dto';
+import { UpdateUserDto } from 'src/auth/dto/update-user.dto';
 import { User } from 'src/auth/entities/user.entity';
+import { ParseMongoIdPipe } from 'src/common/pipes/ParseMongoIdPipe';
 import { AdminService } from './admin.service';
 
 @Controller('admin')
@@ -34,19 +36,25 @@ export class AdminController {
     return this.adminService.findAll();
   }
 
-  @Get(':id')
-  @Auth('SUPER-ADMIN')
-  findOne(@Param('id') id: string) {
-    return this.adminService.findOne(+id);
-  }
-
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAdminDto: LoginDto) {
-    return this.adminService.update(+id, updateAdminDto);
+  @Auth('SUPER-ADMIN','ADMIN')
+  update(
+    @Param('id', ParseMongoIdPipe) id: string, 
+    @Body() updateAdminDto: UpdateUserDto
+  ) {
+    return this.adminService.update(id, updateAdminDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.adminService.remove(+id);
+  @Auth('SUPER-ADMIN')
+  remove(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.adminService.remove(id);
   }
+
+  @Post('activate/:id')
+  @Auth('SUPER-ADMIN')
+  activate(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.adminService.activate(id);
+  }
+
 }

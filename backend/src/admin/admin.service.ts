@@ -5,6 +5,7 @@ import { User } from 'src/auth/entities/user.entity';
 import { Store } from 'src/stores/entities/store.entity';
 import { AuthService } from '../auth/auth.service';
 import { LoginDto } from 'src/auth/dto/login.dto';
+import { UpdateUserDto } from 'src/auth/dto/update-user.dto';
 
 @Injectable()
 export class AdminService {
@@ -30,8 +31,10 @@ export class AdminService {
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
     const { user,token } = await this.authService.login({email, password});
-    if(!['ADMIN','SUPER-ADMIN'].includes(user.role))
-    throw new UnauthorizedException('admin no encontrado');
+    if(
+      !['ADMIN','SUPER-ADMIN'].includes(user.role) ||
+      !user.isActive
+    ) throw new UnauthorizedException('admin no encontrado');
     return {
       user,
       token
@@ -41,9 +44,8 @@ export class AdminService {
   async validate(userToValidate: User) {
     if(userToValidate.role === 'STORE') {
       const store = await this.storeModel.findOne({user : userToValidate.id})
-      .populate('user', '-password')
-      ;
-      if(!store) throw new UnauthorizedException('tienda no encontrada');
+      .populate('user', '-password');
+      if(!store || !(store.user as User).isActive) throw new UnauthorizedException('tienda no encontrada');
       return {
         user: {
           name: store.name, 
@@ -69,20 +71,20 @@ export class AdminService {
 
   findAll() {
     const users = this.userModel.find({role: 'ADMIN'})
-    .select('-password')
-    ;
+    .select('-password');
     return users;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} admin`;
+  update(id: string, updateAdminDto: UpdateUserDto) {
+    return this.authService.updateUser(id,updateAdminDto);
   }
 
-  update(id: number, updateAdminDto: LoginDto) {
-    return `This action updates a #${id} admin`;
+  remove(id: string) {
+    return this.authService.deactivateUser(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} admin`;
+  activate(id: string) {
+    return this.authService.activateUser(id);
   }
+
 }

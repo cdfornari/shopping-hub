@@ -59,9 +59,11 @@ export class ProductsService {
     }
   }
 
-  async findAll() {
+  async findAll(onlyActive: boolean = true) {
     try {
-      const products = await this.productModel.find()
+      const products = await this.productModel.find(
+        onlyActive ? {isActive: true} : {}
+      )
       return products;
     } catch (error) {
       throw new InternalServerErrorException(error)
@@ -101,11 +103,77 @@ export class ProductsService {
     return products;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    const product = await this.productModel.findById(id);
+    if(!product) throw new NotFoundException('Producto no encontrado');
+    if(updateProductDto.category){
+      if(updateProductDto.category === 'shoes'){
+        product.sizes = [];
+        if(!updateProductDto.shoeSizes || updateProductDto.shoeSizes.length === 0){
+          if(product.shoeSizes.length === 0) throw new BadRequestException('Las tallas de zapatos son obligatorias');
+        }
+        product.shoeSizes = (updateProductDto.shoeSizes && updateProductDto.shoeSizes.length > 0) 
+        ? updateProductDto.shoeSizes : product.shoeSizes;
+      }else{
+        product.shoeSizes = [];
+        if(!updateProductDto.sizes || updateProductDto.sizes.length === 0){
+          if(product.sizes.length === 0) throw new BadRequestException('Las tallas son requeridas');
+        }
+        if(product.sizes.length > 1){
+          if(product.sizes.some((size) => size === 'UNI'))         
+          throw new BadRequestException('Las tallas UNI no pueden ir con otras tallas')
+        }
+        product.sizes = (updateProductDto.sizes && updateProductDto.sizes.length > 0) 
+        ? updateProductDto.sizes : product.sizes;
+      }
+    }else{
+      if(product.category === 'shoes'){
+        product.shoeSizes = (updateProductDto.shoeSizes && updateProductDto.shoeSizes.length > 0)
+        ? updateProductDto.shoeSizes : product.shoeSizes;
+      }else{
+        product.sizes = (updateProductDto.sizes && updateProductDto.sizes.length > 0)
+        ? updateProductDto.sizes : product.sizes;
+      }
+    }
+    if(updateProductDto.price){
+      if(updateProductDto.comparativePrice){
+        if(updateProductDto.price > updateProductDto.comparativePrice){
+          throw new BadRequestException('El precio no puede ser mayor al precio comparativo')
+        }
+      }else{
+        if(updateProductDto.price > product.comparativePrice){
+          throw new BadRequestException('El precio no puede ser mayor al precio comparativo')
+        }
+      }
+    }else if(updateProductDto.comparativePrice){
+      if(product.price > updateProductDto.comparativePrice){
+        throw new BadRequestException('El precio no puede ser mayor al precio comparativo')
+      }
+    }
+    product.title = updateProductDto.title ? updateProductDto.title : product.title;
+    product.description = updateProductDto.description ? updateProductDto.description : product.description;
+    product.price = updateProductDto.price ? updateProductDto.price : product.price;
+    product.comparativePrice = updateProductDto.comparativePrice ? updateProductDto.comparativePrice : product.comparativePrice;
+    product.category = updateProductDto.category ? updateProductDto.category : product.category;
+    product.image = updateProductDto.image ? updateProductDto.image : product.image;
+    product.gender = updateProductDto.gender ? updateProductDto.gender : product.gender;
+    return product.save();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: string) {
+    const product = await this.productModel.findById(id);
+    if(!product) throw new NotFoundException('Producto no encontrado');
+    if(!product.isActive) throw new BadRequestException('El producto ya está inactivo');
+    product.isActive = false;
+    return product.save();
   }
+
+  async activate(id: string) {
+    const product = await this.productModel.findById(id);
+    if(!product) throw new NotFoundException('Producto no encontrado');
+    if(product.isActive) throw new BadRequestException('El producto ya está activo');
+    product.isActive = true;
+    return product.save();
+  }
+
 }

@@ -48,6 +48,12 @@ export class Product extends Document {
     image: string;
 
     @Prop({
+        type: Boolean,
+        default: true
+    })
+    isActive: boolean;
+
+    @Prop({
         type: String,
         required: true,
         enum: {
@@ -79,21 +85,17 @@ export class Product extends Document {
         ],
         default: []
     })
-    sizes?: Size[];
+    sizes: Size[];
 
     @Prop({
         type: [
             {
-                type: String,
-                enum: {
-                    values: ValidSizes,
-                    message: 'Size is not valid'
-                }
+                type: Number,
             }
         ],
         default: []
     })
-    shoeSizes?: number[];
+    shoeSizes: number[];
 
 }
 

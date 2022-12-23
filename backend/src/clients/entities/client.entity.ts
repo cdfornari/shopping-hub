@@ -12,7 +12,7 @@ export class Client extends Document{
         ref: 'User',
         required: true,
     })
-    user: User;
+    user: User | Types.ObjectId;
 
     @Prop({
         type: String,

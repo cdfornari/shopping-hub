@@ -93,11 +93,13 @@ export class OrdersService {
     return order;
   }
 
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
+  async update(id: string, updateOrderDto: UpdateOrderDto) {
+    const order = await this.orderModel.findById(id)
+    if(!order) throw new NotFoundException('Orden no encontrada');
+    order.status = updateOrderDto.status;
+    return {
+      order: await order.save()
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
-  }
 }

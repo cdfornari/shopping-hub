@@ -70,13 +70,25 @@ export class StoresController {
     return this.storesService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStoreDto: UpdateStoreDto) {
-    return this.storesService.update(+id, updateStoreDto);
+  @Patch('update')
+  @Auth('STORE')
+  update(
+    @Body() updateClientDto: UpdateStoreDto,
+    @ReqUser() user: User
+  ) {
+    return this.storesService.update(user, updateClientDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.storesService.remove(+id);
+  @Auth('ADMIN','SUPER-ADMIN','STORE')
+  remove(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.storesService.remove(id);
   }
+
+  @Post('activate/:id')
+  @Auth('ADMIN','SUPER-ADMIN')
+  activate(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.storesService.activate(id);
+  }
+
 }
