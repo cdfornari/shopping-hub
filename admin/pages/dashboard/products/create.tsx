@@ -86,7 +86,6 @@ const CreateProductPage: NextPage = () => {
             Notification(isDark).fire({
                 title: 'Producto creado',
                 icon: 'success',
-                
             })
             setIsLoading(false)
         } catch (error: any) {

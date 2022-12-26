@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { Link, Loading, Text } from '@nextui-org/react';
+import NextLink from 'next/link';
 import useSWR from 'swr';
 import { DashboardLayout } from '../../../layouts/DashboardLayout';
 import { Box } from '../../../components/containers';
@@ -7,7 +8,6 @@ import { TableWrapper } from '../../../components/table';
 import { fetcher } from '../../../api/fetcher';
 import { UserProps } from '../../../models/User';
 import { AdminCellReducer } from '../../../components/table/cell-reducers/AdminCellReducer';
-import NextLink from 'next/link';
 
 const columns = [
   { label: "Email", uid: "email" },
@@ -40,13 +40,13 @@ const AdminPage = () => {
         data ? (
           data.length > 0 ? (
             <Box
-                css={{width: '100%'}} 
+              css={{width: '100%'}} 
             >
-                <TableWrapper
-                    columns={columns}
-                    rows={users!}
-                    cellReducer={AdminCellReducer}
-                />
+              <TableWrapper
+                columns={columns}
+                rows={users!}
+                cellReducer={AdminCellReducer}
+              />
             </Box>
           ) : <Text>No hay administradores</Text>
         ) : <Loading/>
