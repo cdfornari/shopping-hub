@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useContext } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
-import { Button, Card, Input, Loading, Radio, Text, useTheme } from '@nextui-org/react';
+import { Button, Card, Input, Loading, Modal, Radio, Text, useModal, useTheme } from '@nextui-org/react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Box } from '../../components/containers';
@@ -9,6 +9,8 @@ import { Client } from '../../models/Client';
 import { useForm } from '../../hooks/useForm';
 import { Notification } from '../../notification';
 import { api } from '../../api/api';
+import { AuthContext } from '../../context/auth';
+import { useRouter } from 'next/router';
 
 interface Props {
   client: Client;
@@ -16,6 +18,9 @@ interface Props {
 
 export const ProfilePage: NextPage<Props> = ({client}) => {
   const {isDark} = useTheme()
+  const { setVisible, bindings } = useModal();
+  const {replace} = useRouter()
+  const {logout} = useContext(AuthContext)
   const [isLoading,setIsLoading] = useState(false)
   const [dniType,setDniType] = useState(client.dni[0])
   const {allowSubmit,parsedFields} = useForm([
@@ -99,11 +104,68 @@ export const ProfilePage: NextPage<Props> = ({client}) => {
       setIsLoading(false)
     }
   }
+  const onDeactivate = async() => {
+    setIsLoading(true)
+    Notification(isDark).fire({
+      title: 'Cargando',
+      icon: 'info',
+    })
+    try {
+      await api.delete(`/clients/${client._id}`, 
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`
+          }
+        }
+      )
+      Notification(isDark).fire({
+        title: 'Cuenta desactivada',
+        icon: 'success',
+        timer: 5000,
+      })
+      logout();
+      setIsLoading(false)
+      replace('/')
+    } catch (error: any) {
+      Notification(isDark).fire({
+        title: error.response.data.message,
+        icon: 'error',
+      })
+      setIsLoading(false)
+    }
+  }
   return (
     <ShopLayout
       title="Perfil"
       description="Profile"
     >
+      <Modal {...bindings}>
+        <Modal.Header>
+          {
+            <Text id='modal-title'>
+              Estas seguro de querer desactivar tu cuenta?
+            </Text>
+          }
+        </Modal.Header>
+        <Modal.Footer>
+          <Button
+            flat
+            color='success'
+            size='sm'
+            onClick={() => setVisible(false)}
+          >
+            Salir
+          </Button>
+          <Button
+            flat
+            color='error'
+            size='sm'
+            onClick={onDeactivate}
+          >
+            Confirmar
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <Box
         css={{
           width: '100%',
@@ -149,7 +211,6 @@ export const ProfilePage: NextPage<Props> = ({client}) => {
                     helperColor={name.color}
                     status={name.color}
                     color={name.color}
-                    size='lg'
                     bordered
                     clearable
                   />
@@ -162,7 +223,6 @@ export const ProfilePage: NextPage<Props> = ({client}) => {
                     helperColor={email.color}
                     status={email.color}
                     color={email.color}
-                    size='lg'
                     bordered
                     clearable
                   />
@@ -176,7 +236,6 @@ export const ProfilePage: NextPage<Props> = ({client}) => {
                     helperColor={phoneNumber.color}
                     status={phoneNumber.color}
                     color={phoneNumber.color}
-                    size='lg'
                     bordered
                     clearable
                   />
@@ -210,7 +269,6 @@ export const ProfilePage: NextPage<Props> = ({client}) => {
                       helperColor={dni.color}
                       status={dni.color}
                       color={dni.color}
-                      size='lg'
                       bordered
                       clearable
                     />
@@ -223,16 +281,30 @@ export const ProfilePage: NextPage<Props> = ({client}) => {
                     helperColor={password.color}
                     status={password.color}
                     color={password.color}
-                    size='lg'
                     bordered
                   />
-                  <Button
-                    size='lg'
-                    onPress={handleSubmit}
-                    disabled={!allowSubmit || !infoChanged || isLoading }
+                  <Box
+                    css={{
+                      d: 'flex',
+                      fd: 'column',
+                      gap: '$10',
+                    }}
                   >
-                    {!isLoading ? 'Actualizar' : <Loading type='points' />}
-                  </Button>
+                    <Button
+                      onPress={handleSubmit}
+                      disabled={!allowSubmit || (!infoChanged && password.value === '') || isLoading }
+                    >
+                      {!isLoading ? 'Actualizar' : <Loading type='points' />}
+                    </Button>
+                    <Button
+                      flat
+                      color='error'
+                      onPress={() => setVisible(true)}
+                      disabled={isLoading }
+                    >
+                      {!isLoading ? 'Desactivar cuenta' : <Loading type='points' />}
+                    </Button>
+                  </Box>
                 </>
               ) : (
                 <Loading/>

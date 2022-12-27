@@ -1,11 +1,13 @@
-import { FC, useMemo, useState } from 'react'
-import { Badge, Button, Card, Grid, Input, Loading, Radio, Row, Spacer, Text, useTheme } from '@nextui-org/react'
+import { FC, useContext, useMemo, useState } from 'react'
+import { Badge, Button, Card, Grid, Input, Loading, Modal, Radio, Row, Spacer, Text, useModal, useTheme } from '@nextui-org/react'
 import { useForm } from '../../hooks/useForm'
 import { Store } from '../../models/Store'
 import { Box } from '../containers'
 import { Notification } from '../../notification'
 import { api } from '../../api/api'
 import Cookies from 'js-cookie'
+import { useRouter } from 'next/router'
+import { AuthContext } from '../../context/auth'
 
 interface Props {
   store: Store,
@@ -13,6 +15,9 @@ interface Props {
 
 export const StoreProfile: FC<Props> = ({store}) => {
   const {isDark} = useTheme()
+  const { setVisible, bindings } = useModal();
+  const {replace} = useRouter()
+  const {logout} = useContext(AuthContext)
   const [isLoading,setIsLoading] = useState(false)
   const [rifType,setRifType] = useState(store.rif[0])
   const {allowSubmit,parsedFields} = useForm([
@@ -96,8 +101,65 @@ export const StoreProfile: FC<Props> = ({store}) => {
       setIsLoading(false)
     }
   }
+  const onDeactivate = async() => {
+    setIsLoading(true)
+    Notification(isDark).fire({
+      title: 'Cargando',
+      icon: 'info',
+    })
+    try {
+      await api.delete(`/stores/${store._id}`, 
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`
+          }
+        }
+      )
+      Notification(isDark).fire({
+        title: 'Cuenta desactivada',
+        icon: 'success',
+        timer: 5000,
+      })
+      logout();
+      setIsLoading(false)
+      replace('/')
+    } catch (error: any) {
+      Notification(isDark).fire({
+        title: error.response.data.message,
+        icon: 'error',
+      })
+      setIsLoading(false)
+    }
+  }
   return (
     <>
+      <Modal {...bindings}>
+        <Modal.Header>
+          {
+            <Text id='modal-title'>
+              Estas seguro de querer desactivar tu cuenta?
+            </Text>
+          }
+        </Modal.Header>
+        <Modal.Footer>
+          <Button
+            flat
+            color='success'
+            size='sm'
+            onClick={() => setVisible(false)}
+          >
+            Salir
+          </Button>
+          <Button
+            flat
+            color='error'
+            size='sm'
+            onClick={onDeactivate}
+          >
+            Confirmar
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <Text h1>Perfil de Tienda</Text>
       <Grid.Container gap={2} justify="center" >
         <Grid 
@@ -127,17 +189,19 @@ export const StoreProfile: FC<Props> = ({store}) => {
           >
             <Button
               flat
-              color="error"
-            >
-              {!isLoading ? 'Desactivar perfil' : <Loading type='points' />}
-            </Button> 
-            <Button
-              flat
-              disabled={!allowSubmit || !infoChanged || isLoading}
+              disabled={!allowSubmit || (!infoChanged && password.value === '') || isLoading}
               onClick={handleSubmit}
             >
               {!isLoading ? 'Actualizar' : <Loading type='points' />}
             </Button> 
+            <Button
+              flat
+              color='error'
+              onPress={() => setVisible(true)}
+              disabled={isLoading }
+            >
+              {!isLoading ? 'Desactivar cuenta' : <Loading type='points' />}
+            </Button>
           </Row>
         </Grid>
 
