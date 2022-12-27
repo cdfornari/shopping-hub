@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { ReqUser } from 'src/auth/decorators/req-user.decorator';
 import { User } from 'src/auth/entities/user.entity';
@@ -44,8 +43,14 @@ export class OrdersController {
 
   @Patch(':id')
   @Auth('SUPER-ADMIN','ADMIN')
-  update(@Param('id', ParseMongoIdPipe) id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.ordersService.update(id, updateOrderDto);
+  nextStep(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.ordersService.nextStep(id);
+  }
+
+  @Patch('cancel/:id')
+  @Auth('SUPER-ADMIN','ADMIN')
+  cancel(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.ordersService.cancel(id);
   }
 
 }

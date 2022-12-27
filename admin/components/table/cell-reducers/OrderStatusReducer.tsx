@@ -10,46 +10,46 @@ export const OrderStatusReducer: FC<Props> = ({statusKey}) => {
     case "pending":
       return (
         <Badge 
-            color= 'warning'
-            variant='bordered'
+          color='warning'
+          variant='bordered'
         >
-            Procesando
+          Procesando
         </Badge>
       );
     case "approved":
       return (
         <Badge 
-            color={'success'}
-            variant='bordered'
+          color='success'
+          variant='bordered'
         >
-            Aprobado
+          Aprobado
         </Badge>
       );
     case "shipped":
       return (
         <Badge 
-            color={ 'secondary'}
-            variant='bordered'
+          color='warning'
+          variant='bordered'
         >
-            Enviado
+          Enviado
         </Badge>
       );
     case "canceled":
       return (
         <Badge 
-            color={'error'}
-            variant='bordered'
+          color='error'
+          variant='bordered'
         >
-            Cancelado
+          Cancelado
         </Badge>
       );
     case "delivered":
       return( 
         <Badge 
-            color={'primary'}
-            variant='bordered'
+          color='success'
+          variant='bordered'
         >
-            Entregado
+          Entregado
         </Badge>
       )
     default:

@@ -38,7 +38,6 @@ const CreateProductPage: NextPage = () => {
         Notification(isDark).fire({
             title: 'Cargando',
             icon: 'info',
-
         })
         if(selectedCategory === 'shoes'){
             if(selectedShoeSizes.length === 0) 

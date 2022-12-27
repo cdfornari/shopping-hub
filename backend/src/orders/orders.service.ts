@@ -6,7 +6,6 @@ import { Client } from 'src/clients/entities/client.entity';
 import { ExchangesService } from 'src/exchanges/exchanges.service';
 import { Product } from 'src/products/entities/product.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { Order } from './entities/order.entity';
 
 @Injectable()
@@ -93,13 +92,31 @@ export class OrdersService {
     return order;
   }
 
-  async update(id: string, updateOrderDto: UpdateOrderDto) {
+  async nextStep(id: string) {
     const order = await this.orderModel.findById(id)
     if(!order) throw new NotFoundException('Orden no encontrada');
-    order.status = updateOrderDto.status;
-    return {
-      order: await order.save()
+    if(order.status === 'delivered') throw new BadRequestException('Orden ya entregada');
+    if(order.status === 'canceled') throw new BadRequestException('Orden cancelada');
+    switch(order.status){
+      case 'pending':
+        order.status = 'approved';
+      break;
+      case 'approved':
+        order.status = 'shipped';
+      break;
+      case 'shipped':
+        order.status = 'delivered';
+      break;
     }
+    return await order.save();
+  }
+
+  async cancel(id: string) {
+    const order = await this.orderModel.findById(id)
+    if(!order) throw new NotFoundException('Orden no encontrada');
+    if(order.status !== 'pending') throw new BadRequestException('Orden no puede ser cancelada');
+    order.status = 'canceled';
+    return await order.save();
   }
 
 }
