@@ -87,6 +87,14 @@ export class ClientsService {
   async update(user: User, updateClientDto: UpdateClientDto) {
     const client = await this.clientModel.findOne({user: user.id});
     if(!client) throw new NotFoundException('cliente no encontrado')
+    if(
+      await this.clientModel.findOne({dni: updateClientDto.dni}) &&
+      client.dni !== updateClientDto.dni
+    ) throw new BadRequestException('cedula ya registrada')
+    if(
+      await this.clientModel.findOne({phoneNumber: updateClientDto.phoneNumber}) &&
+      client.phoneNumber !== updateClientDto.phoneNumber
+    ) throw new BadRequestException('telefono ya registrado')
     const { email, password, ...clientData } = updateClientDto;
     if(email || password) await this.authService.updateUser(
       client.user as Types.ObjectId, {

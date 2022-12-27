@@ -82,7 +82,15 @@ export class StoresService {
 
   async update(user: User, updateStoreDto: UpdateStoreDto) {
     const store = await this.storeModel.findOne({user: user.id});
-    if(!store) throw new NotFoundException('cliente no encontrado')
+    if(!store) throw new NotFoundException('tienda no encontrada')
+    if(
+      await this.storeModel.findOne({rif: updateStoreDto.rif}) &&
+      store.rif !== updateStoreDto.rif
+    ) throw new BadRequestException('rif ya registrado');
+    if(
+      await this.storeModel.findOne({phoneNumber: updateStoreDto.phoneNumber}) &&
+      store.phoneNumber !== updateStoreDto.phoneNumber
+    ) throw new BadRequestException('telefono ya registrado');
     const { email, password, ...storeData } = updateStoreDto;
     if(email || password) await this.authService.updateUser(
       store.user as Types.ObjectId, {
