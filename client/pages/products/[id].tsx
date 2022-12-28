@@ -7,6 +7,7 @@ import { ShopLayout } from "../../layouts";
 import { Product, Size } from '../../models';
 import { ShoppingCartContext } from '../../context/shopping-cart';
 import { Notification } from '../../notification';
+import { sortSizes } from '../../helpers';
 
 interface Props {
     product: Product;
@@ -106,7 +107,7 @@ const ProductPage: NextPage<Props> = ({product}: Props) => {
                 >
                     {
                         product.category === 'shoes' ? (
-                            product.shoeSizes!.map((s, index) => 
+                            product.shoeSizes!.sort().map((s, index) => 
                             <Button  
                                 bordered={selectedShoeSize !== s}
                                 key={index} 
@@ -116,7 +117,7 @@ const ProductPage: NextPage<Props> = ({product}: Props) => {
                             </Button>
                         )
                         ) : (
-                            product.sizes!.map((s, index) => 
+                            sortSizes(product.sizes!).map((s, index) => 
                                 <Button 
                                     bordered={selectedSize !== s}
                                     key={index} 

@@ -5,9 +5,10 @@ import { useContext } from 'react';
 import { useSWRConfig } from 'swr';
 import { api } from '../../../api/api';
 import { AuthContext } from '../../../context/auth';
-import { categoryReducer } from '../../../helpers';
+import { categoryReducer, sortSizes } from '../../../helpers';
 import { Notification } from '../../../notification';
 import { Category } from '../../../types/category';
+import { Size } from '../../../types/size';
 import { TableActions } from '../TableActions';
 import { ProductCategoryReducer } from './ProductCategoryReducer';
 import { ProductGenderReducer } from './ProductGenderReducer';
@@ -20,7 +21,8 @@ interface Row {
   storeName: string;
   storeLogo: string;
   price: number;
-  sizes: string[];
+  sizes: Size[];
+  shoeSizes: number[];
   gender: string;
   active: boolean;
 }
@@ -79,7 +81,7 @@ export const ProductsCellReducer = (row: Row, columnKey: string) => {
       );
     case "store":
       return (
-          <User name={row.storeName} src={row.storeLogo}/>
+        <User name={row.storeName} src={row.storeLogo}/>
       );
     case "price":
       return(
@@ -89,10 +91,20 @@ export const ProductsCellReducer = (row: Row, columnKey: string) => {
       )
     case "sizes":
      return(
-        <Text>
-            {row.sizes.join(',')}
-        </Text>
-        )
+        <>
+          {
+            row.category === 'shoes' ? (
+              <Text>
+              {row.shoeSizes.sort().join(',')}
+            </Text>
+            ) : (
+              <Text>
+                {sortSizes(row.sizes).join(',')}
+              </Text>
+            )
+          }
+        </>
+      )
     case "active":
       return( 
         <Badge 

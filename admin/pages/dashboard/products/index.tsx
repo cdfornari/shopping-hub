@@ -47,7 +47,7 @@ const ProductsPage: NextPage = () => {
         user?.role === 'STORE' && (
           <NextLink href='/dashboard/products/create'>
             <Link>
-                Crear producto
+              Crear producto
             </Link>
           </NextLink>
         )
