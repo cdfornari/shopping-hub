@@ -8,6 +8,7 @@ import { Store } from 'src/stores/entities/store.entity';
 import { User } from 'src/auth/entities/user.entity';
 import { Gender, ValidGenders } from './types/gender';
 import { Category, ValidCategories } from './types/category';
+import { UploadsService } from 'src/uploads/uploads.service';
 
 @Injectable()
 export class ProductsService {
@@ -16,7 +17,8 @@ export class ProductsService {
     @InjectModel(Product.name)
     private readonly productModel: Model<Product>,
     @InjectModel(Store.name)
-    private readonly storeModel: Model<Store>
+    private readonly storeModel: Model<Store>,
+    private readonly uploadsService: UploadsService
   ){}
 
   async create(createProductDto: CreateProductDto, user: User) {
@@ -140,6 +142,14 @@ export class ProductsService {
     product.image = updateProductDto.image ? updateProductDto.image : product.image;
     product.gender = updateProductDto.gender ? updateProductDto.gender : product.gender;
     return product.save();
+  }
+
+  async changeImage(productId: string, imagePath: string) {
+    const product = await this.productModel.findById(productId);
+    if(!product) throw new NotFoundException('tienda no encontrada');
+    const imgUrl = await this.uploadsService.uploadImage(imagePath);
+    product.image = imgUrl;
+    return await product.save()
   }
 
   async remove(id: string) {

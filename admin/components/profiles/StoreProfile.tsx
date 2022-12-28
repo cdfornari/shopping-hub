@@ -1,4 +1,4 @@
-import { FC, useContext, useMemo, useState } from 'react'
+import { FC, useContext, useMemo, useRef, useState } from 'react'
 import { Badge, Button, Card, Grid, Input, Loading, Modal, Radio, Row, Spacer, Text, useModal, useTheme } from '@nextui-org/react'
 import { useForm } from '../../hooks/useForm'
 import { Store } from '../../models/Store'
@@ -18,6 +18,8 @@ export const StoreProfile: FC<Props> = ({store}) => {
   const { setVisible, bindings } = useModal();
   const router = useRouter()
   const {logout} = useContext(AuthContext)
+  const [file,setFile] = useState<File | null>();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isLoading,setIsLoading] = useState(false)
   const [rifType,setRifType] = useState(store.rif[0])
   const {allowSubmit,parsedFields} = useForm([
@@ -73,34 +75,57 @@ export const StoreProfile: FC<Props> = ({store}) => {
       icon: 'info',
     })
     try {
-      await api.patch('/stores/update', 
-        {
-          email: email.value === store.user.email ? null : email.value,
-          name: name.value === store.name ? null : name.value,
-          rif: rifType + '-' + rif.value === store.rif ? null : rifType + '-' + rif.value,
-          phoneNumber: phoneNumber.value === store.phoneNumber ? null : phoneNumber.value,
-          password: password.value === '' ? null : password.value,
-        },
-        {
+      if(file){
+        const formData = new FormData();
+        formData.append('image',file);
+        await api.patch('/stores/change-logo',formData,{
           headers: {
             Authorization: `Bearer ${Cookies.get('token')}`
           }
-        }
-      )
-      Notification(isDark).fire({
-        title: 'Perfil actualizado',
-        icon: 'success',
-        timer: 5000,
-      })
-      setIsLoading(false)
-      router.replace(router.asPath)
+        })
+        Notification(isDark).fire({
+          title: 'Logo actualizado',
+          icon: 'success',
+          timer: 5000,
+        })
+        setFile(null)
+      }
     } catch (error: any) {
       Notification(isDark).fire({
         title: error.response.data.message,
         icon: 'error',
       })
-      setIsLoading(false)
     }
+    try {
+      if(infoChanged){
+        await api.patch('/stores/update', 
+          {
+            email: email.value === store.user.email ? null : email.value,
+            name: name.value === store.name ? null : name.value,
+            rif: rifType + '-' + rif.value === store.rif ? null : rifType + '-' + rif.value,
+            phoneNumber: phoneNumber.value === store.phoneNumber ? null : phoneNumber.value,
+            password: password.value === '' ? null : password.value,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${Cookies.get('token')}`
+            }
+          }
+        )
+        Notification(isDark).fire({
+          title: 'Perfil actualizado',
+          icon: 'success',
+          timer: 5000,
+        })
+      }
+    } catch (error: any) {
+      Notification(isDark).fire({
+        title: error.response.data.message,
+        icon: 'error',
+      })
+    }
+    setIsLoading(false)
+    router.replace(router.asPath)
   }
   const onDeactivate = async() => {
     setIsLoading(true)
@@ -188,9 +213,25 @@ export const StoreProfile: FC<Props> = ({store}) => {
               gap: '$8',
             }}
           >
+            <input
+              type='file'
+              ref={fileInputRef}
+              onChange={e => setFile(e.target.files?.[0])}
+              accept='image/*'
+              style={{
+                display: 'none'
+              }}
+            />
             <Button
               flat
-              disabled={!allowSubmit || (!infoChanged && password.value === '') || isLoading}
+              onPress={() => fileInputRef.current?.click()}
+              color={file ? 'success' : 'primary'}
+            >
+              Cambia la imagen
+            </Button>
+            <Button
+              flat
+              disabled={!allowSubmit || (!infoChanged && password.value === '' && !file) || isLoading}
               onClick={handleSubmit}
             >
               {!isLoading ? 'Actualizar' : <Loading type='points' />}

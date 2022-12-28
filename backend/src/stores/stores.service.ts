@@ -117,4 +117,12 @@ export class StoresService {
     return this.authService.activateUser(store.user as Types.ObjectId);
   }
 
+  async changeLogo(user: User, imagePath: string) {
+    const store = await this.storeModel.findOne({user: user.id});
+    if(!store) throw new NotFoundException('tienda no encontrada');
+    const imgUrl = await this.uploadsService.uploadImage(imagePath);
+    store.logo = imgUrl;
+    return (await store.save()).populate('user', '-password')
+  }
+
 }

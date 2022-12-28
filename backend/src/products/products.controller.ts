@@ -1,4 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseBoolPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseBoolPipe, UseInterceptors, UploadedFile, ParseFilePipeBuilder } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { v4 as uuid } from 'uuid';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -49,6 +52,37 @@ export class ProductsController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
     return this.productsService.update(id, updateProductDto);
+  }
+
+  @Patch('change-image/:id')
+  @Auth('STORE')
+  @UseInterceptors(
+    FileInterceptor('image',{
+      limits: {
+        files: 1,
+      },
+      storage: diskStorage({
+        destination: './images',
+        filename: (req, file, cb) => {
+          const fileExtension = file.mimetype.split('/')[1];
+          const fileName = `${uuid()}.${fileExtension}`;
+          cb(null,fileName)
+        }
+      })
+    })
+  )
+  changeImage(
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+      .addFileTypeValidator({
+        fileType: new RegExp(/(png|jpe?g)/),
+      })
+      .build()
+    ) 
+    file: Express.Multer.File,
+    @Param('id', ParseMongoIdPipe) id: string,
+  ) {
+    return this.productsService.changeImage(id,file.path);
   }
 
   @Delete(':id')

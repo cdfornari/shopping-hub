@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useMemo, useRef, useState } from 'react';
 import { NextPage,GetServerSideProps } from "next"
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
@@ -26,6 +26,8 @@ const DetailsProductPage: NextPage<Props> = ({product}) => {
     const router = useRouter()
     const {user} = useContext(AuthContext)
     const [isLoading,setIsLoading] = useState(false)
+    const [file,setFile] = useState<File | null>();
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const [selectedCategory, setSelectedCategory] = useState<Category>(product.category)
     const [selectedGender, setSelectedGender] = useState<Gender>(product.gender)
     const [selectedSizes, setSelectedSizes] = useState<Size[]>(product.sizes || [])
@@ -87,39 +89,62 @@ const DetailsProductPage: NextPage<Props> = ({product}) => {
             });
         }
         try {
-            await api.patch(`/products/${product._id}`,
-                {
-                    title: title.value !== product.title ? title.value : null,
-                    description: description.value !== product.description ? description.value : null,
-                    price: price !== product.price ? price : null,
-                    comparativePrice: compPrice !== product.comparativePrice ? compPrice : null, 
-                    category: selectedCategory !== product.category ? selectedCategory : null,
-                    gender: selectedGender !== product.gender ? selectedGender : null, 
-                    sizes: selectedCategory !== 'shoes' &&
-                    (selectedSizes.sort().join(',') !== product.sizes?.sort().join(',')) ? selectedSizes : null,
-                    shoeSizes: selectedCategory === 'shoes' &&
-                    (selectedShoeSizes.sort().join(',') !== product.shoeSizes?.sort().join(',')) ? selectedShoeSizes : null,
-                },
-                {
+            if(file){
+                const formData = new FormData();
+                formData.append('image',file);
+                await api.patch(`/products/change-image/${product._id}`,formData,{
                     headers: {
                         'Authorization': `Bearer ${Cookies.get('token')}`
                     }
-                }
-            )
-            Notification(isDark).fire({
-                title: 'Producto actualizado',
-                icon: 'success',
-            })
-            setIsLoading(false)
-            router.replace(router.asPath)
+                })
+                Notification(isDark).fire({
+                    title: 'Imagen actualizada',
+                    icon: 'success',
+                })
+                setFile(null)
+            }
         } catch (error: any) {
             Notification(isDark).fire({
                 title: error.response.data.message,
                 icon: 'error',
                 timer: 3000
             })
-            setIsLoading(false)
         }
+        try {
+            if(infoChanged){
+                await api.patch(`/products/${product._id}`,
+                    {
+                        title: title.value !== product.title ? title.value : null,
+                        description: description.value !== product.description ? description.value : null,
+                        price: price !== product.price ? price : null,
+                        comparativePrice: compPrice !== product.comparativePrice ? compPrice : null, 
+                        category: selectedCategory !== product.category ? selectedCategory : null,
+                        gender: selectedGender !== product.gender ? selectedGender : null, 
+                        sizes: selectedCategory !== 'shoes' &&
+                        (selectedSizes.sort().join(',') !== product.sizes?.sort().join(',')) ? selectedSizes : null,
+                        shoeSizes: selectedCategory === 'shoes' &&
+                        (selectedShoeSizes.sort().join(',') !== product.shoeSizes?.sort().join(',')) ? selectedShoeSizes : null,
+                    },
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${Cookies.get('token')}`
+                        }
+                    }
+                )
+                Notification(isDark).fire({
+                    title: 'Producto actualizado',
+                    icon: 'success',
+                })
+            }
+        } catch (error: any) {
+            Notification(isDark).fire({
+                title: error.response.data.message,
+                icon: 'error',
+                timer: 3000
+            })
+        }
+        setIsLoading(false)
+        router.replace(router.asPath)
     }
     return (
         <DashboardLayout
@@ -261,8 +286,25 @@ const DetailsProductPage: NextPage<Props> = ({product}) => {
                             height='100%'  
                             src={product.image}
                             alt="Default Image"
-                            css={{borderRadius: '16px'}}
+                            css={{borderRadius: '16px', mb: '$4'}}
                         />
+                        <input
+                            type='file'
+                            ref={fileInputRef}
+                            onChange={e => setFile(e.target.files?.[0])}
+                            accept='image/*'
+                            style={{
+                                display: 'none'
+                            }}
+                        />
+                        <Button
+                            flat
+                            css={{width: '100%' }}
+                            onPress={() => fileInputRef.current?.click()}
+                            color={file ? 'success' : 'primary'}
+                        >
+                            Cambia la imagen
+                        </Button>
                     </Col>
                 </Row>
                 <Spacer y={1}/>
@@ -309,7 +351,7 @@ const DetailsProductPage: NextPage<Props> = ({product}) => {
                 </Row>
                 <Spacer y={2}/>
                 <Button
-                    disabled={!allowSubmit || !infoChanged || isLoading}
+                    disabled={!allowSubmit || (!infoChanged && !file) || isLoading}
                     onPress={onSubmit}
                     css={{
                         d: user?.role === 'STORE' ? 'block' : 'none',
