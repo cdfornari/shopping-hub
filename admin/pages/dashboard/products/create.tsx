@@ -294,10 +294,14 @@ const CreateProductPage: NextPage = () => {
                                 step="0.1"
                                 value={price}
                                 onChange={(e) => setPrice(Number(e.target.value))}
-                                helperText={price > 0 ? '' : 'El precio debe ser mayor a 0'}
-                                helperColor={price > 0 ? 'success' : 'error'}
-                                status={price > 0 ? 'success' : 'error'}
-                                color={price > 0 ? 'success' : 'error'}
+                                helperText={
+                                    price > 0 ? 
+                                    (price > compPrice ? 'El precio debe ser >= al precio comparativo' : '') : 
+                                    'El precio debe ser mayor a 0'
+                                }
+                                helperColor={price > 0 && compPrice >= price ? 'success' : 'error'}
+                                status={price > 0 && compPrice >= price ? 'success' : 'error'}
+                                color={price > 0 && compPrice >= price ? 'success' : 'error'}
                             /> 
                             <Spacer x={2}/>
                             <Input 

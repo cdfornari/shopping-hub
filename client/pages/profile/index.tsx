@@ -19,7 +19,7 @@ interface Props {
 export const ProfilePage: NextPage<Props> = ({client}) => {
   const {isDark} = useTheme()
   const { setVisible, bindings } = useModal();
-  const {replace} = useRouter()
+  const router = useRouter()
   const {logout} = useContext(AuthContext)
   const [isLoading,setIsLoading] = useState(false)
   const [dniType,setDniType] = useState(client.dni[0])
@@ -68,7 +68,7 @@ export const ProfilePage: NextPage<Props> = ({client}) => {
       phoneNumber.value !== client.phoneNumber ||
       dni.value !== client.dni.slice(1) ||
       dniType !== client.dni[0]
-  }, [email.value,name.value,phoneNumber.value,dni.value,dniType])
+  }, [email.value,name.value,phoneNumber.value,dni.value,dniType,client])
   const handleSubmit = async() => {
     setIsLoading(true)
     Notification(isDark).fire({
@@ -96,6 +96,7 @@ export const ProfilePage: NextPage<Props> = ({client}) => {
         timer: 5000,
       })
       setIsLoading(false)
+      router.replace(router.asPath)
     } catch (error: any) {
       Notification(isDark).fire({
         title: error.response.data.message,
@@ -125,7 +126,7 @@ export const ProfilePage: NextPage<Props> = ({client}) => {
       })
       logout();
       setIsLoading(false)
-      replace('/')
+      router.replace('/')
     } catch (error: any) {
       Notification(isDark).fire({
         title: error.response.data.message,

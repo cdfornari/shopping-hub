@@ -16,7 +16,7 @@ interface Props {
 export const StoreProfile: FC<Props> = ({store}) => {
   const {isDark} = useTheme()
   const { setVisible, bindings } = useModal();
-  const {replace} = useRouter()
+  const router = useRouter()
   const {logout} = useContext(AuthContext)
   const [isLoading,setIsLoading] = useState(false)
   const [rifType,setRifType] = useState(store.rif[0])
@@ -65,7 +65,7 @@ export const StoreProfile: FC<Props> = ({store}) => {
       phoneNumber.value !== store.phoneNumber ||
       rif.value !== store.rif.slice(2) ||
       rifType !== store.rif[0]
-  }, [email.value,name.value,phoneNumber.value,rif.value,rifType])
+  }, [email.value,name.value,phoneNumber.value,rif.value,rifType,store])
   const handleSubmit = async() => {
     setIsLoading(true)
     Notification(isDark).fire({
@@ -93,6 +93,7 @@ export const StoreProfile: FC<Props> = ({store}) => {
         timer: 5000,
       })
       setIsLoading(false)
+      router.replace(router.asPath)
     } catch (error: any) {
       Notification(isDark).fire({
         title: error.response.data.message,
@@ -122,7 +123,7 @@ export const StoreProfile: FC<Props> = ({store}) => {
       })
       logout();
       setIsLoading(false)
-      replace('/')
+      router.replace('/')
     } catch (error: any) {
       Notification(isDark).fire({
         title: error.response.data.message,
@@ -198,7 +199,7 @@ export const StoreProfile: FC<Props> = ({store}) => {
               flat
               color='error'
               onPress={() => setVisible(true)}
-              disabled={isLoading }
+              disabled={isLoading}
             >
               {!isLoading ? 'Desactivar cuenta' : <Loading type='points' />}
             </Button>

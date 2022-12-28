@@ -3,7 +3,7 @@ import { Gender } from "../types/gender";
 const translateGender = {
     'men': 'Hombres',
     'women': 'Mujeres',
-    'kid': 'Niños',
+    'kids': 'Niños',
     'unisex': 'Unisex'
 }
 
