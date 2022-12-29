@@ -14,7 +14,6 @@ export class Product extends Document {
         type: Types.ObjectId,
         required: true,
         ref: 'Store',
-        autopopulate: true,
     })
     store: Store;
 

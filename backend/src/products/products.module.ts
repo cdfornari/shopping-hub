@@ -9,14 +9,10 @@ import { UploadsModule } from 'src/uploads/uploads.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeatureAsync([
+    MongooseModule.forFeature([
       {
         name: Product.name,
-        useFactory: () => {
-          const schema = ProductSchema;
-          schema.plugin(require('mongoose-autopopulate'));
-          return schema;
-        }, 
+        schema: ProductSchema, 
       }
     ]),
     AuthModule,

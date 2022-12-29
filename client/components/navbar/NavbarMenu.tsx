@@ -1,11 +1,13 @@
 import { useContext } from 'react';
+import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import { Avatar, Button, Dropdown, Link, useTheme } from '@nextui-org/react'
 import { AiOutlineUser } from 'react-icons/ai';
 import { AuthContext } from '../../context/auth';
-import NextLink from 'next/link';
 import { Notification } from '../../notification';
 
 export const NavbarMenu = () => {
+  const {replace} = useRouter()
   const { user, logout } =useContext(AuthContext);
   const { isDark } = useTheme()
   const onLogout = () =>{
@@ -14,6 +16,7 @@ export const NavbarMenu = () => {
         icon: 'info',
         title: 'Sesión cerrada',
     })
+    replace('/')
   }
   return (
     <Dropdown placement="bottom-right">
