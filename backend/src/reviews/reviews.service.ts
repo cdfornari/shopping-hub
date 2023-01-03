@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from 'src/auth/entities/user.entity';
@@ -21,11 +21,11 @@ export class ReviewsService {
 
   async create(createReviewDto: CreateReviewDto, user: User) {
     const order = await this.ordersService.findOne(createReviewDto.orderId)
-    if(!order) throw new Error('orden no encontrada')
+    if(!order) throw new BadRequestException('orden no encontrada')
     const product = await this.productsService.findOne(createReviewDto.productId)
-    if(!product) throw new Error('producto no encontrado')
+    if(!product) throw new BadRequestException('producto no encontrado')
     const client = await this.clientsService.findOne(user.id)
-    if(!client) throw new Error('cliente no encontrado')
+    if(!client) throw new BadRequestException('cliente no encontrado')
     const review = await this.reviewModel.create({
       ...createReviewDto,
       client: client.id,
