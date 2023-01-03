@@ -4,6 +4,7 @@ import { Store } from 'src/stores/entities/store.entity';
 import { Category, ValidCategories } from '../types/category';
 import { Gender, ValidGenders } from '../types/gender';
 import { Size, ValidSizes } from '../types/size';
+import { Review } from '../../reviews/entities/review.entity';
 
 @Schema({
     versionKey: false,
@@ -87,14 +88,17 @@ export class Product extends Document {
     sizes: Size[];
 
     @Prop({
-        type: [
-            {
-                type: Number,
-            }
-        ],
+        type: [Number],
         default: []
     })
     shoeSizes: number[];
+
+    @Prop({
+        type: [Types.ObjectId],
+        ref: 'Review',
+        default: []
+    })
+    reviews: Review[] | Types.ObjectId[];
 
 }
 

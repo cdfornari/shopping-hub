@@ -122,4 +122,9 @@ export class ClientsService {
     return this.authService.activateUser(client.user as Types.ObjectId);
   }
 
+  async findByUser(user: User) {
+    return this.clientModel.findOne({user: user.id})
+    .populate('user', '-password');
+  }
+
 }

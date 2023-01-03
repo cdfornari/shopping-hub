@@ -26,6 +26,7 @@ import { ExchangesModule } from '../exchanges/exchanges.module';
     ExchangesModule,
   ],
   controllers: [OrdersController],
-  providers: [OrdersService]
+  providers: [OrdersService],
+  exports: [OrdersService]
 })
 export class OrdersModule {}

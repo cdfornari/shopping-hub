@@ -75,6 +75,10 @@ export class Order {
                 },
                 shoeSize: {
                     type: Number
+                },
+                isReviewed: {
+                    type: Boolean,
+                    default: false
                 }
             })
         ],
@@ -85,6 +89,7 @@ export class Order {
         quantity: number,
         size?: string,
         shoeSize?: number
+        isReviewed: boolean
     }[]
 
     @Prop({

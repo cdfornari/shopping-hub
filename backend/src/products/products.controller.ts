@@ -11,6 +11,7 @@ import { ParseMongoIdPipe } from '../common/pipes/ParseMongoIdPipe';
 import { User } from 'src/auth/entities/user.entity';
 import { Gender } from './types/gender';
 import { Category } from './types/category';
+import { CreateReviewDto } from '../reviews/dto/create-review.dto';
 
 @Controller('products')
 export class ProductsController {

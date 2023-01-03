@@ -10,6 +10,7 @@ import { StoresModule } from './stores/stores.module';
 import { AdminModule } from './admin/admin.module';
 import { OrdersModule } from './orders/orders.module';
 import { ExchangesModule } from './exchanges/exchanges.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ExchangesModule } from './exchanges/exchanges.module';
     AdminModule,
     OrdersModule,
     ExchangesModule,
+    ReviewsModule,
   ],
   controllers: [],
   providers: [],

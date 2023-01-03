@@ -1,0 +1,43 @@
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { User } from 'src/auth/entities/user.entity';
+import { ClientsService } from 'src/clients/clients.service';
+import { OrdersService } from 'src/orders/orders.service';
+import { ProductsService } from 'src/products/products.service';
+import { CreateReviewDto } from './dto/create-review.dto';
+import { Review } from './entities/review.entity';
+
+@Injectable()
+export class ReviewsService {
+
+  constructor(
+    private readonly productsService: ProductsService,
+    private readonly clientsService: ClientsService,
+    private readonly ordersService: OrdersService,
+    @InjectModel(Review.name)
+    private readonly reviewModel: Model<Review>,
+  ) {}
+
+  async create(createReviewDto: CreateReviewDto, user: User) {
+    const order = await this.ordersService.findOne(createReviewDto.orderId)
+    if(!order) throw new Error('orden no encontrada')
+    const product = await this.productsService.findOne(createReviewDto.productId)
+    if(!product) throw new Error('producto no encontrado')
+    const client = await this.clientsService.findOne(user.id)
+    if(!client) throw new Error('cliente no encontrado')
+    const review = await this.reviewModel.create({
+      ...createReviewDto,
+      client: client.id,
+    })
+    product.reviews.push(review.id)
+    order.products = order.products.map(p => {
+      if(p.product.id === product.id) 
+        p.isReviewed = true;
+      return p;
+    })
+    await Promise.all([order.save(), product.save()])
+    return review;
+  } 
+
+}

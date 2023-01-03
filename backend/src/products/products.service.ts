@@ -55,6 +55,12 @@ export class ProductsService {
     try {
       const products = await this.productModel.find({store: store._id})
       .populate('store')
+      .populate({
+        path: 'reviews',
+        populate: {
+          path: 'client',
+        }
+      })
       return products;
     } catch (error) {
       console.log(error)
@@ -75,11 +81,18 @@ export class ProductsService {
             { category: category ? category : {'$in': ValidCategories} }
           ]
         }
-      ).populate({
+      )
+      .populate({
         path: 'store',
         populate: {
           path: 'user',
           select: 'isActive'
+        }
+      })
+      .populate({
+        path: 'reviews',
+        populate: {
+          path: 'client',
         }
       })
       return onlyActive ? 
@@ -92,7 +105,14 @@ export class ProductsService {
   }
 
   async findOne(id: string) {
-    const product = await (await this.productModel.findById(id)).populate('store')
+    const product = await this.productModel.findById(id)
+    .populate('store')
+    .populate({
+      path: 'reviews',
+      populate: {
+        path: 'client',
+      }
+    })
     return product;
   }
 
