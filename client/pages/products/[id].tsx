@@ -80,13 +80,14 @@ const ProductPage: NextPage<Props> = ({product}: Props) => {
                         fillColorArray={['#f17a45', '#f19745', '#f1a545', '#f1b345', '#f1d045']} 
                         initialValue={
                             product.reviews.length === 0 ? 0 :
-                            product.reviews.reduce((acc, review) => acc + review.rating, 0) / product.reviews.length
+                            product.reviews.reduce((acc, review) => acc + review.rating,0)/product.reviews.length
                         }
                     />
                     {
                         product.reviews.length > 0 && (
                             <Text css={{mt: '-$2'}} size='lg'>
-                                {product.reviews.reduce((acc, review) => (acc + review.rating)/product.reviews.length, 0).toFixed(2)}/5.00
+                                {
+                                (product.reviews.reduce((acc, review) => acc + review.rating,0)/product.reviews.length).toFixed(2)}/5.00
                             </Text>
                         )
                     }
