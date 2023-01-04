@@ -97,7 +97,7 @@ export const StoreProfile: FC<Props> = ({store}) => {
       })
     }
     try {
-      if(infoChanged){
+      if(infoChanged || password.value !== ''){
         await api.patch('/stores/update', 
           {
             email: email.value === store.user.email ? null : email.value,
