@@ -4,11 +4,11 @@ import { Model } from 'mongoose';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
-import { Store } from 'src/stores/entities/store.entity';
 import { User } from 'src/auth/entities/user.entity';
 import { Gender, ValidGenders } from './types/gender';
 import { Category, ValidCategories } from './types/category';
 import { UploadsService } from 'src/uploads/uploads.service';
+import { StoresService } from 'src/stores/stores.service';
 
 @Injectable()
 export class ProductsService {
@@ -16,8 +16,7 @@ export class ProductsService {
   constructor(
     @InjectModel(Product.name)
     private readonly productModel: Model<Product>,
-    @InjectModel(Store.name)
-    private readonly storeModel: Model<Store>,
+    private readonly storesService: StoresService,
     private readonly uploadsService: UploadsService
   ){}
 
@@ -35,7 +34,7 @@ export class ProductsService {
         throw new BadRequestException('Las tallas UNI no pueden ir con otras tallas')
       }
     }
-    const store = await this.storeModel.findOne({user: user.id});
+    const store = await this.storesService.findByUser(user);
     if(!store) throw new NotFoundException('Tienda no encontrada');
     try {
       const product = await this.productModel.create({
@@ -50,7 +49,7 @@ export class ProductsService {
   }
 
   async findByUser(user: User) {
-    const store = await this.storeModel.findOne({user: user.id});
+    const store = await this.storesService.findByUser(user);
     if(!store) throw new NotFoundException('Tienda no encontrada');
     try {
       const products = await this.productModel.find({store: store._id})

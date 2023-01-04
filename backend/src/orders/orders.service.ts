@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException, NotFound
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from 'src/auth/entities/user.entity';
-import { Client } from 'src/clients/entities/client.entity';
+import { ClientsService } from 'src/clients/clients.service';
 import { ExchangesService } from 'src/exchanges/exchanges.service';
 import { Product } from 'src/products/entities/product.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -13,8 +13,8 @@ export class OrdersService {
 
   constructor(
     private readonly exchangesService: ExchangesService,
+    private readonly clientsService: ClientsService,
     @InjectModel(Product.name) private readonly productModel: Model<Product>,
-    @InjectModel(Client.name) private readonly clientModel: Model<Client>,
     @InjectModel(Order.name) private readonly orderModel: Model<Order>,
   ) {}
 
@@ -49,7 +49,7 @@ export class OrdersService {
     },0);
     if(createOrderDto.paymentMethod === 'pago-movil') 
     total *= await this.exchangesService.getBolivarRate();
-    const client = await this.clientModel.findOne({user: user.id});
+    const client = await this.clientsService.findByUser(user)
     if(!client) throw new BadRequestException('Cliente no encontrado');
     try {
       const order = await this.orderModel.create({
@@ -67,7 +67,7 @@ export class OrdersService {
   }
 
   async findByUser(user: User) {
-    const client = await this.clientModel.findOne({user: user.id});
+    const client = await this.clientsService.findByUser(user)
     if(!client) throw new NotFoundException('Cliente no encontrado');
     try {
       const orders = await this.orderModel.find({client: client.id});

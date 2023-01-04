@@ -12,7 +12,8 @@ import { Client } from './entities/client.entity';
 export class ClientsService {
 
   constructor(
-    @InjectModel(Client.name) private readonly clientModel: Model<Client>,
+    @InjectModel(Client.name) 
+    private readonly clientModel: Model<Client>,
     private readonly authService: AuthService,
   ) {}
 

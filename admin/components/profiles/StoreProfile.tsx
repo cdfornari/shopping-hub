@@ -328,7 +328,7 @@ export const StoreProfile: FC<Props> = ({store}) => {
           <Spacer y={2.5} />
 
           <Input.Password
-            labelPlaceholder='Contraseña'
+            labelPlaceholder='Nueva Contraseña'
             value={password.value}
             onChange={(e) => password.setValue(e.target.value)}
             helperText={password.message}

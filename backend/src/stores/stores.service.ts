@@ -125,4 +125,9 @@ export class StoresService {
     return (await store.save()).populate('user', '-password')
   }
 
+  async findByUser(user: User) {
+    return this.storeModel.findOne({user: user.id})
+    .populate('user', '-password');
+  }
+
 }
