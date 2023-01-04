@@ -1,5 +1,5 @@
-import {  Badge } from '@nextui-org/react';
 import { FC } from 'react';
+import {  Badge } from '@nextui-org/react';
 
 interface Props{
     statusKey: string;

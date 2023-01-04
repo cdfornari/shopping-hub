@@ -3,7 +3,7 @@ import { Grid, Loading, Text } from '@nextui-org/react';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { ShopLayout } from '../layouts'
-import { ProductCard } from '../components/ProductCard';
+import { ProductCard } from '../components/products/ProductCard';
 import { fetcher } from '../api/fetcher';
 import { Product } from '../models';
 

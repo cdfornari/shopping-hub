@@ -1,7 +1,8 @@
 import { FC } from 'react'
 import { useRouter } from 'next/router'
 import { Card, Col, Grid, Text } from '@nextui-org/react'
-import { Product } from '../models'
+import { Rating } from 'react-simple-star-rating'
+import { Product } from '../../models'
 
 interface Props {
   product: Product
@@ -44,6 +45,7 @@ export const ProductCard: FC<Props> = ({product}) => {
           zIndex: 1,
           bgBlur: "#0f111466",
           borderTop: "$borderWeights$light solid rgba(255, 255, 255, 0.2)",
+          py: 2
         }}
       >
         <Grid.Container gap={2}>
@@ -59,13 +61,28 @@ export const ProductCard: FC<Props> = ({product}) => {
               transformOrigin: "left",
               fontWeight: "$bold",
               fontSize: "$md",
+              mt: '-$3'
             }}>
               {product.title}
             </Text>
+            {
+              product.comparativePrice > product.price && (
+                <Rating
+                  size={14}
+                  readonly
+                  allowFraction
+                  fillColorArray={['#f17a45', '#f19745', '#f1a545', '#f1b345', '#f1d045']} 
+                  initialValue={
+                    product.reviews.length === 0 ? 0 :
+                    product.reviews.reduce((acc, review) => acc + review.rating, 0) / product.reviews.length
+                  }
+                />
+              )
+            }
           </Grid>
           <Grid xs={4} direction='column'>
             {
-              product.comparativePrice > product.price && (
+              product.comparativePrice > product.price ? (
                 <div style={{
                   display: 'flex'
                 }}>
@@ -86,6 +103,17 @@ export const ProductCard: FC<Props> = ({product}) => {
                     -{((product.comparativePrice-product.price)*100/product.comparativePrice).toFixed(2)}%
                   </Text>
                 </div>
+              ) : (
+                <Rating
+                  size={14}
+                  readonly
+                  allowFraction
+                  fillColorArray={['#f17a45', '#f19745', '#f1a545', '#f1b345', '#f1d045']} 
+                  initialValue={
+                    product.reviews.length === 0 ? 0 :
+                    product.reviews.reduce((acc, review) => acc + review.rating, 0) / product.reviews.length
+                  }
+                />
               )
             }
             <Text css={{

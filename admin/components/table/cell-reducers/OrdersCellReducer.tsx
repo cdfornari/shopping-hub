@@ -1,4 +1,4 @@
-import {  Badge, Text } from '@nextui-org/react';
+import { Text } from '@nextui-org/react';
 import { Status } from '../../../models/Order';
 import { TableActions } from '../TableActions';
 import { OrderStatusReducer } from './OrderStatusReducer';

@@ -22,9 +22,11 @@ export class ReviewsService {
   async create(createReviewDto: CreateReviewDto, user: User) {
     const order = await this.ordersService.findOne(createReviewDto.orderId)
     if(!order) throw new BadRequestException('orden no encontrada')
+    if(order.client.user !== user.id) throw new BadRequestException('no puedes calificar esta orden')
+    if(order.status !== 'delivered') throw new BadRequestException('no puedes calificar este producto')
     const product = await this.productsService.findOne(createReviewDto.productId)
     if(!product) throw new BadRequestException('producto no encontrado')
-    const client = await this.clientsService.findOne(user.id)
+    const client = await this.clientsService.findByUser(user)
     if(!client) throw new BadRequestException('cliente no encontrado')
     const review = await this.reviewModel.create({
       ...createReviewDto,
