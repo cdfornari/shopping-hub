@@ -86,7 +86,7 @@ const ProductPage: NextPage<Props> = ({product}: Props) => {
                     {
                         product.reviews.length > 0 && (
                             <Text css={{mt: '-$2'}} size='lg'>
-                                {product.reviews.reduce((acc, review) => (acc + review.rating)/product.reviews.length, 0)}/5
+                                {product.reviews.reduce((acc, review) => (acc + review.rating)/product.reviews.length, 0).toFixed(2)}/5.00
                             </Text>
                         )
                     }
