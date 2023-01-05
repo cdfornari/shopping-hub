@@ -17,11 +17,26 @@ interface Props {
 
 const CheckoutPage: NextPage<Props> = ({exchange}) => {
     const {isDark} = useTheme()
-    const {push} = useRouter()
-    const {products,clearCart} = useContext(ShoppingCartContext);
+    const {push,replace,asPath} = useRouter()
+    const {products,clearCart,removeProduct} = useContext(ShoppingCartContext);
     const [isLoading,setIsLoading] = useState(false)
     const [paymentMethod,setPaymentMethod] = useState('');
     const [total,setTotal] = useState<number>()
+    useEffect(() => {
+      if(products.length > 0)
+        api.post('/products/validate-cart', {
+            products: products.map(({_id}) => _id)
+        }).then(({data}: {data: string[]}) => {
+            if(data.length > 0){
+                data.forEach(id => removeProduct(products.find(({_id}) => _id === id)!))
+                Notification(isDark).fire({
+                    icon: 'error',
+                    title: 'Algunos productos de tu carrito no están disponibles',
+                    timer: 5000,
+                })
+            }
+        })
+    }, [])
     useEffect(() => {
         setTotal(products.reduce((acc,product) => acc + (product.price * product.quantity),0))
     },[products])
@@ -98,6 +113,7 @@ const CheckoutPage: NextPage<Props> = ({exchange}) => {
                 icon: 'error',
                 title: error.response.data.message
             })
+            replace(asPath)
         }
     }
     return (
