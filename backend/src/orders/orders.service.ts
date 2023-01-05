@@ -5,6 +5,7 @@ import { User } from 'src/auth/entities/user.entity';
 import { ClientsService } from 'src/clients/clients.service';
 import { ExchangesService } from 'src/exchanges/exchanges.service';
 import { Product } from 'src/products/entities/product.entity';
+import { ProductsService } from 'src/products/products.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Order } from './entities/order.entity';
 
@@ -14,6 +15,7 @@ export class OrdersService {
   constructor(
     private readonly exchangesService: ExchangesService,
     private readonly clientsService: ClientsService,
+    private readonly productsService: ProductsService,
     @InjectModel(Product.name) private readonly productModel: Model<Product>,
     @InjectModel(Order.name) private readonly orderModel: Model<Order>,
   ) {}
@@ -21,6 +23,8 @@ export class OrdersService {
   async create(
     createOrderDto: CreateOrderDto, user: User
   ) {
+    const invalidProducts = await this.productsService.getInvalidProducts(createOrderDto.products.map(({product}) => product))
+    if(invalidProducts.length > 0) throw new BadRequestException('Algunos productos no están disponibles');
     const productsDB = await this.productModel.find(
       {
         _id: {

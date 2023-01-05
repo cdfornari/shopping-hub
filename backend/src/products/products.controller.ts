@@ -11,7 +11,7 @@ import { ParseMongoIdPipe } from '../common/pipes/ParseMongoIdPipe';
 import { User } from 'src/auth/entities/user.entity';
 import { Gender } from './types/gender';
 import { Category } from './types/category';
-import { CreateReviewDto } from '../reviews/dto/create-review.dto';
+import { CartDto } from './dto/cart.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -97,5 +97,10 @@ export class ProductsController {
   activate(@Param('id') id: string) {
     return this.productsService.activate(id);
   }
-  
+
+  @Post('validate-cart')
+  validateCart(@Body() cart: CartDto) {
+    return this.productsService.getInvalidProducts(cart.products);
+  }
+
 }

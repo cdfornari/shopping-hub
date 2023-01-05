@@ -196,4 +196,22 @@ export class ProductsService {
     return product.save();
   }
 
+  async getInvalidProducts(productIds: string[]) {
+    const invalidProducts = await Promise.all(
+      productIds.map(async (productId) => {
+        const product = await this.productModel.findById(productId)
+        .populate({
+          path: 'store',
+          populate: {
+            path: 'user',
+            select: 'isActive'
+          }
+        })
+        if(!product || !product.isActive) return productId;
+        if(!(product.store.user as User).isActive) return productId;
+      })
+    )
+    return invalidProducts.filter((invalidProduct) => invalidProduct)
+  }
+
 }
