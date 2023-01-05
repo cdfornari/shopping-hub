@@ -17,7 +17,7 @@ interface Props {
 
 const CheckoutPage: NextPage<Props> = ({exchange}) => {
     const {isDark} = useTheme()
-    const {push,replace,asPath} = useRouter()
+    const {push,replace} = useRouter()
     const {products,clearCart,removeProduct} = useContext(ShoppingCartContext);
     const [isLoading,setIsLoading] = useState(false)
     const [paymentMethod,setPaymentMethod] = useState('');
@@ -113,7 +113,7 @@ const CheckoutPage: NextPage<Props> = ({exchange}) => {
                 icon: 'error',
                 title: error.response.data.message
             })
-            replace(asPath)
+            replace('/shopping-cart')
         }
     }
     return (
