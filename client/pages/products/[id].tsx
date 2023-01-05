@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from "next";
+import { useRouter } from 'next/router';
 import { Button, Container, Grid, Image, Pagination, Spacer, Text, Textarea, User, useTheme } from '@nextui-org/react';
 import axios from 'axios';
 import { Rating } from 'react-simple-star-rating';
@@ -16,6 +17,7 @@ interface Props {
 }
 
 const ProductPage: NextPage<Props> = ({product}: Props) => {
+  const router = useRouter()
   const {isDark} = useTheme();
   const {addProductToCart} = useContext(ShoppingCartContext)
   const [selectedSize, setSelectedSize] = useState<Size>();
@@ -46,6 +48,14 @@ const ProductPage: NextPage<Props> = ({product}: Props) => {
         icon: 'success',
         title: 'Producto agregado al carrito'
     })
+  }
+  const onFilter = (store: string) => {
+    router.push({
+        pathname: '/',
+        query: {
+            store
+        }
+    });
   }
   return (
     <ShopLayout
@@ -87,7 +97,8 @@ const ProductPage: NextPage<Props> = ({product}: Props) => {
                         product.reviews.length > 0 && (
                             <Text css={{mt: '-$2'}} size='lg'>
                                 {
-                                (product.reviews.reduce((acc, review) => acc + review.rating,0)/product.reviews.length).toFixed(2)}/5.00
+                                    (product.reviews.reduce((acc, review) => acc + review.rating,0)/product.reviews.length).toFixed(2)
+                                }/5.00
                             </Text>
                         )
                     }
@@ -174,6 +185,8 @@ const ProductPage: NextPage<Props> = ({product}: Props) => {
                 <User 
                     src={product.store.logo}
                     name={product.store.name}
+                    css={{cursor: 'pointer'}}
+                    onClick={() => onFilter(product.store._id)}
                 />
                 <Spacer y={1} />
                 <Text h3>Reseñas</Text>

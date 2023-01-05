@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
@@ -67,7 +67,7 @@ export class ProductsService {
     }
   }
 
-  async findAll(onlyActive: boolean = true, gender?: Gender, category?: Category) {
+  async findAll(onlyActive: boolean = true, gender?: Gender, category?: Category, store?: string) {
     try {
       const products = await this.productModel.find(
         {
@@ -77,7 +77,8 @@ export class ProductsService {
               (gender === 'kids' ? 'kids' : { '$in': ['unisex',gender] })
               : {'$in': ValidGenders}
             },
-            { category: category ? category : {'$in': ValidCategories} }
+            { category: category ? category : {'$in': ValidCategories} },
+            { store: store ? new Types.ObjectId(store) : {'$exists': true} },
           ]
         }
       )

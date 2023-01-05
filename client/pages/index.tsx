@@ -1,5 +1,5 @@
 import type { NextPage } from 'next'
-import { Grid, Loading, Text, Container } from '@nextui-org/react';
+import { Grid, Loading, Text, Container, User } from '@nextui-org/react';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { ShopLayout } from '../layouts'
@@ -10,8 +10,8 @@ import { categoryReducer, genderReducer } from '../helpers';
 
 const Home: NextPage = () => {
   const {query} = useRouter()
-  const {gender,category} = query;
-  const {data,error} = useSWR<Product[]>(`products?onlyActive=true&gender=${gender || ''}&category=${category || ''}`,fetcher);
+  const {gender,category,store} = query;
+  const {data,error} = useSWR<Product[]>(`products?onlyActive=true&gender=${gender || ''}&category=${category || ''}&store=${store || ''}`,fetcher);
   if(error) return <Text>Error</Text>
   return (
     <ShopLayout
@@ -28,6 +28,15 @@ const Home: NextPage = () => {
       {
         data && data.length > 0 && (
           <Container>
+            {
+              store && (
+                <User
+                  size='xl'
+                  src={data[0].store.logo}
+                  name={data[0].store.name}
+                />
+              )
+            }
             {
               gender && (
                 <Text h3>

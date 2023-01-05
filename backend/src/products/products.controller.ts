@@ -33,8 +33,9 @@ export class ProductsController {
     @Query('onlyActive', ParseBoolPipe) onlyActive: boolean,
     @Query('gender') gender: Gender,
     @Query('category') category: Category,
+    @Query('store') store: string,
   ) {
-    return this.productsService.findAll(onlyActive,gender,category);
+    return this.productsService.findAll(onlyActive,gender,category,store);
   }
 
   @Get('my-products')
