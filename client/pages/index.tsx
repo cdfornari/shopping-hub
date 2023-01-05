@@ -1,5 +1,5 @@
 import type { NextPage } from 'next'
-import { Grid, Loading, Text, Container, User } from '@nextui-org/react';
+import { Grid, Loading, Text, Container, User, Button } from '@nextui-org/react';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { ShopLayout } from '../layouts'
@@ -9,7 +9,7 @@ import { Category, Gender, Product } from '../models';
 import { categoryReducer, genderReducer } from '../helpers';
 
 const Home: NextPage = () => {
-  const {query} = useRouter()
+  const {query,replace} = useRouter()
   const {gender,category,store} = query;
   const {data,error} = useSWR<Product[]>(`products?onlyActive=true&gender=${gender || ''}&category=${category || ''}&store=${store || ''}`,fetcher);
   if(error) return <Text>Error</Text>
@@ -20,9 +20,20 @@ const Home: NextPage = () => {
     >
       {
         data && data.length === 0 && (
-          <Text>
-            No hay productos disponibles
-          </Text>
+          <Container>
+            <Text>
+              No hay productos disponibles con los filtros seleccionados
+            </Text>
+            <Button
+              flat
+              color='error'
+              size='sm'
+              onClick={() => replace('/')}
+              css={{mt: '$4'}}
+            >
+              Limpiar filtros
+            </Button>
+          </Container>
         )
       }
       {
