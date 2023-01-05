@@ -34,6 +34,7 @@ const CheckoutPage: NextPage<Props> = ({exchange}) => {
                     title: 'Algunos productos de tu carrito no están disponibles',
                     timer: 5000,
                 })
+                replace('/shopping-cart')
             }
         })
     }, [])
