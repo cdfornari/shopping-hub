@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { Link, Loading, Text } from '@nextui-org/react';
 import NextLink from 'next/link';
+import { Link, Loading, Text } from '@nextui-org/react';
 import useSWR from 'swr';
 import { DashboardLayout } from '../../../layouts/DashboardLayout';
 import { Box } from '../../../components/containers';

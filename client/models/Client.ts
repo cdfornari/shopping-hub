@@ -1,5 +1,3 @@
-import { Role } from '../types/Role';
-
 export interface Client{
     _id: string;
     fullName: string;
@@ -7,7 +5,7 @@ export interface Client{
         _id: string;
         email: string;
         isActive: boolean;
-        role: Role;
+        role: 'CLIENT';
     },
     dni: string;
     phoneNumber: string;

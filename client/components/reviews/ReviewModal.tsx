@@ -1,5 +1,5 @@
 import { FC, useMemo, useState } from 'react'
-import { Button, Loading, Modal, Text, Textarea } from '@nextui-org/react'
+import { Button, Modal, Text, Textarea } from '@nextui-org/react'
 import { Rating } from 'react-simple-star-rating';
 import { OrderProduct } from '../../models/OrderProduct';
 

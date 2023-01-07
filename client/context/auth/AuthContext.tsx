@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { RegisterDto } from '../../dtos/register.dto';
+import { RegisterDto } from '../../models/register.dto';
 import { Client } from '../../models/Client';
 
 interface ContextProps {

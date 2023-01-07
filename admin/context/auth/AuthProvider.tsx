@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 import { api } from '../../api/api';
 import { authReducer,AuthContext } from './';
 import { User } from '../../models/User';
-import { RegisterDto, RegisterAdmin } from '../../dtos/register.dto';
+import { RegisterDto, RegisterAdmin } from '../../models/register.dto';
 
 export interface AuthState {
     isLoggedIn: boolean;

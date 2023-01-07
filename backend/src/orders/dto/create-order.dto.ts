@@ -2,7 +2,6 @@ import { Type } from 'class-transformer';
 import { IsArray, IsIn, IsObject, IsString, MinLength, ValidateNested } from 'class-validator';
 import { Size } from 'src/products/types/size';
 import { PaymentMethod, ValidPaymentMethods } from '../types/payment-method';
-import { Status, ValidStatus } from '../types/status';
 import { OrderProductDto } from './order-product.dto';
 
 export class CreateOrderDto {

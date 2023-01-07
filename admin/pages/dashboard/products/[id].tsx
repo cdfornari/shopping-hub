@@ -7,15 +7,13 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { DashboardLayout } from '../../../layouts';
 import { Flex } from '../../../components/containers';
-import { ValidSizes, shoeSizes, Size } from '../../../types/size';
-import { Gender, ValidGenders } from '../../../types/gender';
-import { Category, ValidCategories } from '../../../types/category';
 import { Product } from '../../../models/product'
 import { genderReducer, categoryReducer } from '../../../helpers';
 import { AuthContext } from '../../../context/auth';
 import { useForm } from '../../../hooks/useForm';
 import { Notification } from '../../../notification';
 import { api } from '../../../api/api';
+import { Category, Gender, shoeSizes, Size, ValidCategories, ValidGenders, ValidSizes } from '../../../models/product';
 
 interface Props {
     product: Product;

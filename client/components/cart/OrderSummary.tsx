@@ -1,18 +1,14 @@
 import { FC } from 'react';
 import { Grid, Loading, Text } from '@nextui-org/react';
 
-
 interface Props {
     total?: number;
     numberOfItems: number;
 }
 
 export const OrderSummary: FC<Props> = ({ total, numberOfItems }) => {
-    
   return (
-    
     <Grid.Container>
-        
         <Grid xs={6}>
             <Text>Nro. Productos</Text>
         </Grid>
@@ -28,7 +24,6 @@ export const OrderSummary: FC<Props> = ({ total, numberOfItems }) => {
                 total ? <Text>${total}</Text> : <Loading/>
             }
         </Grid>
-
     </Grid.Container>
   )
 }

@@ -3,7 +3,7 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { Button, Card, Input, Link, Loading, Radio, Spacer, Text, useTheme } from '@nextui-org/react'
 import { AuthLayout } from '../../../layouts'
-import { ThemeSwitcher } from '../../../components/ThemeSwitcher';
+import { ThemeSwitcher } from '../../../components/common/ThemeSwitcher';
 import { AuthContext } from '../../../context/auth';
 import { useForm } from '../../../hooks/useForm';
 import { Notification } from '../../../notification';

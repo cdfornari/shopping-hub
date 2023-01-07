@@ -6,14 +6,11 @@ import { Button, Container, Input, Spacer, Row, Col, Text, Textarea, Radio, Chec
 import Cookies from 'js-cookie';
 import { DashboardLayout } from '../../../layouts';
 import { Box, Flex } from '../../../components/containers';
-import { Size, ValidSizes, shoeSizes } from '../../../types/size';
-import { Gender, ValidGenders } from '../../../types/gender';
-import { Category, ValidCategories } from '../../../types/category';
 import { useForm } from '../../../hooks/useForm';
 import { Notification } from '../../../notification';
 import { api } from '../../../api/api';
 import { genderReducer, categoryReducer } from '../../../helpers';
-
+import { Category, Gender, shoeSizes, Size, ValidCategories, ValidGenders, ValidSizes } from '../../../models/product';
 
 const CreateProductPage: NextPage = () => {
     const {isDark} = useTheme();
