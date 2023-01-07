@@ -19,7 +19,7 @@ interface Props {
     product: Product;
 }
 
-const DetailsProductPage: NextPage<Props> = ({product}) => {
+const ProductDetailsPage: NextPage<Props> = ({product}) => {
     const {isDark} = useTheme();
     const router = useRouter()
     const {user} = useContext(AuthContext)
@@ -392,4 +392,4 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }
 
 
-export default DetailsProductPage;
+export default ProductDetailsPage;

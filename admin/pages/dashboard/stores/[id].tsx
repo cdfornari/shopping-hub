@@ -11,7 +11,7 @@ interface Props{
   store: Store;
 }
 
-const DetailsBrandsPage: FC<Props>= ( {store} ) => {  
+const StoreDetailsPage: FC<Props>= ( {store} ) => {  
   return (
     <DashboardLayout 
       title='Detalles de la Tienda'
@@ -133,4 +133,4 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }
 }
 
-export default DetailsBrandsPage
+export default StoreDetailsPage

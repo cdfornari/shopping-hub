@@ -6,7 +6,7 @@ import { Notification } from '../../../notification'
 import { AuthContext } from '../../../context/auth'
 import { useRouter } from 'next/router'
 
-export const AdminCreatePage = () => {
+export const CreateAdminPage = () => {
   
     const {allowSubmit,parsedFields} = useForm([
         {
@@ -124,4 +124,4 @@ export const AdminCreatePage = () => {
     )
 }
 
-export default AdminCreatePage
+export default CreateAdminPage
