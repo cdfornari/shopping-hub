@@ -4,7 +4,7 @@ import { ThemeProvider } from 'next-themes'
 import { darkTheme, lightTheme } from '../themes'
 import { AuthProvider, ShoppingCartProvider } from '../context'
 
-function MyApp({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
       <ShoppingCartProvider>
@@ -25,4 +25,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   )
 }
 
-export default MyApp
+export default App

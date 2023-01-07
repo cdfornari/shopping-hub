@@ -4,7 +4,7 @@ import type { AppProps } from 'next/app'
 import { AuthProvider } from '../context'
 import { darkTheme, lightTheme } from '../themes'
 
-function MyApp({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
       <ThemeProvider
@@ -23,4 +23,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   )
 }
 
-export default MyApp
+export default App
