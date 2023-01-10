@@ -1,4 +1,8 @@
-import { Avatar, Badge, Text } from '@nextui-org/react';
+import { Avatar, Badge, Text, useTheme } from '@nextui-org/react';
+import { useSWRConfig } from 'swr';
+import Cookies from 'js-cookie';
+import { api } from '../../../api/api';
+import { Notification } from '../../../notification';
 import { TableActions } from '../TableActions';
 
 interface Row {
@@ -11,10 +15,42 @@ interface Row {
 }
 
 export const StoresCellReducer = (row: Row, columnKey: string) => {
+  const {isDark} = useTheme();
+  const { mutate } = useSWRConfig()
+  const storeAction = async (type: 'activate' | 'delete') => {
+    Notification(isDark).fire({
+      title: 'Cargando',
+      icon: 'info',
+    })
+    try {
+      if(type === 'delete') await api.delete(`/stores/${row._id}`,{
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`
+        }
+      })
+      else await api.post(`/stores/activate/${row._id}`,{},{
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`
+        }
+      })
+      Notification(isDark).fire({
+        title: type === 'delete' ? 'Tienda desactivada' : 'Tienda activada',
+        icon: 'success',
+        timer: 3000
+      })
+      mutate('stores')
+    } catch (error: any) {
+      Notification(isDark).fire({
+        title: error.response.data.message,
+        icon: 'error',
+        timer: 3000
+      })
+    }
+  }
   switch (columnKey) {
     case "logo":
       return (
-        <Avatar 
+        <Avatar
           squared 
           size='xl'
           src={row.logo} 
@@ -52,7 +88,8 @@ export const StoresCellReducer = (row: Row, columnKey: string) => {
     case "actions": 
       return <TableActions
         url={`/dashboard/stores/${row._id}`}
-        onDelete={() => console.log()}
+        onAction={storeAction}
+        type={row.active ? 'delete' : 'activate'}
       />
     default:
       return <></>

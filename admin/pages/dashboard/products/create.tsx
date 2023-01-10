@@ -6,14 +6,11 @@ import { Button, Container, Input, Spacer, Row, Col, Text, Textarea, Radio, Chec
 import Cookies from 'js-cookie';
 import { DashboardLayout } from '../../../layouts';
 import { Box, Flex } from '../../../components/containers';
-import { Size, ValidSizes, shoeSizes } from '../../../types/size';
-import { Gender, ValidGenders } from '../../../types/gender';
-import { Category, ValidCategories } from '../../../types/category';
 import { useForm } from '../../../hooks/useForm';
 import { Notification } from '../../../notification';
 import { api } from '../../../api/api';
 import { genderReducer, categoryReducer } from '../../../helpers';
-
+import { Category, Gender, shoeSizes, Size, ValidCategories, ValidGenders, ValidSizes } from '../../../models/product';
 
 const CreateProductPage: NextPage = () => {
     const {isDark} = useTheme();
@@ -38,7 +35,6 @@ const CreateProductPage: NextPage = () => {
         Notification(isDark).fire({
             title: 'Cargando',
             icon: 'info',
-
         })
         if(selectedCategory === 'shoes'){
             if(selectedShoeSizes.length === 0) 
@@ -86,7 +82,6 @@ const CreateProductPage: NextPage = () => {
             Notification(isDark).fire({
                 title: 'Producto creado',
                 icon: 'success',
-                
             })
             setIsLoading(false)
         } catch (error: any) {
@@ -296,10 +291,14 @@ const CreateProductPage: NextPage = () => {
                                 step="0.1"
                                 value={price}
                                 onChange={(e) => setPrice(Number(e.target.value))}
-                                helperText={price > 0 ? '' : 'El precio debe ser mayor a 0'}
-                                helperColor={price > 0 ? 'success' : 'error'}
-                                status={price > 0 ? 'success' : 'error'}
-                                color={price > 0 ? 'success' : 'error'}
+                                helperText={
+                                    price > 0 ? 
+                                    (price > compPrice ? 'El precio debe ser >= al precio comparativo' : '') : 
+                                    'El precio debe ser mayor a 0'
+                                }
+                                helperColor={price > 0 && compPrice >= price ? 'success' : 'error'}
+                                status={price > 0 && compPrice >= price ? 'success' : 'error'}
+                                color={price > 0 && compPrice >= price ? 'success' : 'error'}
                             /> 
                             <Spacer x={2}/>
                             <Input 

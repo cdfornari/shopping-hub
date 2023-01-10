@@ -50,13 +50,25 @@ export class ClientsController {
     return this.clientsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateClientDto: UpdateClientDto) {
-    return this.clientsService.update(+id, updateClientDto);
+  @Patch('update')
+  @Auth('CLIENT')
+  update(
+    @Body() updateClientDto: UpdateClientDto,
+    @ReqUser() user: User
+  ) {
+    return this.clientsService.update(user, updateClientDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.clientsService.remove(+id);
+  @Auth('ADMIN','SUPER-ADMIN','CLIENT')
+  remove(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.clientsService.remove(id);
   }
+
+  @Post('activate/:id')
+  @Auth('ADMIN','SUPER-ADMIN')
+  activate(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.clientsService.activate(id);
+  }
+
 }

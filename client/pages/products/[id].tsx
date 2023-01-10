@@ -1,23 +1,29 @@
 import { useContext, useState } from "react";
 import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from "next";
-import { Button, Grid, Image, Spacer, Text, Textarea, User, useTheme } from '@nextui-org/react';
-import { ItemCounter } from "../../components/ui/ItemCounter";
+import { useRouter } from 'next/router';
+import { Button, Container, Grid, Image, Pagination, Spacer, Text, Textarea, User, useTheme } from '@nextui-org/react';
 import axios from 'axios';
+import { Rating } from 'react-simple-star-rating';
 import { ShopLayout } from "../../layouts";
+import { ItemCounter } from "../../components/ui/ItemCounter";
 import { Product, Size } from '../../models';
 import { ShoppingCartContext } from '../../context/shopping-cart';
 import { Notification } from '../../notification';
+import { sortSizes } from '../../helpers';
+import { ReviewCard } from '../../components/reviews/ReviewCard';
 
 interface Props {
     product: Product;
 }
 
 const ProductPage: NextPage<Props> = ({product}: Props) => {
+  const router = useRouter()
   const {isDark} = useTheme();
   const {addProductToCart} = useContext(ShoppingCartContext)
   const [selectedSize, setSelectedSize] = useState<Size>();
   const [selectedShoeSize, setSelectedShoeSize] = useState<number>();
   const [quantity, setQuantity] = useState<number>(1);
+  const [pagination, setPagination] = useState(1)
   const onAddToCart = () => {
     if(product.category === 'shoes') {
         if(!selectedShoeSize) 
@@ -43,23 +49,30 @@ const ProductPage: NextPage<Props> = ({product}: Props) => {
         title: 'Producto agregado al carrito'
     })
   }
+  const onFilter = (store: string) => {
+    router.push({
+        pathname: '/',
+        query: {
+            store
+        }
+    });
+  }
   return (
     <ShopLayout
         title ='Product page'
         description='This is the produc page'
     >
         <Grid.Container gap={0} justify='flex-start' css={{mt: '$14', mh: 'fit-content'}}>       
-            <Grid xs={12} sm={7}> 
+            <Grid xs={12} sm={7} css={{h: 'fit-content'}}> 
                 <Image
                     alt='Product image'
-                    width= '80%'
-                    height = '80%'
+                    width='80%'
                     src={product.image}
                     objectFit = 'fill'
                     css={{borderRadius: '16px'}}
                 />
             </Grid>
-            <Grid xs={12} sm={4}  direction='column'>
+            <Grid xs={12} sm={4} direction='column'>
                 <Text 
                     size='$lg'
                     weight="bold" 
@@ -69,6 +82,31 @@ const ProductPage: NextPage<Props> = ({product}: Props) => {
                     {product.store.name}
                 </Text>
                 <Text h1>{product.title}</Text>
+                <div style={{display: 'flex'}}>
+                    <Rating
+                        size={20}
+                        readonly
+                        allowFraction
+                        fillColorArray={['#f17a45', '#f19745', '#f1a545', '#f1b345', '#f1d045']} 
+                        initialValue={
+                            product.reviews.length === 0 ? 0 :
+                            product.reviews.reduce((acc, review) => acc + review.rating,0)/product.reviews.length
+                        }
+                    />
+                    {
+                        product.reviews.length > 0 && (
+                            <Text css={{mt: '-$2'}} size='lg'>
+                                {
+                                    (product.reviews.reduce((acc, review) => acc + review.rating,0)/product.reviews.length).toFixed(2)
+                                }/5.00
+                            </Text>
+                        )
+                    }
+                    <Spacer x={0.5}/>
+                    <Text css={{mt: '-$2'}} size='lg'>
+                        ({product.reviews.length})
+                    </Text>
+                </div>
                 {
                     product.comparativePrice > product.price && (
                         <div 
@@ -106,7 +144,7 @@ const ProductPage: NextPage<Props> = ({product}: Props) => {
                 >
                     {
                         product.category === 'shoes' ? (
-                            product.shoeSizes!.map((s, index) => 
+                            product.shoeSizes!.sort().map((s, index) => 
                             <Button  
                                 bordered={selectedShoeSize !== s}
                                 key={index} 
@@ -116,7 +154,7 @@ const ProductPage: NextPage<Props> = ({product}: Props) => {
                             </Button>
                         )
                         ) : (
-                            product.sizes!.map((s, index) => 
+                            sortSizes(product.sizes!).map((s, index) => 
                                 <Button 
                                     bordered={selectedSize !== s}
                                     key={index} 
@@ -147,7 +185,32 @@ const ProductPage: NextPage<Props> = ({product}: Props) => {
                 <User 
                     src={product.store.logo}
                     name={product.store.name}
+                    css={{cursor: 'pointer'}}
+                    onClick={() => onFilter(product.store._id)}
                 />
+                <Spacer y={1} />
+                <Text h3>Reseñas</Text>
+                {
+                    product.reviews.length === 0 ? (
+                        <Text css={{mt: '$2'}}>Nadie ha escrito reseñas todavía</Text>
+                    ) : (
+                        <ReviewCard
+                            review={product.reviews[pagination-1]}
+                        />
+                    )
+                }
+                {
+                    product.reviews.length > 1 && (
+                        <Container css={{d: 'flex', justifyContent: 'center', mt: '$8'}}>
+                            <Pagination
+                                loop
+                                page={pagination}
+                                onChange={setPagination}
+                                total={product.reviews.length}
+                            />  
+                        </Container>
+                    )
+                }
             </Grid>
         </Grid.Container>
     </ShopLayout>

@@ -2,7 +2,9 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { ValidRoles, ValidRolesArray } from '../types/valid-roles.type';
 
-@Schema()
+@Schema({
+    versionKey: false,
+})
 export class User extends Document {
 
     @Prop({

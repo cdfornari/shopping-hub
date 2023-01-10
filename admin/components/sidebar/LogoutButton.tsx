@@ -2,8 +2,8 @@ import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { Button, useTheme } from '@nextui-org/react'
 import { FiLogOut } from 'react-icons/fi';
-import { AuthContext } from '../context/auth';
-import { Notification } from '../notification';
+import { AuthContext } from '../../context/auth';
+import { Notification } from '../../notification';
 
 export const LogoutButton = () => {
   const { isDark } = useTheme()

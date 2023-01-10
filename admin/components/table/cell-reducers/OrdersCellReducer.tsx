@@ -1,4 +1,4 @@
-import {  Badge, Text } from '@nextui-org/react';
+import { Text } from '@nextui-org/react';
 import { Status } from '../../../models/Order';
 import { TableActions } from '../TableActions';
 import { OrderStatusReducer } from './OrderStatusReducer';
@@ -45,7 +45,7 @@ export const OrdersCellReducer = (row: Row, columnKey: string) => {
     case "actions": 
       return <TableActions
         url={`/dashboard/orders/${row._id}`}
-        onDelete={() => console.log()}
+        showDelete={false}
       />
     default:
       return <></>

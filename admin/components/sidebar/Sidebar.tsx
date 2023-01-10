@@ -3,12 +3,12 @@ import { useRouter } from 'next/router';
 import { Sidebar } from './sidebar.styles';
 import { SidebarItem } from './SidebarItem';
 import { Box, Flex } from '../containers';
-import { ThemeSwitcher } from '../ThemeSwitcher';
+import { ThemeSwitcher } from '../common/ThemeSwitcher';
 import { AiTwotoneHome,AiTwotoneShop,AiTwotoneShopping } from 'react-icons/ai';
 import { FaShoppingCart } from 'react-icons/fa';
 import { BsFillPeopleFill,BsFillPersonFill } from 'react-icons/bs';
 import { RiAdminFill } from 'react-icons/ri';
-import { LogoutButton } from '../LogoutButton';
+import { LogoutButton } from './LogoutButton';
 import { AuthContext } from '../../context/auth';
 
 export const SidebarWrapper = () => {

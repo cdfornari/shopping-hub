@@ -1,15 +1,15 @@
 import { useMemo, useContext } from 'react';
+import { NextPage } from 'next';
+import NextLink from 'next/link';
 import { Link, Loading, Text } from '@nextui-org/react';
 import useSWR from 'swr';
 import { DashboardLayout } from '../../../layouts/DashboardLayout';
 import { Box } from '../../../components/containers';
 import { TableWrapper } from '../../../components/table';
 import { fetcher } from '../../../api/fetcher';
-import { NextPage } from 'next';
 import { Product } from '../../../models/product';
 import { ProductsCellReducer } from '../../../components/table/cell-reducers/ProductsCellReducer';
 import { AuthContext } from '../../../context/auth/AuthContext';
-import NextLink from 'next/link';
 
 const columns = [
   { label: "Titulo", uid: "title" },
@@ -17,13 +17,14 @@ const columns = [
   { label: "Precio", uid: "price" },
   { label: "Genero", uid: "gender" },
   { label: "Tallas", uid: "sizes" },
+  { label: "Status", uid: "active" },
   { label: "Acciones", uid: "actions" },
 ];
 
 const ProductsPage: NextPage = () => {
   const { user } = useContext(AuthContext);
   const {data,error} = useSWR<Product[]>(
-    user?.role !== 'STORE' ?  'products' : 'products/my-products', 
+    user?.role === 'STORE' ?  'products/my-products' : 'products?onlyActive=false', 
     fetcher
   )
   const products = useMemo(() => (
@@ -31,6 +32,7 @@ const ProductsPage: NextPage = () => {
       id: i,
       storeName: product.store.name,
       storeLogo: product.store.logo,
+      active: product.isActive,
       ...product
     }))
   ),[data])
@@ -45,7 +47,7 @@ const ProductsPage: NextPage = () => {
         user?.role === 'STORE' && (
           <NextLink href='/dashboard/products/create'>
             <Link>
-                Crear producto
+              Crear producto
             </Link>
           </NextLink>
         )

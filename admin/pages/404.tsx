@@ -10,12 +10,12 @@ const Custom404 = () => {
         alignContent='center'
         alignItems='center'
         css={{
-            height:'calc(100vh - 200px)',
-            flexDirection: "column"
+          height:'calc(100vh - 200px)',
+          flexDirection: "column"
         }}
       >
-        <Text size={'xxx-large'} weight="bold" >Error 404 |</Text>
-        <Text size={'$xl'}  weight="bold">No se encontro ninguna página aquí</Text>
+        <Text size='xxx-large' weight="bold" >Error 404 |</Text>
+        <Text size='$xl' weight="bold">No se encontro ninguna página aquí</Text>
       </Container>
     </DashboardLayout>
   )

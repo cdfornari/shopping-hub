@@ -5,4 +5,5 @@ export interface OrderProduct{
     quantity: number;
     size: Size;
     product: Product;
+    isReviewed: boolean;
 }

@@ -1,4 +1,4 @@
-import { Category } from "../types/category";
+import { Category } from '../models/product';
 
 const translateCategory = {
     'tops': 'Prendas superiores',

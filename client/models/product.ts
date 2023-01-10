@@ -1,3 +1,4 @@
+import { Review } from './Review';
 import { Store } from './Store';
 
 export interface Product {
@@ -12,6 +13,8 @@ export interface Product {
     shoeSizes?: number[];
     category: Category;
     gender: Gender;
+    reviews: Review[];
+    isActive: boolean;
 }
 
 export type Size = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|'XXXL'|'UNI';

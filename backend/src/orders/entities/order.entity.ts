@@ -6,7 +6,9 @@ import { Product } from 'src/products/entities/product.entity';
 import { PaymentMethod, ValidPaymentMethods } from '../types/payment-method';
 import { ValidSizes } from '../../products/types/size';
 
-@Schema()
+@Schema({
+    versionKey: false,
+})
 export class Order {
 
     @Prop({
@@ -59,7 +61,8 @@ export class Order {
                 product: {
                     type: Types.ObjectId,
                     ref: 'Product',
-                    required: true
+                    required: true,
+                    autopopulate: true,
                 },
                 quantity: {
                     type: Number,
@@ -72,6 +75,10 @@ export class Order {
                 },
                 shoeSize: {
                     type: Number
+                },
+                isReviewed: {
+                    type: Boolean,
+                    default: false
                 }
             })
         ],
@@ -82,12 +89,14 @@ export class Order {
         quantity: number,
         size?: string,
         shoeSize?: number
+        isReviewed: boolean
     }[]
 
     @Prop({
         type: Types.ObjectId,
         required: true,
-        ref: 'Client'
+        ref: 'Client',
+        autopopulate: true,
     })
     client: Client
 }

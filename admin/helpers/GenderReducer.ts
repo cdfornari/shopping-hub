@@ -1,9 +1,9 @@
-import { Gender } from "../types/gender";
+import { Gender } from '../models/product';
 
 const translateGender = {
     'men': 'Hombres',
     'women': 'Mujeres',
-    'kid': 'Niños',
+    'kids': 'Niños',
     'unisex': 'Unisex'
 }
 

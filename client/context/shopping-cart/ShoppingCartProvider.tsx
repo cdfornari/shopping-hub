@@ -42,14 +42,19 @@ export const ShoppingCartProvider: FC<Props> = ({children}) => {
             type: 'UPDATE_PRODUCT_QUANTITY',
             payload: product
         })
-        Cookies.set('cart', JSON.stringify(state.products), {expires: 31});
+        Cookies.set('cart', JSON.stringify(
+            state.products.map(p => {
+                if(p._id === product._id && p.size === product.size) return product;
+                return p;
+            })
+        ), {expires: 31});
     }
     const removeProduct = (product: CartProduct) => {
         dispatch({
             type: 'REMOVE_PRODUCT',
             payload: product
         })
-        Cookies.set('cart', JSON.stringify(state.products), {expires: 31});
+        Cookies.set('cart', JSON.stringify(state.products.filter(p => p._id !== product._id)), {expires: 31});
     }
 
     const clearCart = () => {

@@ -17,6 +17,6 @@ import { Client, ClientSchema } from './entities/client.entity';
   ],
   controllers: [ClientsController],
   providers: [ClientsService],
-  exports: [MongooseModule]
+  exports: [MongooseModule,ClientsService]
 })
 export class ClientsModule {}

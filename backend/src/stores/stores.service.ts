@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { AuthService } from 'src/auth/auth.service';
 import { LoginDto } from 'src/auth/dto/login.dto';
 import { User } from 'src/auth/entities/user.entity';
@@ -40,10 +40,8 @@ export class StoresService {
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
     const { user,token } = await this.authService.login({email, password});
-    const store = await this.storeModel.findOne({"user._id": user.id})
-    .populate('user', '-password -__v')
-    .select('-__v')
-    .lean();
+    const store = await this.storeModel.findOne({user: user.id})
+    .populate('user', '-password')
     if(!store) throw new NotFoundException('tienda no encontrada')
     delete store.user;
     return {
@@ -62,18 +60,14 @@ export class StoresService {
 
   async current(user: User) {
     const client = await this.storeModel.findOne({user: user.id})
-    .populate('user', '-password -__v')
-    .select('-__v')
-    .lean();
+    .populate('user', '-password')
     return client
   }
 
   async findAll() {
     try {
       const stores = await this.storeModel.find()
-      .populate('user', '-password -__v')
-      .select('-__v') 
-      .lean();
+      .populate('user', '-password')
       return stores;
     } catch (error) {
       throw new InternalServerErrorException(error)
@@ -82,17 +76,58 @@ export class StoresService {
 
   async findOne(id: string) {
     const store = await this.storeModel.findById(id)
-    .populate('user', '-password -__v')
-    .select('-__v') 
-    .lean();
+    .populate('user', '-password')
     return store;
   }
 
-  update(id: number, updateStoreDto: UpdateStoreDto) {
-    return `This action updates a #${id} store`;
+  async update(user: User, updateStoreDto: UpdateStoreDto) {
+    const store = await this.storeModel.findOne({user: user.id});
+    if(!store) throw new NotFoundException('tienda no encontrada')
+    if(
+      await this.storeModel.findOne({rif: updateStoreDto.rif}) &&
+      store.rif !== updateStoreDto.rif
+    ) throw new BadRequestException('rif ya registrado');
+    if(
+      await this.storeModel.findOne({phoneNumber: updateStoreDto.phoneNumber}) &&
+      store.phoneNumber !== updateStoreDto.phoneNumber
+    ) throw new BadRequestException('telefono ya registrado');
+    const { email, password, ...storeData } = updateStoreDto;
+    if(email || password) await this.authService.updateUser(
+      store.user as Types.ObjectId, {
+        email: email ? email : null,
+        password: password ? password : null,
+      }
+    )
+    store.rif = storeData.rif ? storeData.rif : store.rif;
+    store.logo = storeData.logo ? storeData.logo : store.logo;
+    store.name = storeData.name ? storeData.name : store.name;
+    store.phoneNumber = storeData.phoneNumber ? storeData.phoneNumber : store.phoneNumber;
+    return (await store.save()).populate('user', '-password')
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} store`;
+  async remove(id: string) {
+    const store = await this.storeModel.findById(id);
+    if(!store) throw new NotFoundException('tienda no encontrada')
+    return this.authService.deactivateUser(store.user as Types.ObjectId);
   }
+
+  async activate(id: string) {
+    const store = await this.storeModel.findById(id);
+    if(!store) throw new NotFoundException('tienda no encontrada')
+    return this.authService.activateUser(store.user as Types.ObjectId);
+  }
+
+  async changeLogo(user: User, imagePath: string) {
+    const store = await this.storeModel.findOne({user: user.id});
+    if(!store) throw new NotFoundException('tienda no encontrada');
+    const imgUrl = await this.uploadsService.uploadImage(imagePath);
+    store.logo = imgUrl;
+    return (await store.save()).populate('user', '-password')
+  }
+
+  async findByUser(user: User) {
+    return this.storeModel.findOne({user: user.id})
+    .populate('user', '-password');
+  }
+
 }

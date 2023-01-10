@@ -1,17 +1,20 @@
-import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { Store } from 'src/stores/entities/store.entity';
 import { Category, ValidCategories } from '../types/category';
 import { Gender, ValidGenders } from '../types/gender';
 import { Size, ValidSizes } from '../types/size';
+import { Review } from '../../reviews/entities/review.entity';
 
-@Schema()
+@Schema({
+    versionKey: false,
+})
 export class Product extends Document {
 
    @Prop({
         type: Types.ObjectId,
         required: true,
-        ref: 'Store'
+        ref: 'Store',
     })
     store: Store;
 
@@ -45,6 +48,12 @@ export class Product extends Document {
     image: string;
 
     @Prop({
+        type: Boolean,
+        default: true
+    })
+    isActive: boolean;
+
+    @Prop({
         type: String,
         required: true,
         enum: {
@@ -76,21 +85,20 @@ export class Product extends Document {
         ],
         default: []
     })
-    sizes?: Size[];
+    sizes: Size[];
 
     @Prop({
-        type: [
-            {
-                type: String,
-                enum: {
-                    values: ValidSizes,
-                    message: 'Size is not valid'
-                }
-            }
-        ],
+        type: [Number],
         default: []
     })
-    shoeSizes?: number[];
+    shoeSizes: number[];
+
+    @Prop({
+        type: [Types.ObjectId],
+        ref: 'Review',
+        default: []
+    })
+    reviews: Review[] | Types.ObjectId[];
 
 }
 

@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { AuthService } from 'src/auth/auth.service';
 import { LoginDto } from 'src/auth/dto/login.dto';
 import { User } from 'src/auth/entities/user.entity';
@@ -12,7 +12,8 @@ import { Client } from './entities/client.entity';
 export class ClientsService {
 
   constructor(
-    @InjectModel(Client.name) private readonly clientModel: Model<Client>,
+    @InjectModel(Client.name) 
+    private readonly clientModel: Model<Client>,
     private readonly authService: AuthService,
   ) {}
 
@@ -41,10 +42,8 @@ export class ClientsService {
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
     const { user,token } = await this.authService.login({email, password});
-    const client = await this.clientModel.findOne({"user._id" : user.id})
-    .populate('user', '-password -__v')
-    .select('-__v')
-    .lean();
+    const client = await this.clientModel.findOne({user: user.id})
+    .populate('user', '-password')
     if(!client) throw new NotFoundException('cliente no encontrado')
     return {
       client,
@@ -55,9 +54,7 @@ export class ClientsService {
   async findAll() {
     try {
       const clients = await this.clientModel.find()
-      .populate('user', '-password -__v')
-      .select('-__v') 
-      .lean();
+      .populate('user', '-password');
       return clients;
     } catch (error) {
       throw new InternalServerErrorException(error)
@@ -66,18 +63,15 @@ export class ClientsService {
 
   async findOne(id: string) {
     const client = await this.clientModel.findById(id)
-    .populate('user', '-password -__v')
-    .select('-__v') 
-    .lean();
+    .populate('user', '-password');
     if(!client) throw new NotFoundException('cliente no encontrado')
     return client;
   }
 
   async validate(user: User) {
+    if(!user.isActive) throw new NotFoundException('cliente inactivo')
     const client = await this.clientModel.findOne({user: user.id})
-    .populate('user', '-password -__v')
-    .select('-__v')
-    .lean();
+    .populate('user', '-password');
     return {
       client,
       token: (await this.authService.renewToken(user)).token
@@ -85,18 +79,53 @@ export class ClientsService {
   }
 
   async current(user: User) {
+    if(!user.isActive) throw new NotFoundException('cliente inactivo')
     const client = await this.clientModel.findOne({user: user.id})
-    .populate('user', '-password -__v')
-    .select('-__v')
-    .lean();
+    .populate('user', '-password');
     return client
   }
 
-  update(id: number, updateClientDto: UpdateClientDto) {
-    return `This action updates a #${id} client`;
+  async update(user: User, updateClientDto: UpdateClientDto) {
+    const client = await this.clientModel.findOne({user: user.id});
+    if(!client) throw new NotFoundException('cliente no encontrado')
+    if(
+      await this.clientModel.findOne({dni: updateClientDto.dni}) &&
+      client.dni !== updateClientDto.dni
+    ) throw new BadRequestException('cedula ya registrada')
+    if(
+      await this.clientModel.findOne({phoneNumber: updateClientDto.phoneNumber}) &&
+      client.phoneNumber !== updateClientDto.phoneNumber
+    ) throw new BadRequestException('telefono ya registrado')
+    const { email, password, ...clientData } = updateClientDto;
+    if(email || password) await this.authService.updateUser(
+      client.user as Types.ObjectId, {
+        email: email ? email : null,
+        password: password ? password : null,
+      }
+    )
+    client.dni = clientData.dni ? clientData.dni : client.dni;
+    client.fullName = clientData.fullName ? clientData.fullName : client.fullName;
+    client.phoneNumber = clientData.phoneNumber ? clientData.phoneNumber : client.phoneNumber;
+    return {
+      client: await client.save(),
+    };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} client`;
+  async remove(id: string) {
+    const client = await this.clientModel.findById(id);
+    if(!client) throw new NotFoundException('cliente no encontrado')
+    return this.authService.deactivateUser(client.user as Types.ObjectId);
   }
+
+  async activate(id: string) {
+    const client = await this.clientModel.findById(id);
+    if(!client) throw new NotFoundException('cliente no encontrado')
+    return this.authService.activateUser(client.user as Types.ObjectId);
+  }
+
+  async findByUser(user: User) {
+    return this.clientModel.findOne({user: user.id})
+    .populate('user', '-password');
+  }
+
 }

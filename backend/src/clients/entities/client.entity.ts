@@ -2,15 +2,17 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { User } from 'src/auth/entities/user.entity';
 
-@Schema()
+@Schema({
+    versionKey: false,
+})
 export class Client extends Document{
 
     @Prop({
         type: Types.ObjectId,
         ref: 'User',
-        required: true
+        required: true,
     })
-    user: User;
+    user: User | Types.ObjectId;
 
     @Prop({
         type: String,

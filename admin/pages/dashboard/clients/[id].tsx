@@ -12,7 +12,7 @@ interface Props {
   client: Client
 }
 
-export const ClientsProfile: FC<Props> = ({client}) => {
+export const ClientDetailsPage: FC<Props> = ({client}) => {
   return (
   <DashboardLayout 
     title='Detalles del Cliente'
@@ -129,4 +129,4 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-export default ClientsProfile
+export default ClientDetailsPage

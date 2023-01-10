@@ -1,4 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseBoolPipe, UseInterceptors, UploadedFile, ParseFilePipeBuilder } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { v4 as uuid } from 'uuid';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -8,6 +11,7 @@ import { ParseMongoIdPipe } from '../common/pipes/ParseMongoIdPipe';
 import { User } from 'src/auth/entities/user.entity';
 import { Gender } from './types/gender';
 import { Category } from './types/category';
+import { CartDto } from './dto/cart.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -25,8 +29,13 @@ export class ProductsController {
   }
 
   @Get()
-  findAll() {
-    return this.productsService.findAll();
+  findAll(
+    @Query('onlyActive', ParseBoolPipe) onlyActive: boolean,
+    @Query('gender') gender: Gender,
+    @Query('category') category: Category,
+    @Query('store') store: string,
+  ) {
+    return this.productsService.findAll(onlyActive,gender,category,store);
   }
 
   @Get('my-products')
@@ -42,22 +51,57 @@ export class ProductsController {
     return this.productsService.findOne(id);
   }
 
-  @Get(':gender/:category')
-  filter(
-    @Param('gender') gender: Gender,
-    @Param('category') category: Category,
-  ) {
-    return this.productsService.filter(gender,category);
-  }
-
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productsService.update(+id, updateProductDto);
+    return this.productsService.update(id, updateProductDto);
+  }
+
+  @Patch('change-image/:id')
+  @Auth('STORE')
+  @UseInterceptors(
+    FileInterceptor('image',{
+      limits: {
+        files: 1,
+      },
+      storage: diskStorage({
+        destination: './images',
+        filename: (req, file, cb) => {
+          const fileExtension = file.mimetype.split('/')[1];
+          const fileName = `${uuid()}.${fileExtension}`;
+          cb(null,fileName)
+        }
+      })
+    })
+  )
+  changeImage(
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+      .addFileTypeValidator({
+        fileType: new RegExp(/(png|jpe?g)/),
+      })
+      .build()
+    ) 
+    file: Express.Multer.File,
+    @Param('id', ParseMongoIdPipe) id: string,
+  ) {
+    return this.productsService.changeImage(id,file.path);
   }
 
   @Delete(':id')
+  @Auth('ADMIN','SUPER-ADMIN','STORE')
   remove(@Param('id') id: string) {
-    return this.productsService.remove(+id);
+    return this.productsService.remove(id);
   }
-  
+
+  @Post('activate/:id')
+  @Auth('ADMIN','SUPER-ADMIN','STORE')
+  activate(@Param('id') id: string) {
+    return this.productsService.activate(id);
+  }
+
+  @Post('validate-cart')
+  validateCart(@Body() cart: CartDto) {
+    return this.productsService.getInvalidProducts(cart.products);
+  }
+
 }

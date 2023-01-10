@@ -70,13 +70,56 @@ export class StoresController {
     return this.storesService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStoreDto: UpdateStoreDto) {
-    return this.storesService.update(+id, updateStoreDto);
+  @Patch('update')
+  @Auth('STORE')
+  update(
+    @Body() updateClientDto: UpdateStoreDto,
+    @ReqUser() user: User
+  ) {
+    return this.storesService.update(user, updateClientDto);
+  }
+
+  @Patch('change-logo')
+  @Auth('STORE')
+  @UseInterceptors(
+    FileInterceptor('image',{
+      limits: {
+        files: 1,
+      },
+      storage: diskStorage({
+        destination: './images',
+        filename: (req, file, cb) => {
+          const fileExtension = file.mimetype.split('/')[1];
+          const fileName = `${uuid()}.${fileExtension}`;
+          cb(null,fileName)
+        }
+      })
+    })
+  )
+  changeLogo(
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+      .addFileTypeValidator({
+        fileType: new RegExp(/(png|jpe?g)/),
+      })
+      .build()
+    ) 
+    file: Express.Multer.File,
+    @ReqUser() user: User
+  ) {
+    return this.storesService.changeLogo(user, file.path);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.storesService.remove(+id);
+  @Auth('ADMIN','SUPER-ADMIN','STORE')
+  remove(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.storesService.remove(id);
   }
+
+  @Post('activate/:id')
+  @Auth('ADMIN','SUPER-ADMIN')
+  activate(@Param('id', ParseMongoIdPipe) id: string) {
+    return this.storesService.activate(id);
+  }
+
 }

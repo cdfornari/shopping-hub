@@ -1,7 +1,7 @@
-import { Grid, Text, Card, Button, Row, useTheme } from '@nextui-org/react';
-import { useRouter } from 'next/router';
-import { CartList, OrderSummary } from '.';
 import { FC, useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { Grid, Text, Card, Button, Row, useTheme } from '@nextui-org/react';
+import { CartList, OrderSummary } from '.';
 import { CartProduct } from '../../models';
 import { AuthContext } from '../../context/auth';
 import { Notification } from '../../notification';
