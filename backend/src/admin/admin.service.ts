@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 import { User } from 'src/auth/entities/user.entity';
 import { AuthService } from '../auth/auth.service';
 import { LoginDto } from 'src/auth/dto/login.dto';
-import { UpdateUserDto } from 'src/auth/dto/update-user.dto';
 import { StoresService } from 'src/stores/stores.service';
 
 @Injectable()
@@ -71,10 +70,6 @@ export class AdminService {
     const users = this.userModel.find({role: 'ADMIN'})
     .select('-password');
     return users;
-  }
-
-  update(id: string, updateAdminDto: UpdateUserDto) {
-    return this.authService.updateUser(id,updateAdminDto);
   }
 
   remove(id: string) {

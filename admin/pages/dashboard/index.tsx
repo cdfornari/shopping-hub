@@ -1,4 +1,4 @@
-import { Text } from '@nextui-org/react'
+import { Container, Text } from '@nextui-org/react'
 import { DashboardLayout } from '../../layouts'
 
 const DashboardPage = () => {
@@ -7,7 +7,9 @@ const DashboardPage = () => {
       title='Dashboard'
       description='Pagina administrativa'
     >
-      <Text h1>Inicio</Text>
+      <div style={{display: 'flex', width: '100%', justifyContent: 'center', marginTop: '50px'}}>
+        <Text h1>Bienvenido al Dashboard</Text>
+      </div>
     </DashboardLayout>
   )
 }
