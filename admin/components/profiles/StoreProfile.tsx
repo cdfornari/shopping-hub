@@ -18,6 +18,7 @@ export const StoreProfile: FC<Props> = ({store}) => {
   const { setVisible, bindings } = useModal();
   const router = useRouter()
   const {logout} = useContext(AuthContext)
+  const [confirmationText, setConfirmationText] = useState('')
   const [file,setFile] = useState<File | null>();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isLoading,setIsLoading] = useState(false)
@@ -129,6 +130,7 @@ export const StoreProfile: FC<Props> = ({store}) => {
   }
   const onDeactivate = async() => {
     setIsLoading(true)
+    setVisible(false)
     Notification(isDark).fire({
       title: 'Cargando',
       icon: 'info',
@@ -159,7 +161,13 @@ export const StoreProfile: FC<Props> = ({store}) => {
   }
   return (
     <>
-      <Modal {...bindings}>
+      <Modal 
+        {...bindings}
+        onClose={() => {
+          setConfirmationText('')
+          setVisible(false)
+        }}
+      >
         <Modal.Header>
           {
             <Text id='modal-title'>
@@ -181,9 +189,21 @@ export const StoreProfile: FC<Props> = ({store}) => {
             color='error'
             size='sm'
             onClick={onDeactivate}
+            disabled={confirmationText !== 'ELIMINAR'}
           >
-            Confirmar
+            Si, desactivar mi cuenta
           </Button>
+          <div style={{display: 'flex', width: '100%', alignItems: 'center', flexDirection: 'column'}}>
+            <Text>
+              Escribe ELIMINAR para confirmar
+            </Text>
+            <Input
+              value={confirmationText}
+              onChange={(e) => setConfirmationText(e.target.value)}
+              bordered
+              placeholder='Escribe ELIMINAR'
+            />
+          </div>
         </Modal.Footer>
       </Modal>
       <Text h1>Perfil de Tienda</Text>

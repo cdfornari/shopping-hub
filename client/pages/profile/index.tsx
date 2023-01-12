@@ -21,6 +21,7 @@ export const ProfilePage: NextPage<Props> = ({client}) => {
   const { setVisible, bindings } = useModal();
   const router = useRouter()
   const {logout} = useContext(AuthContext)
+  const [confirmationText, setConfirmationText] = useState('')
   const [isLoading,setIsLoading] = useState(false)
   const [dniType,setDniType] = useState(client.dni[0])
   const {allowSubmit,parsedFields} = useForm([
@@ -107,6 +108,7 @@ export const ProfilePage: NextPage<Props> = ({client}) => {
   }
   const onDeactivate = async() => {
     setIsLoading(true)
+    setVisible(false)
     Notification(isDark).fire({
       title: 'Cargando',
       icon: 'info',
@@ -140,7 +142,13 @@ export const ProfilePage: NextPage<Props> = ({client}) => {
       title="Perfil"
       description="Profile"
     >
-      <Modal {...bindings}>
+      <Modal 
+        {...bindings}
+        onClose={() => {
+          setConfirmationText('')
+          setVisible(false)
+        }}
+      >
         <Modal.Header>
           {
             <Text id='modal-title'>
@@ -162,9 +170,21 @@ export const ProfilePage: NextPage<Props> = ({client}) => {
             color='error'
             size='sm'
             onClick={onDeactivate}
+            disabled={confirmationText !== 'ELIMINAR'}
           >
-            Confirmar
+            Si, desactivar mi cuenta
           </Button>
+          <div style={{display: 'flex', width: '100%', alignItems: 'center', flexDirection: 'column'}}>
+            <Text>
+              Escribe ELIMINAR para confirmar
+            </Text>
+            <Input
+              value={confirmationText}
+              onChange={(e) => setConfirmationText(e.target.value)}
+              bordered
+              placeholder='Escribe ELIMINAR'
+            />
+          </div>
         </Modal.Footer>
       </Modal>
       <Box
@@ -293,7 +313,7 @@ export const ProfilePage: NextPage<Props> = ({client}) => {
                   >
                     <Button
                       onPress={handleSubmit}
-                      disabled={!allowSubmit || (!infoChanged && password.value === '') || isLoading }
+                      disabled={!allowSubmit || (!infoChanged && password.value === '') || isLoading}
                     >
                       {!isLoading ? 'Actualizar' : <Loading type='points' />}
                     </Button>
@@ -301,7 +321,7 @@ export const ProfilePage: NextPage<Props> = ({client}) => {
                       flat
                       color='error'
                       onPress={() => setVisible(true)}
-                      disabled={isLoading }
+                      disabled={isLoading}
                     >
                       {!isLoading ? 'Desactivar cuenta' : <Loading type='points' />}
                     </Button>
